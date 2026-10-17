@@ -62,7 +62,7 @@ function rewriteUrls(root, baseUrl) {
    });
 }
 
-function highlightCode(root) {
+export function highlightCode(root) {
    if (!window.hljs) return;
    root
       .querySelectorAll('pre code')
