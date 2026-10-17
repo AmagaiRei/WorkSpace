@@ -61,8 +61,8 @@ function switchTheme(theme) {
    document.startViewTransition(() => applyTheme(theme));
 }
 
-// !1. Светлая тема — вариант по умолчанию; сохранённый выбор пользователя имеет приоритет.
-applyTheme(readSavedTheme() ?? 'light');
+// !1. Применяем тему сразу. В localStorage НЕ пишем: выбор сохраняется только по клику пользователя.
+applyTheme(readSavedTheme() ?? (darkQuery.matches ? 'dark' : 'light'));
 
 // !2. Кнопку и иконку можно найти только после разбора DOM.
 document.addEventListener('DOMContentLoaded', () => {
@@ -74,3 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
    });
 });
 
+// !3. Пока пользователь не выбирал тему сам — следуем за настройкой ОС.
+darkQuery.addEventListener('change', (event) => {
+   if (readSavedTheme() === null) switchTheme(event.matches ? 'dark' : 'light');
+});

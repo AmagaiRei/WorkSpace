@@ -8,7 +8,7 @@ const STATUS_ITEMS = [
 ];
 
 const prefersReducedMotion = window.matchMedia(
-   '(prefers-reduced-motion: reduce), (hover: none), (max-width: 760px)',
+   '(prefers-reduced-motion: reduce)',
 );
 
 function pluralizeWork(count) {

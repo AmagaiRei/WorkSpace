@@ -252,11 +252,9 @@ function render() {
 }
 
 function bindEvents() {
-   let searchTimer = 0;
    ui.search.addEventListener('input', () => {
       state.query = ui.search.value;
-      clearTimeout(searchTimer);
-      searchTimer = setTimeout(render, 90);
+      render();
    });
 
    // !Один обработчик на весь контейнер (делегирование), а не по одному на каждую кнопку
