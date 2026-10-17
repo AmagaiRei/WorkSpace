@@ -6,6 +6,43 @@ export function normalize(value) {
       .toLocaleLowerCase('ru');
 }
 
+// !Лабораторные и предметы не меняются при поиске, поэтому нормализованные строки кэшируются.
+const labSearchCache = new WeakMap();
+const subjectTitleCache = new WeakMap();
+const progressCache = new WeakMap();
+
+function getLabSearchData(lab) {
+   let cached = labSearchCache.get(lab);
+   if (!cached) {
+      cached = {
+         title: normalize(lab.title),
+         description: normalize(lab.description),
+         tags: (lab.tags ?? []).map(normalize),
+         searchable: [lab.title, lab.description, ...(lab.tags ?? [])]
+            .map(normalize)
+            .join(' '),
+      };
+      labSearchCache.set(lab, cached);
+   }
+   return cached;
+}
+
+function getSubjectTitle(subject) {
+   if (!subjectTitleCache.has(subject)) {
+      subjectTitleCache.set(subject, normalize(subject.title));
+   }
+   return subjectTitleCache.get(subject);
+}
+
+function getProgress(labs) {
+   let progress = progressCache.get(labs);
+   if (!progress) {
+      progress = calcProgress(labs);
+      progressCache.set(labs, progress);
+   }
+   return progress;
+}
+
 // ! Уникальные теги по всем лабораторным: [{ key, label }], key — нормализованный.
 export function collectTags(subjects) {
    const unique = new Map();
@@ -30,8 +67,8 @@ export function calcProgress(labs = []) {
    return { done, total, percent: Math.round((done / total) * 100) };
 }
 
-/**
- * !Фильтрует предметы по тексту и тегу.
+/*!
+ * Фильтрует предметы по тексту и тегу.
  * !Прогресс считается по ВСЕМ лабораторным предмета — он не зависит от фильтра
  * @returns {{ subject: object, labs: object[], progress: object }[]}
  */
@@ -41,24 +78,20 @@ export function filterSubjects(subjects, { query = '', tag = null } = {}) {
    return subjects
       .map((subject) => {
          const allLabs = subject.labs ?? [];
-         const titleMatches = q !== '' && normalize(subject.title).includes(q);
+         const titleMatches = q !== '' && getSubjectTitle(subject).includes(q);
 
          const labs = allLabs.filter((lab) => {
-            const tagOk =
-               !tag || (lab.tags ?? []).some((t) => normalize(t) === tag);
+            const searchData = getLabSearchData(lab);
+            const tagOk = !tag || searchData.tags.includes(tag);
             const textOk =
-               q === '' ||
-               titleMatches ||
-               [lab.title, lab.description, ...(lab.tags ?? [])].some((field) =>
-                  normalize(field).includes(q),
-               );
+               q === '' || titleMatches || searchData.searchable.includes(q);
             return tagOk && textOk;
          });
 
          return {
             subject,
             labs,
-            progress: calcProgress(allLabs),
+            progress: getProgress(allLabs),
             titleMatches,
          };
       })
