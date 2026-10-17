@@ -1,0 +1,238 @@
+{
+   "profile": {
+      "name": "Руслан Мородецкий",
+      "github": "https://github.com/AmagaiRei",
+      "telegram": "https://t.me/AmagaiRei",
+      "email": "amagairei.dev@gmail.com"
+   },
+   "repo": {
+      "owner": "AmagaiRei",
+      "name": "WorkSpace",
+      "branch": "main"
+   },
+   "subjects": [
+      {
+         "id": "testing",
+         "title": "Поддержка и тестирование программных модулей",
+         "labs": []
+      },
+      {
+         "id": "os",
+         "title": "Операционные системы и среды",
+         "labs": []
+      },
+      {
+         "id": "hardware",
+         "title": "Архитектура аппаратных средств",
+         "labs": []
+      },
+      {
+         "id": "graphics",
+         "title": "Инженерная графика",
+         "labs": []
+      },
+      {
+         "id": "databases",
+         "title": "Проектировка и разработка баз данных",
+         "labs": [
+            {
+               "id": 1,
+               "title": "Описание исходных данных в табличном виде",
+               "description": "Представление данных о деловой одежде.",
+               "date": "2026-10-11",
+               "status": "done",
+               "tags": [
+                  "SQL",
+                  "PostgreSQL",
+                  "Таблицы",
+                  "Предметная область",
+                  "Справочники",
+                  "Проектирование БД"
+               ],
+               "report": "data/labs/databases/lab-01/Lab01.docx",
+               "archive": "data/labs/databases/lab-01/project.zip",
+               "code": [],
+               "screenshots": []
+            },
+            {
+               "id": 2,
+               "title": "Связь «один-ко-многим»",
+               "description": "Проектирование двух таблиц, связанных внешним ключом.",
+               "date": "2026-10-11",
+               "status": "done",
+               "tags": [
+                  "SQL",
+                  "MySQL",
+                  "Внешние ключи",
+                  "Таблицы",
+                  "Связи",
+                  "Один-ко-многим",
+                  "Первичный ключ",
+                  "Ограничения",
+                  "CREATE TABLE",
+                  "INSERT",
+                  "SELECT",
+                  "JOIN",
+                  "INNER JOIN"
+               ],
+               "report": "data/labs/databases/lab-02/Lab02.docx",
+               "archive": "data/labs/databases/lab-02/project.zip",
+               "code": [
+                  "data/labs/databases/lab-02/code/business_clothing.sql"
+               ],
+               "screenshots": [
+                  "data/labs/databases/lab-02/screenshots/Picture1.png",
+                  "data/labs/databases/lab-02/screenshots/Picture2.png",
+                  "data/labs/databases/lab-02/screenshots/Picture3.png"
+               ]
+            },
+            {
+               "id": 3,
+               "title": "Связь «многие-ко-многим»",
+               "description": "Связующая таблица и составной первичный ключ.",
+               "date": "2026-10-11",
+               "status": "done",
+               "tags": [
+                  "SQL",
+                  "MySQL",
+                  "JOIN",
+                  "Нормализация",
+                  "Многие-ко-многим",
+                  "Связующая таблица",
+                  "Составной ключ",
+                  "Первичный ключ",
+                  "Внешние ключи",
+                  "Таблицы",
+                  "INNER JOIN",
+                  "ORDER BY",
+                  "CREATE TABLE",
+                  "INSERT"
+               ],
+               "report": "data/labs/databases/lab-03/Lab03.docx",
+               "archive": "data/labs/databases/lab-03/project.zip",
+               "code": [
+                  "data/labs/databases/lab-03/code/business_clothing2.sql"
+               ],
+               "screenshots": [
+                  "data/labs/databases/lab-03/screenshots/Picture1.png",
+                  "data/labs/databases/lab-03/screenshots/Picture2.png",
+                  "data/labs/databases/lab-03/screenshots/Picture3.png"
+               ]
+            }
+         ]
+      },
+      {
+         "id": "it",
+         "title": "Информационные технологии",
+         "labs": [
+            {
+               "id": 1,
+               "title": "Лабораторная работа по Word",
+               "description": "Выполнение заданий по ТЗ",
+               "date": "2026-10-11",
+               "status": "todo",
+               "tags": [],
+               "report": "",
+               "archive": "",
+               "code": [],
+               "screenshots": []
+            }
+         ]
+      },
+      {
+         "id": "development",
+         "title": "Разработка программных модулей",
+         "labs": [
+            {
+               "id": 1,
+               "title": "Разработка приложения для графического отображения стандартных примитивов",
+               "description": "Реализовация программы для рисования фигур:Круг, Квадрат, Сектор, Линия, Строка, Дуга, Прямоугольник, Эллипс, Две горизонтальные линии, Три вертикальные линии, Сектор с заданным радиусом, Снежинка",
+               "date": "2026-10-14",
+               "status": "done",
+               "tags": [],
+               "report": "data/labs/development/lab-01/Lab01.docx",
+               "archive": "data/labs/development/lab-01/project.zip",
+               "code": ["data/labs/development/lab-01/code/"],
+               "screenshots": [
+                  "data/labs/development/lab-01/screenshots/Picture1.png",
+                  "data/labs/development/lab-01/screenshots/Picture2.png",
+                  "data/labs/development/lab-01/screenshots/Picture3.png",
+                  "data/labs/development/lab-01/screenshots/Picture4.png",
+                  "data/labs/development/lab-01/screenshots/Picture5.png",
+                  "data/labs/development/lab-01/screenshots/Picture6.png",
+                  "data/labs/development/lab-01/screenshots/Picture7.png",
+                  "data/labs/development/lab-01/screenshots/Picture8.png",
+                  "data/labs/development/lab-01/screenshots/Picture9.png",
+                  "data/labs/development/lab-01/screenshots/Picture10.png",
+                  "data/labs/development/lab-01/screenshots/Picture11.png",
+                  "data/labs/development/lab-01/screenshots/Picture12.png",
+                  "data/labs/development/lab-01/screenshots/Picture13.png",
+                  "data/labs/development/lab-01/screenshots/Picture14.png",
+                  "data/labs/development/lab-01/screenshots/Picture15.png",
+                  "data/labs/development/lab-01/screenshots/Picture16.png",
+                  "data/labs/development/lab-01/screenshots/Picture17.png",
+                  "data/labs/development/lab-01/screenshots/Picture18.png",
+                  "data/labs/development/lab-01/screenshots/Picture19.png",
+                  "data/labs/development/lab-01/screenshots/Picture20.png",
+                  "data/labs/development/lab-01/screenshots/Picture21.png",
+                  "data/labs/development/lab-01/screenshots/Picture22.png",
+                  "data/labs/development/lab-01/screenshots/Picture23.png",
+                  "data/labs/development/lab-01/screenshots/Picture24.png",
+                  "data/labs/development/lab-01/screenshots/Picture25.png"
+               ]
+            },
+            {
+               "id": 2,
+               "title": "Разработка приложения для графического отображения стандартных примитивов",
+               "description": "В данной лабораторной работе разработана программа для поиска букв в тексте",
+               "date": "2026-10-14",
+               "status": "done",
+               "tags": [],
+               "report": "data/labs/development/lab-02/Lab02.docx",
+               "archive": "data/labs/development/lab-02/project.zip",
+               "code": ["data/labs/development/lab-02/code/"],
+               "screenshots": [
+                  "data/labs/development/lab-02/screenshots/Picture1.png",
+                  "data/labs/development/lab-02/screenshots/Picture2.png",
+                  "data/labs/development/lab-02/screenshots/Picture3.png",
+                  "data/labs/development/lab-02/screenshots/Picture4.png",
+                  "data/labs/development/lab-02/screenshots/Picture5.png",
+                  "data/labs/development/lab-02/screenshots/Picture6.png",
+                  "data/labs/development/lab-02/screenshots/Picture7.png",
+                  "data/labs/development/lab-02/screenshots/Picture8.png",
+                  "data/labs/development/lab-02/screenshots/Picture9.png",
+                  "data/labs/development/lab-02/screenshots/Picture10.png",
+                  "data/labs/development/lab-02/screenshots/Picture11.png",
+                  "data/labs/development/lab-02/screenshots/Picture12.png",
+                  "data/labs/development/lab-02/screenshots/Picture13.png",
+                  "data/labs/development/lab-02/screenshots/Picture14.png",
+                  "data/labs/development/lab-02/screenshots/Picture15.png",
+                  "data/labs/development/lab-02/screenshots/Picture16.png",
+                  "data/labs/development/lab-02/screenshots/Picture17.png",
+                  "data/labs/development/lab-02/screenshots/Picture18.png",
+                  "data/labs/development/lab-02/screenshots/Picture19.png",
+                  "data/labs/development/lab-02/screenshots/Picture20.png",
+                  "data/labs/development/lab-02/screenshots/Picture21.png",
+                  "data/labs/development/lab-02/screenshots/Picture22.png"
+               ]
+            }
+         ]
+      },
+      {
+         "id": "security",
+         "title": "Основы информационной безопасности",
+         "labs": []
+      },
+      {
+         "id": "integration",
+         "title": "Осуществление интеграций программных модулей",
+         "labs": []
+      }
+   ],
+   "lifeProject": {
+      "title": "Сайт для людей в экзистенциальном кризисе",
+      "description": "Место, где можно честно сказать, что всё идёт не так, и не услышать в ответ «просто соберись». Это дело, ради которого я учусь делать сайты. Пока пусто",
+      "status": "idea",
+      "link": null
+   }
+}

@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="ru">
+   <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <meta
+         name="description"
+         content="Лабораторные и практические работы по IT-специальности."
+      />
+      <title>Мои задания — Руслан Мородецкий</title>
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+      <link
+         href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;800&display=swap"
+         rel="stylesheet"
+      />
+      <link rel="stylesheet" href="css/style.css" />
+      <link rel="stylesheet" href="css/theme-system.css" />
+      <link rel="stylesheet" href="css/smooth-motion.css" />
+      <link rel="stylesheet" href="css/markdown-modal.css" />
+      <link
+         rel="stylesheet"
+         href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css"
+      />
+      <!-- !theme.js БЕЗ defer: тема применяется до отрисовки, страница не мигает -->
+      <script src="js/theme.js"></script>
+      <script type="module" src="js/menu.js"></script>
+      <script type="module" src="js/index.js"></script>
+      <!-- !Админ-панель: код подгружается только по горячей клавише (Ctrl+Alt+A) -->
+      <script type="module" src="js/admin/admin-loader.js"></script>
+      <script
+         defer
+         src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"
+      ></script>
+      <script
+         defer
+         src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"
+      ></script>
+      <script
+         defer
+         src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"
+      ></script>
+      <script type="module" src="js/markdown-modal.js"></script>
+   </head>
+   <body>
+      <header class="header" id="home">
+         <a class="logo" href="#home"
+            ><span lang="ja">雨</span> Amagai Rei <span lang="ja">雨</span></a
+         >
+
+         <nav class="nav" aria-label="Основная навигация">
+            <a href="#home">Главная</a>
+            <a href="#tasks">Предметы</a>
+            <a href="#project">Проект</a>
+            <a href="#contacts">Контакты</a>
+         </nav>
+
+         <button
+            class="github-sync"
+            id="github-sync"
+            type="button"
+            aria-label="Синхронизировать с GitHub"
+            title="Обновить данные с GitHub"
+         >
+            <span class="github-sync__icon" aria-hidden="true">
+               <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+               >
+                  <path
+                     d="M20 7V3.5M20 7h-3.5"
+                     stroke="currentColor"
+                     stroke-width="1.8"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                  />
+                  <path
+                     d="M20 7a8 8 0 0 0-14-2M4 17v3.5M4 17h3.5"
+                     stroke="currentColor"
+                     stroke-width="1.8"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                  />
+                  <path
+                     d="M4 17a8 8 0 0 0 14 2"
+                     stroke="currentColor"
+                     stroke-width="1.8"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                  />
+               </svg>
+            </span>
+         </button>
+
+         <button
+            class="admin-panel-trigger"
+            id="admin-panel-trigger"
+            type="button"
+            aria-label="Открыть панель загрузки лабораторных"
+            title="Загрузить лабораторную"
+         >
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+               <path d="M12 15V3m0 0L7.5 7.5M12 3l4.5 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+               <path d="M5 13.5v4A2.5 2.5 0 0 0 7.5 20h9a2.5 2.5 0 0 0 2.5-2.5v-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+         </button>
+
+         <div class="header__actions">
+            <button
+               class="theme-toggle"
+               id="theme-toggle"
+               type="button"
+               aria-pressed="false"
+               aria-label="Включить тёмную тему"
+            >
+               <span class="theme-toggle__icon" aria-hidden="true">🌙</span>
+            </button>
+
+            <details class="mobile-menu">
+               <summary
+                  class="mobile-menu__summary"
+                  aria-label="Меню"
+               ></summary>
+               <nav class="mobile-menu__nav" aria-label="Мобильная навигация">
+                  <a href="#home">Главная</a>
+                  <a href="#tasks">Предметы</a>
+                  <a href="#project">Проект</a>
+                  <a href="#contacts">Контакты</a>
+               </nav>
+            </details>
+         </div>
+      </header>
+
+      <main>
+         <section class="hero">
+            <div class="hero__content">
+               <h1 class="hero__title">Мои задания</h1>
+               <p class="hero__subtitle">Руслан Мородецкий</p>
+               <p class="hero__text">
+                  Лабораторные и практические работы, которые я выполняю в
+                  колледже. У каждой работы есть отчёт, код и скриншоты
+                  выполнения. Я считаю это правильным подходом.
+               </p>
+               <a class="btn" href="#tasks">Смотреть предметы</a>
+
+               <section
+                  class="dashboard"
+                  id="dashboard"
+                  aria-label="Статистика выполнения лабораторных работ"
+                  aria-live="polite"
+               >
+                  <p class="dashboard__loading">Подсчитываем прогресс…</p>
+               </section>
+            </div>
+
+            <svg
+               class="hero__waves"
+               viewBox="0 0 1440 320"
+               preserveAspectRatio="none"
+               aria-hidden="true"
+            >
+               <path
+                  fill="rgba(255,255,255,0.08)"
+                  d="M0,192 C240,260 480,120 720,180 C960,240 1200,120 1440,190 L1440,320 L0,320 Z"
+               />
+               <path
+                  fill="rgba(255,255,255,0.14)"
+                  d="M0,240 C260,170 520,300 780,230 C1040,160 1260,270 1440,220 L1440,320 L0,320 Z"
+               />
+               <path
+                  fill="rgba(156,39,196,0.35)"
+                  d="M0,280 C300,230 600,320 900,270 C1150,230 1300,290 1440,265 L1440,320 L0,320 Z"
+               />
+            </svg>
+         </section>
+
+         <section class="section" id="tasks">
+            <h2 class="section__title">Предметы</h2>
+            <p class="section__lead">
+               Нажми на предмет, чтобы увидеть его лабораторные работы.
+            </p>
+
+            <div class="toolbar">
+               <label class="visually-hidden" for="search">
+                  Поиск по предметам и лабораторным
+               </label>
+               <input
+                  class="search"
+                  id="search"
+                  type="search"
+                  placeholder="Поиск по предметам, работам и тегам"
+                  autocomplete="off"
+               />
+               <button
+                  class="filters-reset"
+                  id="filters-reset"
+                  type="button"
+                  hidden
+               >
+                  Сбросить фильтры
+               </button>
+            </div>
+
+            <div
+               class="tag-filters"
+               id="tag-filters"
+               role="group"
+               aria-label="Фильтр по тегам"
+            ></div>
+            <p class="results-count" id="results-count" aria-live="polite"></p>
+
+            <div id="subjects" class="subjects">
+               <p class="empty">Загрузка…</p>
+            </div>
+         </section>
+
+         <section class="section" id="project">
+            <h2 class="section__title">Главный проект</h2>
+            <div id="life-project"></div>
+            <div
+               id="github-sync-status"
+               class="github-sync-status"
+               aria-live="polite"
+            ></div>
+            <div id="github-labs" class="github-labs" hidden></div>
+
+            <p class="project-docs">
+               <a
+                  class="project-docs__link"
+                  href="./README.md"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-readme
+                  data-readme-title="Документация WorkSpace"
+               >
+                  Читать документацию WorkSpace
+                  <span aria-hidden="true">↗</span>
+               </a>
+            </p>
+         </section>
+      </main>
+
+      <footer class="footer" id="contacts">
+         <div class="socials">
+            <a
+               data-contact="github"
+               href="#"
+               aria-label="GitHub"
+               title="GitHub"
+            >
+               <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <polyline points="8 7 3 12 8 17" />
+                  <polyline points="16 7 21 12 16 17" />
+                  <line x1="14" y1="5" x2="10" y2="19" />
+               </svg>
+            </a>
+            <a
+               data-contact="telegram"
+               href="#"
+               aria-label="Telegram"
+               title="Telegram"
+            >
+               <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M21.5 3.5 2.5 11l6 2.3 2 6.2 3.2-3.8 4.6 3.4z" />
+                  <path d="M8.5 13.3 21.5 3.5" />
+               </svg>
+            </a>
+            <a data-contact="email" href="#" aria-label="Почта" title="Почта">
+               <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <rect x="3" y="5" width="18" height="14" rx="2" />
+                  <polyline points="3 7 12 13 21 7" />
+               </svg>
+            </a>
+         </div>
+         <p class="footer__note">
+            <span lang="ja">雨</span> Amagai Rei <span lang="ja">雨</span>
+         </p>
+      </footer>
+   </body>
+</html>

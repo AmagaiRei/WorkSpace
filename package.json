@@ -1,0 +1,10 @@
+{
+   "name": "workspace",
+   "private": true,
+   "type": "module",
+   "engines": { "node": ">=18" },
+   "scripts": {
+      "sync": "node js/sync-local.mjs",
+      "sync:dry": "node js/sync-local.mjs --dry-run"
+   }
+}

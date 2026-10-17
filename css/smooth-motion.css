@@ -1,0 +1,512 @@
+:root {
+  --motion-fast: 150ms;
+  --motion-normal: 240ms;
+  --motion-slow: 360ms;
+  --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5.5rem;
+}
+
+body {
+  animation: ws-page-enter 420ms var(--ease-smooth) both;
+}
+
+a,
+button,
+input,
+select,
+textarea,
+summary,
+.card,
+.subject,
+.shot,
+.life-card,
+.lab-panel,
+.lab-sidebar,
+.item,
+.file,
+.project-docs__link,
+.github-labs,
+.github-sync-status,
+.dashboard__glass,
+.dashboard__kpi,
+.dashboard__chart,
+.dashboard__activity,
+.dashboard__progress,
+.dashboard__stat,
+.theme-toggle,
+.nav a,
+.mobile-menu__nav a,
+.socials a {
+  transition:
+    color var(--motion-normal) var(--ease-standard),
+    background-color var(--motion-normal) var(--ease-standard),
+    border-color var(--motion-normal) var(--ease-standard),
+    box-shadow var(--motion-normal) var(--ease-standard),
+    opacity var(--motion-normal) var(--ease-standard),
+    transform var(--motion-normal) var(--ease-smooth),
+    filter var(--motion-normal) var(--ease-standard);
+}
+
+button,
+.btn,
+.button,
+[role="button"],
+.theme-toggle,
+.github-sync,
+.admin-panel-trigger {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:not(:disabled):active,
+.btn:active,
+.button:active,
+[role="button"]:active {
+  transform: scale(0.98);
+}
+
+button:disabled,
+button[aria-disabled="true"] {
+  cursor: not-allowed;
+  transform: none;
+  filter: saturate(0.65);
+}
+
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--ws-purple, #a855f7);
+  outline-offset: 3px;
+}
+
+.nav a,
+.mobile-menu__nav a,
+.socials a {
+  position: relative;
+}
+
+.nav a::after {
+  position: absolute;
+  right: 0;
+  bottom: -0.3rem;
+  left: 0;
+  height: 2px;
+  content: "";
+  background: var(--ws-purple, #a855f7);
+  border-radius: 99px;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--motion-normal) var(--ease-smooth);
+}
+
+.nav a:hover::after,
+.nav a:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.card:hover,
+.subject:hover,
+.shot:hover,
+.life-card:hover,
+.file:hover,
+.item:hover,
+.project-docs__link:hover,
+.dashboard__kpi:hover,
+.dashboard__activity:hover,
+.dashboard__stat:hover {
+  transform: translateY(-3px);
+}
+
+.card:active,
+.subject:active,
+.file:active,
+.item:active {
+  transform: translateY(-1px);
+}
+
+.hero__content,
+.page-head,
+#lab-body,
+#subjects,
+#dashboard,
+.footer {
+  animation: ws-content-enter 480ms var(--ease-smooth) both;
+}
+
+#dashboard {
+  animation-delay: 70ms;
+}
+
+#subjects {
+  animation-delay: 110ms;
+}
+
+.subjects > details,
+.subject,
+.card,
+.dashboard__kpi,
+.dashboard__glass,
+.lab-panel,
+.lab-sidebar {
+  transform-origin: center top;
+}
+
+.subjects > details[open] > :not(summary) {
+  animation: ws-reveal 260ms var(--ease-smooth) both;
+}
+
+.mobile-menu[open] .mobile-menu__nav,
+.mobile-menu[open] nav {
+  animation: ws-pop-in 200ms var(--ease-smooth) both;
+  transform-origin: top right;
+}
+
+.search,
+input,
+select,
+textarea {
+  transition:
+    border-color var(--motion-normal) var(--ease-standard),
+    box-shadow var(--motion-normal) var(--ease-standard),
+    background-color var(--motion-normal) var(--ease-standard);
+}
+
+.search:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ws-purple, #a855f7) 22%, transparent);
+}
+
+.theme-toggle:hover,
+.github-sync:hover,
+.admin-panel-trigger:hover,
+.socials a:hover {
+  transform: translateY(-2px);
+}
+
+.github-sync:hover svg {
+  transform: rotate(35deg);
+}
+
+.github-sync svg {
+  transition: transform 420ms var(--ease-smooth);
+}
+
+.markdown-modal__dialog,
+.md-modal__dialog {
+  animation: ws-modal-in 240ms var(--ease-smooth) both;
+}
+
+.md-modal__backdrop {
+  animation: ws-fade-in 180ms ease-out both;
+}
+
+[hidden] {
+  animation: none !important;
+}
+
+@keyframes ws-page-enter {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes ws-content-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes ws-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes ws-pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(-5px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes ws-modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes ws-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (hover: none) {
+  .card:hover,
+  .subject:hover,
+  .shot:hover,
+  .life-card:hover,
+  .file:hover,
+  .item:hover,
+  .project-docs__link:hover,
+  .dashboard__kpi:hover,
+  .dashboard__activity:hover,
+  .dashboard__stat:hover,
+  .theme-toggle:hover,
+  .github-sync:hover,
+  .admin-panel-trigger:hover,
+  .socials a:hover {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  body,
+  .hero__content,
+  .page-head,
+  #lab-body,
+  #subjects,
+  #dashboard,
+  .footer {
+    animation: none !important;
+  }
+}
+
+
+/* Раскрывающиеся списки и вложенные элементы */
+.subject {
+  overflow: clip;
+  transition:
+    border-color var(--motion-normal) var(--ease-standard),
+    background-color var(--motion-normal) var(--ease-standard),
+    box-shadow var(--motion-normal) var(--ease-standard),
+    transform var(--motion-normal) var(--ease-smooth);
+}
+
+.subject__summary {
+  transition:
+    color var(--motion-normal) var(--ease-standard),
+    background-color var(--motion-normal) var(--ease-standard);
+}
+
+.subject__summary::after {
+  transition:
+    transform var(--motion-normal) var(--ease-smooth),
+    border-color var(--motion-normal) var(--ease-standard);
+}
+
+.subject[open] > .subject__summary::after {
+  transform: translateY(-30%) rotate(-135deg);
+}
+
+.subject__content {
+  animation: ws-dropdown-content 320ms var(--ease-smooth) both;
+  transform-origin: top center;
+}
+
+.subject[open] > .subject__content > * {
+  animation: ws-dropdown-item 360ms var(--ease-smooth) both;
+}
+
+.subject[open] > .subject__content > *:nth-child(1) { animation-delay: 25ms; }
+.subject[open] > .subject__content > *:nth-child(2) { animation-delay: 55ms; }
+.subject[open] > .subject__content > *:nth-child(3) { animation-delay: 85ms; }
+.subject[open] > .subject__content > *:nth-child(4) { animation-delay: 115ms; }
+.subject[open] > .subject__content > *:nth-child(5) { animation-delay: 145ms; }
+.subject[open] > .subject__content > *:nth-child(n + 6) { animation-delay: 165ms; }
+
+.tree__folder > summary {
+  transition:
+    color var(--motion-normal) var(--ease-standard),
+    background-color var(--motion-normal) var(--ease-standard);
+}
+
+.tree__folder > summary .icon--chevron {
+  transition: transform var(--motion-normal) var(--ease-smooth);
+}
+
+.tree__folder[open] > summary .icon--chevron {
+  transform: rotate(90deg);
+}
+
+.tree__folder[open] > :not(summary) {
+  animation: ws-dropdown-content 260ms var(--ease-smooth) both;
+  transform-origin: top left;
+}
+
+.mobile-menu__summary::before {
+  transition: transform var(--motion-normal) var(--ease-smooth);
+}
+
+.mobile-menu[open] > .mobile-menu__summary::before {
+  transform: rotate(90deg);
+}
+
+@keyframes ws-dropdown-content {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+    clip-path: inset(0 0 100% 0 round 8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    clip-path: inset(0 0 0 0 round 0);
+  }
+}
+
+@keyframes ws-dropdown-item {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+
+/* !Единый фон без резких горизонтальных переходов */
+html,
+body {
+  min-height: 100%;
+  background-color: #1c1028;
+}
+
+body {
+  background-image:
+    radial-gradient(ellipse at 12% 8%, rgba(126, 48, 170, 0.20), transparent 42%),
+    radial-gradient(ellipse at 88% 22%, rgba(205, 66, 179, 0.14), transparent 44%),
+    radial-gradient(ellipse at 52% 78%, rgba(93, 45, 145, 0.12), transparent 50%),
+    linear-gradient(145deg, #21142e 0%, #301b40 48%, #24152f 100%) !important;
+  background-attachment: fixed !important;
+}
+
+:root[data-theme='dark'] body {
+  background-image:
+    radial-gradient(ellipse at 12% 8%, rgba(126, 48, 170, 0.16), transparent 42%),
+    radial-gradient(ellipse at 88% 22%, rgba(205, 66, 179, 0.10), transparent 44%),
+    radial-gradient(ellipse at 52% 78%, rgba(93, 45, 145, 0.10), transparent 50%),
+    linear-gradient(145deg, #100a19 0%, #1b1028 48%, #120b1d 100%) !important;
+}
+
+.hero,
+.section,
+.footer {
+  background: transparent !important;
+}
+
+.hero__waves {
+  display: none !important;
+}
+
+/* !Плавное раскрытие предметов и лабораторных */
+.subjects > details > summary,
+.subject > summary,
+.subjects summary {
+  transition: color var(--motion-normal) var(--ease-standard), background-color var(--motion-normal) var(--ease-standard);
+}
+
+.subjects > details[open] > :not(summary),
+.subject[open] > :not(summary) {
+  animation: ws-dropdown-open 380ms var(--ease-smooth) both;
+  transform-origin: top center;
+}
+
+.subjects > details[open] > :not(summary) > *,
+.subject[open] > :not(summary) > * {
+  animation: ws-dropdown-child 360ms var(--ease-smooth) both;
+}
+
+.subjects > details[open] > :not(summary) > *:nth-child(2) { animation-delay: 35ms; }
+.subjects > details[open] > :not(summary) > *:nth-child(3) { animation-delay: 70ms; }
+.subjects > details[open] > :not(summary) > *:nth-child(4) { animation-delay: 105ms; }
+
+@keyframes ws-dropdown-open {
+  from { opacity: 0; transform: translateY(-10px); clip-path: inset(0 0 100% 0 round 12px); }
+  to { opacity: 1; transform: translateY(0); clip-path: inset(0 0 0 0 round 0); }
+}
+
+@keyframes ws-dropdown-child {
+  from { opacity: 0; transform: translateY(7px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* !Плавное открытие полноразмерных скриншотов */
+dialog.lightbox[open] {
+  animation: ws-lightbox-in 300ms var(--ease-smooth) both;
+  transform-origin: center;
+}
+
+dialog.lightbox[open]::backdrop {
+  animation: ws-lightbox-backdrop 240ms ease-out both;
+}
+
+dialog.lightbox img {
+  animation: ws-lightbox-image 380ms var(--ease-smooth) both;
+}
+
+dialog.lightbox .file-button,
+dialog.lightbox .btn {
+  animation: ws-lightbox-image 400ms var(--ease-smooth) 45ms both;
+}
+
+@keyframes ws-lightbox-in {
+  from { opacity: 0; transform: translateY(12px) scale(0.965); filter: blur(5px); }
+  to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+
+@keyframes ws-lightbox-backdrop {
+  from { background-color: rgba(15, 5, 25, 0); }
+  to { background-color: rgba(15, 5, 25, 0.85); }
+}
+
+@keyframes ws-lightbox-image {
+  from { opacity: 0; transform: scale(0.975); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  dialog.lightbox[open],
+  dialog.lightbox[open]::backdrop,
+  dialog.lightbox img,
+  .subjects > details[open] > :not(summary),
+  .subject[open] > :not(summary) {
+    animation: none !important;
+  }
+}
