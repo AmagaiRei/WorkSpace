@@ -85,6 +85,18 @@
                "archive": "",
                "code": [],
                "screenshots": []
+            },
+            {
+               "id": 4,
+               "title": "Описание процессора",
+               "description": "Выполнить полное описание процессора в соответствии с вариантом (вариант задания соответствует номеру по списку):",
+               "date": "2026-10-20",
+               "status": "done",
+               "tags": [],
+               "report": "data/labs/hardware/lab-04/Practice-04.docx",
+               "archive": "",
+               "code": [],
+               "screenshots": []
             }
          ]
       },
