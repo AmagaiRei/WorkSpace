@@ -61,6 +61,18 @@
                "archive": "",
                "code": [],
                "screenshots": []
+            },
+            {
+               "id": 2,
+               "title": "Практическая работа - 02",
+               "description": "Таблицы истинности",
+               "date": "2026-10-20",
+               "status": "done",
+               "tags": [],
+               "report": "data/labs/hardware/lab-02/Practice-02.docx",
+               "archive": "",
+               "code": [],
+               "screenshots": []
             }
          ]
       },
