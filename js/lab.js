@@ -6,17 +6,18 @@ import {
    showError,
    renderContacts,
 } from './common.js';
+import { createFileViewer } from './file-viewer.js';
 import {
    buildTree,
    extensionOf,
    fileName,
+   matchPaths,
    plural,
    sortedDirs,
    sortedFiles,
    typeOf,
 } from './tree.js';
 
-const MAX_CODE_CHARS = 200_000;
 const API_TIMEOUT_MS = 8000;
 const CACHE_TTL_MS = 60_000;
 
@@ -204,52 +205,6 @@ async function collectCodeFiles(entries, repo) {
    return { files: [...files].sort(), problems };
 }
 
-/* !---------- Просмотр кода прямо на странице ---------- */
-
-function createCodeViewer() {
-   const name = el('span', { className: 'code-viewer__name' });
-   const link = el('a', {
-      className: 'text-link',
-      text: 'Открыть отдельно',
-      attrs: { target: '_blank', rel: 'noopener' },
-   });
-   const code = el('pre', { className: 'code' });
-   const root = el(
-      'div',
-      { className: 'code-viewer', attrs: { hidden: '' } },
-      el('div', { className: 'code-viewer__head' }, name, link),
-      code,
-   );
-
-   // !Номер запроса защищает от гонки: если успели кликнуть другой файл, старый ответ не перетрёт новый.
-   let lastRequest = 0;
-
-   async function show(path) {
-      const request = ++lastRequest;
-      root.hidden = false;
-      name.textContent = fileName(path);
-      link.href = path;
-      code.textContent = 'Загрузка…';
-      root.scrollIntoView({ block: 'nearest' });
-
-      try {
-         const response = await fetch(path);
-         if (!response.ok) throw new Error(`HTTP ${response.status}`);
-         const text = await response.text();
-         if (request !== lastRequest) return;
-         code.textContent =
-            text.length > MAX_CODE_CHARS
-               ? `${text.slice(0, MAX_CODE_CHARS)}\n\n…файл обрезан, остальное по ссылке «Открыть отдельно»`
-               : text;
-      } catch (error) {
-         if (request !== lastRequest) return;
-         code.textContent = `Не удалось загрузить файл: ${error.message}. Проверь, что он лежит по пути ${path}.`;
-      }
-   }
-
-   return { root, show };
-}
-
 /* !---------- Проводник: дерево слева, карточки справа ---------- */
 
 function createItem({ iconName, tone, name, meta, desc }, tag, attrs = {}) {
@@ -280,9 +235,27 @@ function createExplorer(root) {
       attrs: { 'aria-label': 'Путь к папке' },
    });
    const grid = el('div', { className: 'file-grid' });
-   const viewer = createCodeViewer();
+   const start = el(
+      'div',
+      { className: 'fv-start' },
+      el('p', {
+         className: 'hint',
+         text: 'Выбери файл в дереве: он откроется во вкладке.',
+      }),
+      crumbs,
+      grid,
+   );
+   const filesByPath = new Map();
+   const folders = [];
+   const viewer = createFileViewer({
+      icon,
+      onActivate: handleActivate,
+      onMissing: handleMissing,
+   });
+   let currentFolder = root;
    let currentRow = null;
    let selectedPath = null;
+   let savedOpen = null;
 
    function markCurrent(row) {
       currentRow?.removeAttribute('aria-current');
@@ -326,7 +299,6 @@ function createExplorer(root) {
             tone: 'folder',
             name: folder.name,
             meta: `Папка · ${count} ${plural(count, ['элемент', 'элемента', 'элементов'])}`,
-            desc: 'Вложенные файлы и папки.',
          },
          'button',
       );
@@ -336,19 +308,16 @@ function createExplorer(root) {
 
    function createFileCard(file) {
       const type = typeOf(file.path);
-      const details = {
-         iconName: type.icon,
-         tone: type.tone,
-         name: file.name,
-         meta: `${type.label} · ${type.kind}`,
-         desc: type.desc,
-      };
-      // !Текст открываем на странице, остальное (docx, zip, картинки) - обычная ссылка на скачивание.
-      if (!type.text) {
-         return createItem(details, 'a', { href: file.path, download: '' });
-      }
-      const card = createItem(details, 'button');
-      if (file.path === selectedPath) card.setAttribute('aria-current', 'true');
+      const card = createItem(
+         {
+            iconName: type.icon,
+            tone: type.tone,
+            name: file.name,
+            meta: `${type.label} · ${type.kind}`,
+            desc: type.desc,
+         },
+         'button',
+      );
       card.addEventListener('click', () => openFile(file));
       return card;
    }
@@ -369,51 +338,66 @@ function createExplorer(root) {
       if (reveal) {
          for (let node = folder; node; node = node.parent) node.details.open = true;
       }
-      markCurrent(folder.row);
+      currentFolder = folder;
+      // !Пока открыт файл, подсвечен он, а не папка.
+      if (selectedPath === null) markCurrent(folder.row);
       renderCrumbs(folder);
       renderCards(folder);
    }
 
    function openFile(file) {
-      selectedPath = file.path;
+      viewer.open({
+         path: file.path,
+         name: file.name,
+         shown: file.path.slice(root.path.length),
+      });
+      closeDrawer();
+   }
+
+   // !Вызывается просмотрщиком при смене вкладки: null - вкладок не осталось, возвращаем стартовое состояние.
+   function handleActivate(path) {
+      if (path === null) {
+         selectedPath = null;
+         start.hidden = false;
+         showFolder(currentFolder);
+         return;
+      }
+      const file = filesByPath.get(path);
+      selectedPath = path;
+      start.hidden = true;
       showFolder(file.folder, { reveal: true });
       markCurrent(file.row);
-      viewer.show(file.path);
+      file.row.scrollIntoView({ block: 'nearest' });
+   }
+
+   function handleMissing(path) {
+      const row = filesByPath.get(path)?.row;
+      if (!row) return;
+      row.classList.add('tree__row--missing');
+      row.title = 'Файл не найден на сервере';
    }
 
    function createTreeFile(file) {
       const type = typeOf(file.path);
-      const content = [
+      file.row = el(
+         'button',
+         { className: 'tree__row', attrs: { type: 'button' } },
          icon(type.icon, type.tone),
          el('span', { text: file.name }),
-      ];
-      if (type.text) {
-         file.row = el(
-            'button',
-            { className: 'tree__row', attrs: { type: 'button' } },
-            ...content,
-         );
-         file.row.addEventListener('click', () => openFile(file));
-      } else {
-         file.row = el(
-            'a',
-            {
-               className: 'tree__row',
-               attrs: { href: file.path, download: '' },
-            },
-            ...content,
-         );
-      }
+      );
+      file.row.addEventListener('click', () => openFile(file));
+      filesByPath.set(file.path, file);
       return file.row;
    }
 
    function createTreeFolder(folder, depth) {
       const list = el('ul', { className: 'tree__list' });
       for (const child of sortedDirs(folder)) {
-         list.append(el('li', {}, createTreeFolder(child, depth + 1)));
+         list.append(createTreeFolder(child, depth + 1));
       }
       for (const file of sortedFiles(folder)) {
-         list.append(el('li', {}, createTreeFile(file)));
+         file.item = el('li', {}, createTreeFile(file));
+         list.append(file.item);
       }
 
       folder.row = el(
@@ -428,26 +412,141 @@ function createExplorer(root) {
 
       folder.details = el('details', { className: 'tree__folder' }, folder.row, list);
       folder.details.open = depth === 0;
-      return folder.details;
+      folder.item = el('li', {}, folder.details);
+      folders.push(folder);
+      return folder.item;
    }
 
+   /* !----- Поиск по дереву: скрываем лишнее, а не перестраиваем дерево ----- */
+
+   const searchInput = el('input', {
+      className: 'tree-search__input',
+      attrs: {
+         type: 'search',
+         placeholder: 'Имя или .расширение',
+         'aria-label': 'Поиск по файлам проекта',
+         autocomplete: 'off',
+         spellcheck: 'false',
+      },
+   });
+   const clearButton = el('button', {
+      className: 'tree-search__clear',
+      text: '×',
+      attrs: { type: 'button', 'aria-label': 'Очистить поиск', hidden: '' },
+   });
+   const noMatch = el('p', {
+      className: 'tree__nomatch',
+      attrs: { 'aria-live': 'polite' },
+   });
+
+   function applyFilter() {
+      const visible = matchPaths([...filesByPath.keys()], searchInput.value);
+      clearButton.hidden = !searchInput.value;
+      if (visible && !savedOpen) {
+         savedOpen = new Map(folders.map((folder) => [folder, folder.details.open]));
+      }
+      for (const folder of folders) {
+         const show = !visible || !folder.parent || visible.has(folder.path);
+         folder.item.hidden = !show;
+         if (visible && show) folder.details.open = true;
+      }
+      for (const [path, file] of filesByPath) {
+         file.item.hidden = Boolean(visible) && !visible.has(path);
+      }
+      if (!visible && savedOpen) {
+         for (const [folder, wasOpen] of savedOpen) folder.details.open = wasOpen;
+         savedOpen = null;
+      }
+      noMatch.textContent =
+         visible && visible.size === 0
+            ? 'Ничего не найдено. Попробуй другое имя или расширение, например .sql'
+            : '';
+   }
+
+   function clearSearch() {
+      searchInput.value = '';
+      applyFilter();
+   }
+
+   searchInput.addEventListener('input', applyFilter);
+   searchInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && searchInput.value) {
+         event.stopPropagation();
+         clearSearch();
+      }
+   });
+   clearButton.addEventListener('click', () => {
+      clearSearch();
+      searchInput.focus();
+   });
+
+   /* !----- Телефон: дерево выезжает отдельной панелью ----- */
+
+   const backdrop = el('div', { className: 'fv-backdrop' });
+   const filesButton = el('button', {
+      className: 'fv-files-btn',
+      text: '📁 Файлы',
+      attrs: {
+         type: 'button',
+         'aria-controls': 'lab-sidebar',
+         'aria-expanded': 'false',
+      },
+   });
+   const closeButton = el('button', {
+      className: 'lab-sidebar__close',
+      text: '×',
+      attrs: { type: 'button', 'aria-label': 'Закрыть список файлов' },
+   });
    const sidebar = el(
       'aside',
-      { className: 'lab-sidebar', attrs: { 'aria-label': 'Файлы проекта' } },
-      el('h2', { className: 'lab-sidebar__title', text: 'Файлы проекта' }),
+      {
+         className: 'lab-sidebar',
+         attrs: { id: 'lab-sidebar', 'aria-label': 'Файлы проекта' },
+      },
+      el(
+         'div',
+         { className: 'lab-sidebar__head' },
+         el('h2', { className: 'lab-sidebar__title', text: 'Файлы проекта' }),
+         closeButton,
+      ),
+      el('div', { className: 'tree-search' }, searchInput, clearButton),
       el(
          'div',
          { className: 'tree' },
-         el(
-            'ul',
-            { className: 'tree__list' },
-            el('li', {}, createTreeFolder(root, 0)),
-         ),
+         el('ul', { className: 'tree__list' }, createTreeFolder(root, 0)),
       ),
+      noMatch,
    );
 
+   function setDrawer(isOpen) {
+      sidebar.classList.toggle('lab-sidebar--open', isOpen);
+      backdrop.classList.toggle('is-open', isOpen);
+      filesButton.setAttribute('aria-expanded', String(isOpen));
+      // !Пока панель открыта, остальная страница недоступна ни мыши, ни клавиатуре.
+      if (sidebar.nextElementSibling) sidebar.nextElementSibling.inert = isOpen;
+      if (isOpen) searchInput.focus();
+   }
+
+   function closeDrawer(refocus = false) {
+      if (!sidebar.classList.contains('lab-sidebar--open')) return;
+      setDrawer(false);
+      if (refocus) filesButton.focus();
+   }
+
+   filesButton.addEventListener('click', () => setDrawer(true));
+   closeButton.addEventListener('click', () => closeDrawer(true));
+   backdrop.addEventListener('click', () => closeDrawer(true));
+   document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') closeDrawer(true);
+   });
+   window
+      .matchMedia('(max-width: 800px)')
+      .addEventListener('change', (event) => {
+         if (!event.matches) closeDrawer();
+      });
+
    showFolder(root);
-   return { sidebar, crumbs, grid, viewer: viewer.root };
+   return { sidebar, backdrop, filesButton, start, viewer: viewer.root };
 }
 
 function renderCode(files, problems) {
@@ -465,6 +564,7 @@ function renderCode(files, problems) {
          : el('p', { className: 'empty', text: 'Файлов с кодом пока нет.' });
       return {
          sidebar: null,
+         backdrop: null,
          panel: el(
             'section',
             { className: 'lab-panel lab-panel--code' },
@@ -478,16 +578,13 @@ function renderCode(files, problems) {
    const explorer = createExplorer(buildTree(files));
    return {
       sidebar: explorer.sidebar,
+      backdrop: explorer.backdrop,
       panel: el(
          'section',
          { className: 'lab-panel lab-panel--code' },
          title,
-         el('p', {
-            className: 'hint',
-            text: 'Выбери папку или файл: код открывается ниже, прямо на этой странице.',
-         }),
-         explorer.crumbs,
-         explorer.grid,
+         explorer.filesButton,
+         explorer.start,
          explorer.viewer,
          ...notices,
       ),
@@ -620,7 +717,7 @@ async function renderBody(lab, repo, body) {
       el(
          'section',
          { className: 'lab-section lab-section--code' },
-         el('div', { className: layoutClass }, code.sidebar, main),
+         el('div', { className: layoutClass }, code.backdrop, code.sidebar, main),
       ),
    );
 }

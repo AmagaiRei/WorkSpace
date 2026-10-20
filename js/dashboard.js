@@ -50,7 +50,11 @@ function createKpiCard({ key, label, icon, className }, value) {
          className: `dashboard__kpi dashboard__kpi--${className}`,
          attrs: { 'aria-label': `${label}: ${value}` },
       },
-      el('span', { className: 'dashboard__kpi-icon', text: icon, attrs: { 'aria-hidden': 'true' } }),
+      el('span', {
+         className: 'dashboard__kpi-icon',
+         text: icon,
+         attrs: { 'aria-hidden': 'true' },
+      }),
       el('span', { className: 'dashboard__kpi-label', text: label }),
       el('strong', {
          className: 'dashboard__kpi-value',
@@ -103,17 +107,20 @@ function createProgress(stats) {
 }
 
 function getHint(stats) {
-   if (stats.total === 0) return 'Пока нет лабораторных — добавь работы, чтобы отслеживать прогресс.';
-   if (stats.remaining === 0) return 'Всё сдано — можно отдыхать! ✨';
+   if (stats.total === 0) return 'Пока нет лабораторных';
+   if (stats.remaining === 0) return 'Всё сдано';
 
    const hint = `Осталось доработать ${stats.remaining} ${pluralizeWork(stats.remaining)}`;
    if (stats.progress > 0) {
       return `${hint}. Сейчас в работе: ${stats.progress}.`;
    }
-   return `${hint}. Маленькими шагами к большой цели!`;
+   return `${hint}. Почти...`;
 }
 
-export function renderDashboard(subjects, container = document.getElementById('dashboard')) {
+export function renderDashboard(
+   subjects,
+   container = document.getElementById('dashboard'),
+) {
    if (!container) return;
 
    const stats = calculateStatistics(subjects);
@@ -129,9 +136,17 @@ export function renderDashboard(subjects, container = document.getElementById('d
          el(
             'div',
             { className: 'dashboard__heading' },
-            el('div', {}, 
-               el('p', { className: 'dashboard__eyebrow', text: 'ТВОЙ ПРОГРЕСС' }),
-               el('h2', { className: 'dashboard__title', text: 'Всё под контролем' }),
+            el(
+               'div',
+               {},
+               el('p', {
+                  className: 'dashboard__eyebrow',
+                  text: 'ТВОЙ ПРОГРЕСС',
+               }),
+               el('h2', {
+                  className: 'dashboard__title',
+                  text: 'Всё под контролем',
+               }),
             ),
             el('span', {
                className: 'dashboard__total-chip',
@@ -156,7 +171,9 @@ export function renderDashboard(subjects, container = document.getElementById('d
    );
 
    for (const item of STATUS_ITEMS) {
-      const valueElement = container.querySelector(`[data-kpi-value="${item.key}"]`);
+      const valueElement = container.querySelector(
+         `[data-kpi-value="${item.key}"]`,
+      );
       animateNumber(valueElement, stats[item.key], 850);
    }
 

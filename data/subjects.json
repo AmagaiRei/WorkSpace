@@ -14,7 +14,32 @@
       {
          "id": "testing",
          "title": "Поддержка и тестирование программных модулей",
-         "labs": []
+         "labs": [
+            {
+               "id": 1,
+               "title": "Вариант 18 Состав ремонтных заказов",
+               "description": "Создание сервиса RepairOrderService. Родитель — ремонтный заказ; дочерняя запись — работа или деталь в заказе",
+               "date": "2026-10-19",
+               "status": "done",
+               "tags": [],
+               "report": "",
+               "archive": "data/labs/testing/lab-01/project.zip",
+               "code": ["data/labs/testing/lab-01/code/"],
+               "screenshots": []
+            },
+            {
+               "id": 2,
+               "title": "Проверочная работа - Консольные программы с условиями",
+               "description": "Работа проверяет умение создать небольшую консольную программу, получить данные от пользователя, сохранить их в переменных, проверить условия и вывести понятный результат.",
+               "date": "2026-10-19",
+               "status": "done",
+               "tags": [],
+               "report": "data/labs/testing/lab-02/Cases.xlsx",
+               "archive": "data/labs/testing/lab-02/project.zip",
+               "code": ["data/labs/testing/lab-02/code/"],
+               "screenshots": []
+            }
+         ]
       },
       {
          "id": "os",
@@ -221,7 +246,44 @@
       {
          "id": "security",
          "title": "Основы информационной безопасности",
-         "labs": []
+         "labs": [
+            {
+               "id": 2,
+               "title": "Правовые основы информационной безопасности РФ",
+               "description": "Ответы на вопросы",
+               "date": "2026-10-18",
+               "status": "done",
+               "tags": [],
+               "report": "data/labs/security/lab-02/Lab-02.docx",
+               "archive": "",
+               "code": [],
+               "screenshots": []
+            },
+            {
+               "id": 3,
+               "title": "Кодирование и подсчет количества информации",
+               "description": "Изучить основные виды и свойства информации. Научиться определять количество представленной информации в ЭВМ",
+               "date": "2026-10-18",
+               "status": "done",
+               "tags": [],
+               "report": "data/labs/security/lab-03/Lab-03.docx",
+               "archive": "",
+               "code": [],
+               "screenshots": []
+            },
+            {
+               "id": 4,
+               "title": "Кому принадлежат ваши данные",
+               "description": "Ответы на вопросы",
+               "date": "2026-10-18",
+               "status": "done",
+               "tags": [],
+               "report": "data/labs/security/lab-04/Lab-04.docx",
+               "archive": "",
+               "code": [],
+               "screenshots": []
+            }
+         ]
       },
       {
          "id": "integration",
