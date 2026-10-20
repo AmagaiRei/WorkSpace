@@ -97,6 +97,18 @@
                "archive": "",
                "code": [],
                "screenshots": []
+            },
+            {
+               "id": 5,
+               "title": "Лабораторная работа - 05",
+               "description": "Сравнение всех типов микропроцессоров",
+               "date": "2026-10-20",
+               "status": "done",
+               "tags": [],
+               "report": "data/labs/hardware/lab-05/Pratice-05.docx",
+               "archive": "",
+               "code": [],
+               "screenshots": []
             }
          ]
       },
