@@ -24,7 +24,7 @@ function render() {
    root.innerHTML = `
       <div class="ws-admin__backdrop" data-close></div>
       <section class="ws-admin__dialog" role="dialog" aria-modal="true" aria-labelledby="ws-admin-title">
-         <header class="ws-admin__header"><div><p>WORKSPACE / ADMIN</p><h2 id="ws-admin-title">Публикация лабораторной</h2></div><button type="button" class="ws-admin__close" data-close aria-label="Закрыть">×</button></header>
+         <header class="ws-admin__header"><div><p>WORKSPACE / ADMIN</p><h2 id="ws-admin-title">Публикация лабораторной</h2></div><div class="ws-admin__header-actions"><button type="button" class="ws-admin__button ws-admin__button--quiet" data-switch>✎ Редактировать</button><button type="button" class="ws-admin__close" data-close aria-label="Закрыть">×</button></div></header>
          <div class="ws-admin__content">
             <details class="ws-admin__token" open><summary>Доступ к GitHub</summary>
                <label class="ws-admin__field"><span>GitHub token</span><input id="ws-token" type="password" autocomplete="off" placeholder="github_pat_…"></label>
@@ -58,6 +58,7 @@ function render() {
       </section>`;
    document.body.append(root);
    root.querySelectorAll('[data-close]').forEach((button) => button.addEventListener('click', closeAdminPanel));
+   root.querySelector('[data-switch]').addEventListener('click', switchToEdit);
    root.querySelector('#ws-subject').addEventListener('change', updateNextId);
    root.querySelector('#ws-save-token').addEventListener('click', saveToken);
    root.querySelector('#ws-unlock-token').addEventListener('click', unlockToken);
@@ -136,7 +137,16 @@ export async function toggleAdminPanel() {
    } catch (error) { window.alert(error.message || 'Не удалось открыть админ-панель.'); }
 }
 
-function closeAdminPanel() {
+export const isOpen = () => Boolean(root?.isConnected);
+
+async function switchToEdit() {
+   closeAdminPanel();
+   if (isOpen()) return; // !закрытие отклонено (идёт публикация)
+   const panel = await import('./admin-edit.js');
+   panel.toggleAdminPanel();
+}
+
+export function closeAdminPanel() {
    if (busy && !window.confirm('Публикация ещё выполняется. Закрыть панель?')) return;
    root?.remove();
    root = null;

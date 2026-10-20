@@ -162,3 +162,22 @@
 @media (prefers-reduced-motion: reduce) {
    .ws-admin__button, .ws-admin__close { transition: none; }
 }
+
+/* --- Окно редактирования --- */
+.ws-admin__header-actions { display: flex; align-items: center; gap: 10px; }
+.ws-admin__header-actions .ws-admin__button { min-height: 40px; white-space: nowrap; }
+.ws-admin__grid--even { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+#ws-edit-body[hidden], #ws-empty[hidden] { display: none; }
+.ws-edit__current { margin: 20px 0 0; padding: 14px 16px; border: 1px solid rgba(223, 139, 255, .24); border-radius: 15px; background: rgba(255, 255, 255, .018); }
+.ws-edit__title { margin: 0 0 8px; color: #f2d9ff; font-weight: 750; font-size: .9rem; }
+.ws-edit__row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; padding: 7px 0; border-top: 1px solid rgba(222, 177, 246, .1); color: #d8c5e8; font-size: .86rem; overflow-wrap: anywhere; }
+.ws-edit__row a { color: #ff9ee6; }
+.ws-edit__check, .ws-edit__shot span { display: inline-flex; align-items: center; gap: 6px; color: #ff9dbf; font-size: .8rem; cursor: pointer; }
+.ws-edit__check input, .ws-edit__shot input { width: 16px; height: 16px; accent-color: #ff6bc8; }
+.ws-edit__shots { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; padding-top: 10px; border-top: 1px solid rgba(222, 177, 246, .1); }
+.ws-edit__shot { display: grid; gap: 6px; padding: 6px; border: 1px solid rgba(223, 139, 255, .22); border-radius: 10px; background: rgba(9, 5, 17, .5); }
+.ws-edit__shot img { width: 100%; height: 76px; object-fit: cover; border-radius: 7px; background: rgba(255, 255, 255, .04); }
+@media (max-width: 620px) {
+   .ws-admin__header-actions .ws-admin__button { flex: 0 0 auto; padding: 8px 10px; font-size: .78rem; }
+   .ws-admin__grid--even { grid-template-columns: minmax(0, 1fr); }
+}

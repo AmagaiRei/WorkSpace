@@ -9,6 +9,8 @@ import {
    planFiles,
    buildLabEntry,
    addLabToText,
+   buildEditPlan,
+   replaceLabInText,
 } from './admin-model.js';
 
 const API = 'https://api.github.com';
@@ -217,6 +219,142 @@ export async function publishLab({ token, repo, draft, onProgress = () => {} }) 
                );
             }
             throw error;
+         }
+         onProgress(`Ветка изменилась, повторяю (${attempt + 1} из ${MAX_ATTEMPTS})…`);
+      }
+   }
+}
+
+/* ---------- Редактирование: тоже один коммит ---------- */
+
+async function attemptEdit(ctx, blobCache) {
+   const { token, repo, draft, onProgress } = ctx;
+   const branch = repo.branch ?? 'main';
+
+   onProgress('Читаю состояние репозитория…');
+   const ref = await api(token, repo, `/git/ref/heads/${branch}`);
+   const headSha = ref.object.sha;
+   const headCommit = await api(token, repo, `/git/commits/${headSha}`);
+   const baseTreeSha = headCommit.tree.sha;
+   const tree = await api(token, repo, `/git/trees/${baseTreeSha}?recursive=1`);
+   if (tree.truncated) {
+      throw new GitHubError('API', 'Репозиторий слишком большой для проверки дерева.');
+   }
+
+   const subjectsItem = tree.tree.find((item) => item.path === SUBJECTS_PATH);
+   if (!subjectsItem) throw new GitHubError('API', `В репозитории нет ${SUBJECTS_PATH}.`);
+   const blob = await api(token, repo, `/git/blobs/${subjectsItem.sha}`);
+   const originalText = decodeBase64Utf8(blob.content);
+
+   // !Исходную запись берём из репозитория, а не из страницы: она могла устареть
+   let parsed;
+   try {
+      parsed = JSON.parse(originalText.replace(/^\uFEFF/, ''));
+   } catch {
+      throw new GitHubError('API', 'subjects.json в репозитории не читается как JSON.');
+   }
+   const original = parsed.subjects
+      ?.find((s) => s.id === draft.subjectId)
+      ?.labs.find((lab) => Number(lab.id) === draft.id);
+   if (!original) {
+      throw new GitHubError(
+         'MISSING',
+         `Лабораторная ${pad2(draft.id)} не найдена в репозитории — возможно, её уже удалили.`,
+      );
+   }
+
+   const folder = labFolder(draft.subjectId, draft.id);
+   const blobs = tree.tree.filter((item) => item.type === 'blob');
+   const existing = new Set(blobs.map((item) => item.path));
+   const existingInFolder = blobs
+      .map((item) => item.path)
+      .filter((path) => path.startsWith(`${folder}/`));
+
+   const plan = buildEditPlan(draft, original, existingInFolder);
+   if (!plan.changed) throw new GitHubError('NO_CHANGES', 'Изменений нет — нечего сохранять.');
+
+   let newSubjectsText;
+   try {
+      newSubjectsText = replaceLabInText(originalText, draft.subjectId, plan.entry);
+   } catch (error) {
+      if (error.code === 'MISSING') throw new GitHubError('MISSING', error.message);
+      throw error;
+   }
+
+   const entries = [...plan.upload.entries()].filter(([path]) => !blobCache.has(path));
+   let done = 0;
+   await mapLimit(entries, UPLOAD_CONCURRENCY, async ([path, file]) => {
+      const created = await api(token, repo, '/git/blobs', {
+         method: 'POST',
+         body: { content: await fileToBase64(file), encoding: 'base64' },
+      });
+      blobCache.set(path, created.sha);
+      done += 1;
+      onProgress(`Загружаю файлы: ${done} из ${entries.length}…`);
+   });
+
+   onProgress('Обновляю subjects.json…');
+   const subjectsBlob = await api(token, repo, '/git/blobs', {
+      method: 'POST',
+      body: { content: newSubjectsText, encoding: 'utf-8' },
+   });
+
+   onProgress('Создаю коммит…');
+   // !sha: null в дереве = удалить файл; удаляем только то, что реально есть в репозитории
+   const removals = [...plan.remove]
+      .filter((path) => existing.has(path))
+      .map((path) => ({ path, mode: '100644', type: 'blob', sha: null }));
+   const newTree = await api(token, repo, '/git/trees', {
+      method: 'POST',
+      body: {
+         base_tree: baseTreeSha,
+         tree: [
+            ...[...plan.upload.keys()].map((path) => ({
+               path,
+               mode: '100644',
+               type: 'blob',
+               sha: blobCache.get(path),
+            })),
+            ...removals,
+            { path: SUBJECTS_PATH, mode: '100644', type: 'blob', sha: subjectsBlob.sha },
+         ],
+      },
+   });
+   const message = `Edit lab ${pad2(draft.id)} (${draft.subjectId}): ${plan.entry.title}`.slice(0, 72);
+   const commit = await api(token, repo, '/git/commits', {
+      method: 'POST',
+      body: { message, tree: newTree.sha, parents: [headSha] },
+   });
+   await api(token, repo, `/git/refs/heads/${branch}`, {
+      method: 'PATCH',
+      body: { sha: commit.sha, force: false },
+   });
+
+   return {
+      commitUrl: `https://github.com/${repo.owner}/${repo.name}/commit/${commit.sha}`,
+      entry: plan.entry,
+      uploaded: plan.upload.size,
+      removed: removals.length,
+   };
+}
+
+export async function publishEdit({ token, repo, draft, onProgress = () => {} }) {
+   if (!repo?.owner || !repo?.name) {
+      throw new GitHubError('API', 'В subjects.json нет блока repo (owner, name).');
+   }
+   const blobCache = new Map();
+   const ctx = { token, repo, draft, onProgress };
+
+   for (let attempt = 1; ; attempt += 1) {
+      try {
+         return await attemptEdit(ctx, blobCache);
+      } catch (error) {
+         if (error.code !== 'CONFLICT') throw error;
+         if (attempt >= MAX_ATTEMPTS) {
+            throw new GitHubError(
+               'CONFLICT',
+               'Ветка постоянно меняется (другой коммит или деплой). Повтори через минуту.',
+            );
          }
          onProgress(`Ветка изменилась, повторяю (${attempt + 1} из ${MAX_ATTEMPTS})…`);
       }
