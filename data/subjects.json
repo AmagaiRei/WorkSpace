@@ -73,6 +73,18 @@
                "archive": "",
                "code": [],
                "screenshots": []
+            },
+            {
+               "id": 3,
+               "title": "Практическая работа - 03",
+               "description": "Вариант 8. Таблицы истинности\n A = 0, B = 0, C = 0.",
+               "date": "2026-10-20",
+               "status": "done",
+               "tags": [],
+               "report": "data/labs/hardware/lab-03/Practice-03.docx",
+               "archive": "",
+               "code": [],
+               "screenshots": []
             }
          ]
       },
