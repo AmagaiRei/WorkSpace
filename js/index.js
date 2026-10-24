@@ -40,6 +40,8 @@ const ui = {
    count: document.getElementById('results-count'),
 };
 
+let renderGeneration = 0;
+
 function yieldToMain() {
    if (typeof scheduler !== 'undefined' && scheduler.yield) {
       return scheduler.yield();
@@ -239,6 +241,7 @@ function createSubject({ subject, labs, progress }, filtersActive) {
 }
 
 async function render() {
+   const generation = ++renderGeneration;
    const filtersActive = normalize(state.query) !== '' || state.tag !== null;
    const results = filterSubjects(state.subjects, state);
 
@@ -250,8 +253,11 @@ async function render() {
       }
       if (i + RENDER_BATCH < results.length) {
          await yieldToMain();
+         if (generation !== renderGeneration) return; // старый рендер — отбрасываем
       }
    }
+
+   if (generation !== renderGeneration) return;
 
    for (const old of ui.subjects.children) {
       if (old._destroy) old._destroy();

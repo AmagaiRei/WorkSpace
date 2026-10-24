@@ -122,7 +122,7 @@ function createProgress(stats) {
 
 function getHint(stats) {
    if (stats.total === 0) return 'Пока нет лабораторных';
-   if (stats.remaining === 0) return 'Всё сданo';
+   if (stats.remaining === 0) return 'Всё сдано';
 
    const hint = `Осталось доработать ${stats.remaining} ${pluralizeWork(stats.remaining)}`;
    if (stats.progress > 0) {
@@ -184,7 +184,6 @@ export function renderDashboard(
       ),
    );
 
-   cancelAnimation(document.querySelector('.dashboard__bar-fill'));
    for (const item of STATUS_ITEMS) {
       const valueElement = container.querySelector(
          `[data-kpi-value="${item.key}"]`,

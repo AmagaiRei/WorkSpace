@@ -52,27 +52,28 @@ self.addEventListener('fetch', (event) => {
 
 async function staleWhileRevalidate(request) {
    const cached = await caches.match(request);
-   try {
-      const network = await fetch(request);
-      if (network.ok) {
-         const clone = network.clone();
-         caches.open(CACHE).then((cache) => cache.put(request, clone));
-      }
-      return network;
-   } catch {
-      return (
-         cached ||
-         new Response('Offline', { status: 503, statusText: 'Offline' })
-      );
-   }
+
+   const networkPromise = fetch(request)
+      .then((response) => {
+         if (response.ok) {
+            const clone = response.clone();
+            caches.open(CACHE).then((cache) => cache.put(request, clone));
+         }
+         return response;
+      })
+      .catch(() => null);
+
+   // Сначала отдаём кэш (даже устаревший), сеть обновляет его в фоне
+   return cached || networkPromise;
 }
 
 async function networkFirst(request) {
    try {
       return await fetch(request);
    } catch {
+      const cached = await caches.match(request);
       return (
-         caches.match(request) ||
+         cached ||
          new Response('Offline', { status: 503, statusText: 'Offline' })
       );
    }

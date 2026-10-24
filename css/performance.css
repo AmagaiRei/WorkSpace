@@ -2,6 +2,7 @@
    --ws-motion-fast: 120ms;
 }
 
+/* По умолчанию отключаем дорогой размытие везде */
 .card,
 .mobile-menu__nav,
 .dashboard__glass,
@@ -11,6 +12,7 @@
    backdrop-filter: none !important;
 }
 
+/* Только composited-свойства в transition */
 .card,
 .life-card,
 .tag-pill,
@@ -25,6 +27,7 @@ a {
    transition-duration: 140ms !important;
 }
 
+/* Progress-bar: width → transform (без Layout) */
 .dashboard__bar-fill {
    width: 100% !important;
    transform-origin: left center !important;
@@ -35,6 +38,7 @@ a {
    transform-origin: left center !important;
 }
 
+/* content-visibility для карточек */
 .card,
 .life-card,
 .subject {
@@ -43,6 +47,7 @@ a {
    contain: layout style paint !important;
 }
 
+/* Отключаем декоративные анимации */
 .dashboard__glass::before,
 .dashboard__glass::after,
 .life-card::before,
@@ -97,20 +102,24 @@ a {
    }
 }
 
-/* Эффекты только для мощных устройств и хорошей сети */
+/* ============================================================
+   Красивые эффекты — только для мощных устройств + хорошая сеть
+   Оба правила имеют !important и более высокую специфичность,
+   чем глобальное none выше, поэтому применяются.
+   ============================================================ */
 .perf-high.net-rich .card {
-   backdrop-filter: blur(8px);
-   -webkit-backdrop-filter: blur(8px);
-   background: rgba(255, 255, 255, 0.08);
+   -webkit-backdrop-filter: blur(8px) !important;
+   backdrop-filter: blur(8px) !important;
+   background: rgba(255, 255, 255, 0.08) !important;
 }
 
 .perf-high.net-rich .dashboard__glass {
-   backdrop-filter: blur(16px);
-   -webkit-backdrop-filter: blur(16px);
-   box-shadow: 0 18px 50px rgba(30, 15, 46, 0.2);
+   -webkit-backdrop-filter: blur(16px) !important;
+   backdrop-filter: blur(16px) !important;
+   box-shadow: 0 18px 50px rgba(30, 15, 46, 0.2) !important;
 }
 
 .perf-high.net-rich .hero::before {
-   filter: blur(12px);
-   animation: neon-orbit 16s ease-in-out infinite alternate;
+   filter: blur(12px) !important;
+   animation: neon-orbit 16s ease-in-out infinite alternate !important;
 }
