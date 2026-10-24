@@ -4,17 +4,63 @@
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <title>Лабораторная — Руслан Мородецкий</title>
-      <link rel="preconnect" href="https://fonts.googleapis.com" />
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
       <link
-         href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;800&display=swap"
-         rel="stylesheet"
+         rel="preload"
+         href="./fonts/montserrat-v26-latin-400.woff2"
+         as="font"
+         type="font/woff2"
+         crossorigin
       />
-      <link rel="stylesheet" href="css/style.css" />
-      <link rel="stylesheet" href="css/theme-system.css" />
-      <link rel="stylesheet" href="css/markdown-modal.css" />
-      <link rel="stylesheet" href="css/file-manager.css" />
-      <script src="js/theme.js"></script>
+      <link
+         rel="stylesheet"
+         href="./fonts/montserrat.css"
+         media="print"
+         onload="this.media = 'all'"
+      />
+      <link
+         rel="stylesheet"
+         href="css/style.css"
+         media="print"
+         onload="this.media = 'all'"
+      />
+      <link
+         rel="stylesheet"
+         href="css/theme-system.css"
+         media="print"
+         onload="this.media = 'all'"
+      />
+      <link
+         rel="stylesheet"
+         href="css/markdown-modal.css"
+         media="print"
+         onload="this.media = 'all'"
+      />
+      <link
+         rel="stylesheet"
+         href="css/file-manager.css"
+         media="print"
+         onload="this.media = 'all'"
+      />
+      <script>
+         (function () {
+            const key = 'workspace-theme';
+            const dark = window.matchMedia(
+               '(prefers-color-scheme: dark)',
+            ).matches;
+            let v = null;
+            try {
+               v = localStorage.getItem(key);
+            } catch {}
+            if (v === 'dark' || v === 'light') {
+               document.documentElement.setAttribute(
+                  'data-theme',
+                  v === 'dark' ? 'dark' : '',
+               );
+            } else if (dark) {
+               document.documentElement.setAttribute('data-theme', 'dark');
+            }
+         })();
+      </script>
       <script type="module" src="js/menu.js"></script>
       <script
          defer
@@ -116,5 +162,11 @@
             <span lang="ja">雨</span> Amagai Rei <span lang="ja">雨</span>
          </p>
       </footer>
+
+      <script>
+         if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw.js').catch(() => {});
+         }
+      </script>
    </body>
 </html>

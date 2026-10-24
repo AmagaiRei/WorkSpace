@@ -1,3 +1,6 @@
+// ============================================================
+// Дашборд прогресса — отмена rAF, нет лишних замыканий
+// ============================================================
 import { el } from './common.js';
 
 const STATUS_ITEMS = [
@@ -11,13 +14,11 @@ const prefersReducedMotion = window.matchMedia(
    '(prefers-reduced-motion: reduce)',
 );
 
-function pluralizeWork(count) {
-   const remainder100 = count % 100;
-   if (remainder100 >= 11 && remainder100 <= 14) return 'работ';
-   const remainder10 = count % 10;
-   if (remainder10 === 1) return 'работу';
-   if (remainder10 >= 2 && remainder10 <= 4) return 'работы';
-   return 'работ';
+let rafId = null;
+
+function cancelAnimation() {
+   if (rafId) cancelAnimationFrame(rafId);
+   rafId = null;
 }
 
 export function calculateStatistics(subjects) {
@@ -43,6 +44,15 @@ export function calculateStatistics(subjects) {
    return stats;
 }
 
+function pluralizeWork(count) {
+   const remainder100 = count % 100;
+   if (remainder100 >= 11 && remainder100 <= 14) return 'работ';
+   const remainder10 = count % 10;
+   if (remainder10 === 1) return 'работу';
+   if (remainder10 >= 2 && remainder10 <= 4) return 'работы';
+   return 'работ';
+}
+
 function createKpiCard({ key, label, icon, className }, value) {
    return el(
       'article',
@@ -65,6 +75,7 @@ function createKpiCard({ key, label, icon, className }, value) {
 }
 
 function animateNumber(element, target, duration = 1100) {
+   cancelAnimation();
    if (prefersReducedMotion.matches || target === 0) {
       element.textContent = String(target);
       return;
@@ -75,10 +86,14 @@ function animateNumber(element, target, duration = 1100) {
       const progress = Math.min((now - startTime) / duration, 1);
       const eased = 1 - (1 - progress) ** 3;
       element.textContent = String(Math.round(target * eased));
-      if (progress < 1) requestAnimationFrame(frame);
+      if (progress < 1) {
+         rafId = requestAnimationFrame(frame);
+      } else {
+         rafId = null;
+      }
    };
 
-   requestAnimationFrame(frame);
+   rafId = requestAnimationFrame(frame);
 }
 
 function createProgress(stats) {
@@ -170,6 +185,7 @@ export function renderDashboard(
       ),
    );
 
+   cancelAnimation();
    for (const item of STATUS_ITEMS) {
       const valueElement = container.querySelector(
          `[data-kpi-value="${item.key}"]`,
@@ -178,15 +194,16 @@ export function renderDashboard(
    }
 
    if (prefersReducedMotion.matches) {
-      fill.style.width = `${stats.percent}%`;
+      fill.style.transform = `scaleX(${stats.percent / 100})`;
       return;
    }
 
-   fill.style.width = '0%';
+   fill.style.transform = 'scaleX(0)';
+   percent.textContent = '0%';
+
    requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-         fill.style.width = `${stats.percent}%`;
-         percent.textContent = `${stats.percent}%`;
+         fill.style.transform = `scaleX(${stats.percent / 100})`;
          const startedAt = performance.now();
          const duration = 1200;
 
@@ -194,11 +211,14 @@ export function renderDashboard(
             const progress = Math.min((now - startedAt) / duration, 1);
             const eased = 1 - (1 - progress) ** 3;
             percent.textContent = `${Math.round(stats.percent * eased)}%`;
-            if (progress < 1) requestAnimationFrame(animatePercent);
+            if (progress < 1) {
+               rafId = requestAnimationFrame(animatePercent);
+            } else {
+               rafId = null;
+            }
          };
 
-         percent.textContent = '0%';
-         requestAnimationFrame(animatePercent);
+         rafId = requestAnimationFrame(animatePercent);
       });
    });
 }

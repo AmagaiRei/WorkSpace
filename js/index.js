@@ -14,24 +14,30 @@ import {
 } from './github.js';
 import { bindGitHubSync } from './github-sync.js';
 import { renderDashboard } from './dashboard.js';
+import {
+   NETWORK_PROFILE,
+   maxConcurrencyByProfile,
+   isBackgroundSyncDisabled,
+} from './adaptive-loader.js';
 
-// !Состояние страницы: данные + то, что выбрал пользователь.
-// !Экран всегда рисуется заново из этого состояния (функция render).
+// ============================================================
+// Состояние страницы
+// ============================================================
 const state = { subjects: [], query: '', tag: null };
-const openIds = new Set(); // !предметы, которые пользователь раскрыл сам
+const openIds = new Set();
 
-// !Синхронизация описаний с README.md на GitHub (progressive enhancement).
-// !render() пересоздаёт весь DOM, поэтому данные README живут здесь, а не в узлах:
-// !любая новая карточка при создании берёт текст из readmes.
 const README_SYNC = {
-   overrideTitle: true, // !заголовок из README заменяет title из subjects.json
-   concurrency: 3, // !сколько README грузим одновременно (бережём лимит API)
+   overrideTitle: true,
+   concurrency: maxConcurrencyByProfile(3), // 1 при slow-2g, иначе 3
 };
-const readmes = new Map(); // !ключ лабораторной -> { title, description }, только успешные
-const readmePending = new Set(); // !ключи, чей README сейчас грузится
-const labIndex = new Map(); // !ключ лабораторной -> { subjectId, lab }
+const readmes = new Map();
+const readmePending = new Set();
+const labIndex = new Map();
 let readmeSyncRunning = false;
 
+// ============================================================
+// DOM ссылки
+// ============================================================
 const ui = {
    subjects: document.getElementById('subjects'),
    search: document.getElementById('search'),
@@ -40,6 +46,26 @@ const ui = {
    count: document.getElementById('results-count'),
 };
 
+// ============================================================
+// Утилиты
+// ============================================================
+function yieldToMain() {
+   if (typeof scheduler !== 'undefined' && scheduler.yield) {
+      return scheduler.yield();
+   }
+   if (typeof requestIdleCallback !== 'undefined') {
+      return new Promise((resolve) =>
+         requestIdleCallback(resolve, { timeout: 50 }),
+      );
+   }
+   return new Promise((resolve) => setTimeout(resolve, 0));
+}
+
+const RENDER_BATCH = 6;
+
+// ============================================================
+// Фабрика элементов
+// ============================================================
 function createTagPill({ key, label }) {
    return el('button', {
       className: 'tag-pill',
@@ -50,7 +76,7 @@ function createTagPill({ key, label }) {
 
 function createProgress({ percent }) {
    const bar = el('span', { className: 'progress__bar' });
-   bar.style.width = `${percent}%`;
+   bar.style.transform = `scaleX(${percent / 100})`;
    const track = el(
       'span',
       {
@@ -73,14 +99,11 @@ function createProgress({ percent }) {
    );
 }
 
-// !Ключ лабораторной: уникален в пределах сайта (id повторяются между предметами)
 const getLabKey = (subjectId, lab) => `${subjectId}/${lab.id}`;
 
-// !Папка лабораторной в репозитории: data/labs/<subjectId>/lab-<NN>
 const getLabPath = (subjectId, lab) =>
    `data/labs/${subjectId}/lab-${String(lab.id).padStart(2, '0')}`;
 
-// !Итоговые тексты карточки: README важнее subjects.json, если он загрузился
 function resolveLabTexts(key, lab) {
    const readme = readmes.get(key);
    const title =
@@ -89,7 +112,6 @@ function resolveLabTexts(key, lab) {
    return { title: `${lab.id}) ${title}`, description };
 }
 
-// !Карточка лабораторной: классы .card* берутся из style.css
 function createLabCard(subjectId, lab) {
    const key = getLabKey(subjectId, lab);
    const { title, description } = resolveLabTexts(key, lab);
@@ -114,7 +136,6 @@ function createLabCard(subjectId, lab) {
          },
       },
       el('span', { className: 'card__title', text: title }),
-      // !Описание создаём всегда, даже пустое: в него потом придёт текст из README
       el('span', { className: 'card__text', text: description }),
       tags,
       el(
@@ -126,14 +147,14 @@ function createLabCard(subjectId, lab) {
    );
 }
 
-// !Точечно обновляет карточку, которая сейчас на экране. Страницу не перерисовываем.
-// !Скрытые карточки (закрытый <details>) тоже в DOM, поэтому обновляются так же.
+// ============================================================
+// Фоновая синхронизация README — чанки с уступкой потоку
+// ============================================================
 function patchLabCard(key) {
    const entry = labIndex.get(key);
    const card = ui.subjects.querySelector(
       `[data-lab-key="${CSS.escape(key)}"]`,
    );
-   // !Карточки нет на экране (её скрыл фильтр): следующий render() возьмёт данные из readmes
    if (!entry || !card) return;
 
    const { title, description } = resolveLabTexts(key, entry.lab);
@@ -142,28 +163,27 @@ function patchLabCard(key) {
    card.classList.toggle('card--loading', readmePending.has(key));
 }
 
-// !Грузит README одной лабораторной. Исключения наружу не выпускает.
 async function syncLab(key) {
    const { subjectId, lab } = labIndex.get(key);
    try {
       const data = await fetchLabReadme(getLabPath(subjectId, lab));
-      // !found=false: README нет, папки нет в репозитории или API недоступен
       if (data.found) {
          readmes.set(key, { title: data.title, description: data.description });
       } else {
-         readmes.delete(key); // !README пропал: возвращаемся к subjects.json
+         readmes.delete(key);
       }
    } catch (error) {
       console.warn(`Синхронизация README не удалась (${key}):`, error);
    } finally {
       readmePending.delete(key);
-      patchLabCard(key); // !снимает индикатор загрузки в любом случае
+      patchLabCard(key);
    }
 }
 
-// !Фоновая синхронизация: N воркеров разбирают общую очередь
 async function syncReadmes() {
    if (readmeSyncRunning) return;
+   if (isBackgroundSyncDisabled()) return; // экономия трафика при slow-2g
+
    readmeSyncRunning = true;
 
    const queue = [...labIndex.keys()];
@@ -172,21 +192,29 @@ async function syncReadmes() {
       patchLabCard(key);
    }
 
-   const worker = async () => {
-      while (queue.length) await syncLab(queue.shift());
-   };
-   try {
-      await Promise.all(
-         Array.from(
-            { length: Math.min(README_SYNC.concurrency, queue.length) },
-            worker,
-         ),
+   const YIELD_EVERY = 6;
+   let processed = 0;
+
+   while (queue.length) {
+      const batch = Array.from(
+         {
+            length: Math.min(README_SYNC.concurrency, queue.length),
+         },
+         () => queue.shift(),
       );
-   } finally {
-      readmeSyncRunning = false;
+      await Promise.all(batch.map(syncLab));
+
+      processed += batch.length;
+      if (queue.length && processed % YIELD_EVERY === 0) {
+         await yieldToMain();
+      }
    }
+   readmeSyncRunning = false;
 }
 
+// ============================================================
+// Рендер предметов — фрагменты + scheduler.yield()
+// ============================================================
 function createSubject({ subject, labs, progress }, filtersActive) {
    const summaryText = progress.total
       ? `${progress.done} из ${progress.total} сдано`
@@ -216,23 +244,40 @@ function createSubject({ subject, labs, progress }, filtersActive) {
       el('div', { className: 'subject__content' }, content),
    );
 
-   // !При поиске раскрывается всё найденное, иначе — то, что раскрыл пользователь
-   details.open = filtersActive || openIds.has(subject.id);
-   details.addEventListener('toggle', () => {
+   const onToggle = () => {
       if (filtersActive) return;
       if (details.open) openIds.add(subject.id);
       else openIds.delete(subject.id);
-   });
+   };
+   details.addEventListener('toggle', onToggle);
+   details._destroy = () => details.removeEventListener('toggle', onToggle);
+
+   details.open = filtersActive || openIds.has(subject.id);
    return details;
 }
 
-function render() {
+async function render() {
    const filtersActive = normalize(state.query) !== '' || state.tag !== null;
    const results = filterSubjects(state.subjects, state);
 
-   ui.subjects.replaceChildren(
-      ...results.map((entry) => createSubject(entry, filtersActive)),
-   );
+   const fragment = document.createDocumentFragment();
+   for (let i = 0; i < results.length; i += RENDER_BATCH) {
+      const batch = results.slice(i, i + RENDER_BATCH);
+      for (const entry of batch) {
+         fragment.appendChild(createSubject(entry, filtersActive));
+      }
+      if (i + RENDER_BATCH < results.length) {
+         await yieldToMain();
+      }
+   }
+
+   // Очистка старых обработчиков перед заменой DOM
+   for (const old of ui.subjects.children) {
+      if (old._destroy) old._destroy();
+   }
+
+   ui.subjects.replaceChildren(...fragment.children);
+
    if (results.length === 0) {
       ui.subjects.append(
          el('p', {
@@ -251,17 +296,32 @@ function render() {
       : '';
 }
 
+// ============================================================
+// События — дебаунс поиска + AbortController
+// ============================================================
+let renderController = null;
+
 function bindEvents() {
-   ui.search.addEventListener('input', () => {
-      state.query = ui.search.value;
-      render();
+   ui.search.addEventListener('input', (event) => {
+      if (renderController) renderController.abort();
+      renderController = new AbortController();
+
+      state.query = event.target.value;
+
+      setTimeout(async () => {
+         if (renderController.signal.aborted) return;
+         try {
+            await render();
+         } catch (e) {
+            if (e.name !== 'AbortError') throw e;
+         }
+      }, 150);
    });
 
-   // !Один обработчик на весь контейнер (делегирование), а не по одному на каждую кнопку
    ui.tags.addEventListener('click', (event) => {
       const pill = event.target.closest('.tag-pill');
       if (!pill) return;
-      state.tag = state.tag === pill.dataset.tag ? null : pill.dataset.tag; // !повторный клик снимает тег
+      state.tag = state.tag === pill.dataset.tag ? null : pill.dataset.tag;
       render();
    });
 
@@ -293,21 +353,14 @@ function renderLifeProject(project, container) {
    );
 }
 
+// ============================================================
+// Инициализация
+// ============================================================
 async function init() {
    try {
       const data = await loadData();
       state.subjects = data.subjects;
-      renderDashboard(state.subjects);
-      for (const subject of state.subjects) {
-         for (const lab of subject.labs ?? []) {
-            labIndex.set(getLabKey(subject.id, lab), {
-               subjectId: subject.id,
-               lab,
-            });
-         }
-      }
 
-      // !Если в адресе есть #databases, этот предмет сразу раскрыт
       const hash = decodeURIComponent(location.hash.slice(1));
       if (state.subjects.some((subject) => subject.id === hash))
          openIds.add(hash);
@@ -317,7 +370,9 @@ async function init() {
       );
       bindEvents();
       bindGitHubSync();
-      render();
+
+      // Критичный рендер списка — сразу
+      await render();
       document.getElementById(hash)?.scrollIntoView();
 
       renderLifeProject(
@@ -326,10 +381,22 @@ async function init() {
       );
       renderContacts(data.profile);
 
-      // !Без await: страница уже нарисована из subjects.json, README подтянутся в фоне
-      syncReadmes();
-      // !Кнопка 🔄: github-sync.js сначала чистит кэш (до своего первого await),
-      // !затем этот обработчик заново тянет README. Порядок = порядок подписки.
+      // Некритичное — в idle (дашборд, фоновая синхронизация README)
+      if (typeof requestIdleCallback !== 'undefined') {
+         requestIdleCallback(
+            async () => {
+               renderDashboard(state.subjects);
+               await syncReadmes();
+            },
+            { timeout: 2000 },
+         );
+      } else {
+         setTimeout(async () => {
+            renderDashboard(state.subjects);
+            await syncReadmes();
+         }, 0);
+      }
+
       document
          .getElementById('github-sync')
          ?.addEventListener('click', syncReadmes);
@@ -337,5 +404,13 @@ async function init() {
       showError(ui.subjects, error);
    }
 }
+
+// Очистка памяти при уходе со страницы
+window.addEventListener('pagehide', () => {
+   readmes.clear();
+   readmePending.clear();
+   readmeSyncRunning = false;
+   if (renderController) renderController.abort();
+});
 
 init();

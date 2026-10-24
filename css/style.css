@@ -1071,7 +1071,7 @@ a.life-card:hover {
    height: 100%;
    background: linear-gradient(90deg, var(--purple-600), #d58bf0);
    border-radius: inherit;
-   transition: width 0.3s ease;
+   transition: transform 0.3s ease;
 }
 
 .progress__text {
@@ -1759,7 +1759,9 @@ summary.tree__row::-webkit-details-marker {
 }
 
 @keyframes github-sync-spin {
-   to { transform: rotate(360deg); }
+   to {
+      transform: rotate(360deg);
+   }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1821,7 +1823,9 @@ summary.tree__row::-webkit-details-marker {
    border-radius: 12px;
    padding: 1.25rem;
    border: 1px solid transparent;
-   transition: all 0.3s ease;
+   transition:
+      border-color 0.3s ease,
+      background 0.3s ease;
    display: flex;
    flex-direction: column;
    gap: 0.5rem;
@@ -1905,7 +1909,9 @@ summary.tree__row::-webkit-details-marker {
    display: flex;
    flex-direction: column;
    gap: 0.75rem;
-   transition: all 0.3s ease;
+   transition:
+      border-color 0.3s ease,
+      background 0.3s ease;
 }
 .github-lab-card:hover {
    border-color: var(--accent, #9d4edd);
@@ -1951,7 +1957,6 @@ summary.tree__row::-webkit-details-marker {
    color: var(--accent, #9d4edd);
    text-decoration: underline;
 }
-
 
 /* !========== Дашборд прогресса ========== */
 .dashboard {
@@ -2226,7 +2231,6 @@ summary.tree__row::-webkit-details-marker {
    }
 }
 
-
 /* !========== Neon glass design layer ========== */
 :root {
    color-scheme: dark;
@@ -2237,11 +2241,13 @@ summary.tree__row::-webkit-details-marker {
    --purple-400: #c62cff;
    --white: #fbf7ff;
    --white-soft: rgba(231, 211, 250, 0.76);
-   --line: rgba(226, 115, 255,  0.28);
+   --line: rgba(226, 115, 255, 0.28);
    --glass: rgba(20, 8, 35, 0.66);
    --neon-pink: #ff4fcf;
    --neon-violet: #b44cff;
-   --neon-glow: 0 0 0 1px rgba(220, 87, 255, 0.12), 0 0 24px rgba(190, 49, 255, 0.11), inset 0 0 22px rgba(176, 53, 255, 0.035);
+   --neon-glow:
+      0 0 0 1px rgba(220, 87, 255, 0.12), 0 0 24px rgba(190, 49, 255, 0.11),
+      inset 0 0 22px rgba(176, 53, 255, 0.035);
 }
 
 html {
@@ -2252,9 +2258,21 @@ html {
 body {
    color: var(--white);
    background:
-      radial-gradient(ellipse at 78% 8%, rgba(157, 35, 194, 0.22), transparent 32%),
-      radial-gradient(ellipse at 95% 78%, rgba(206, 28, 190, 0.15), transparent 30%),
-      radial-gradient(ellipse at 12% 40%, rgba(87, 29, 130, 0.16), transparent 34%),
+      radial-gradient(
+         ellipse at 78% 8%,
+         rgba(157, 35, 194, 0.22),
+         transparent 32%
+      ),
+      radial-gradient(
+         ellipse at 95% 78%,
+         rgba(206, 28, 190, 0.15),
+         transparent 30%
+      ),
+      radial-gradient(
+         ellipse at 12% 40%,
+         rgba(87, 29, 130, 0.16),
+         transparent 34%
+      ),
       linear-gradient(145deg, #08040f 0%, #12081f 52%, #0a0612 100%);
    background-attachment: fixed;
 }
@@ -2266,7 +2284,10 @@ body::before {
    z-index: -1;
    pointer-events: none;
    opacity: 0.28;
-   background-image: radial-gradient(rgba(239, 170, 255, 0.55) 0.7px, transparent 0.7px);
+   background-image: radial-gradient(
+      rgba(239, 170, 255, 0.55) 0.7px,
+      transparent 0.7px
+   );
    background-size: 46px 46px;
    mask-image: linear-gradient(to bottom, black, transparent 85%);
 }
@@ -2280,7 +2301,12 @@ body::before {
 .nav a,
 .header__actions button,
 .github-sync {
-   transition: color 180ms ease, border-color 180ms ease, background 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+   transition:
+      color 180ms ease,
+      border-color 180ms ease,
+      background 180ms ease,
+      box-shadow 180ms ease,
+      transform 180ms ease;
 }
 
 .nav a:hover,
@@ -2309,7 +2335,12 @@ body::before {
 .hero::before {
    top: 14%;
    right: -10%;
-   background: radial-gradient(circle at 35% 35%, rgba(225, 51, 255, 0.22), rgba(126, 36, 200, 0.09) 44%, transparent 72%);
+   background: radial-gradient(
+      circle at 35% 35%,
+      rgba(225, 51, 255, 0.22),
+      rgba(126, 36, 200, 0.09) 44%,
+      transparent 72%
+   );
    filter: blur(12px);
    animation: neon-orbit 16s ease-in-out infinite alternate;
 }
@@ -2335,14 +2366,22 @@ body::before {
    border: 1px solid rgba(255, 224, 255, 0.85);
    border-radius: 18px;
    background: rgba(36, 12, 54, 0.32);
-   box-shadow: 0 0 22px rgba(196, 57, 255, 0.1), inset 0 0 16px rgba(211, 94, 255, 0.04);
-   transition: background 180ms ease, color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+   box-shadow:
+      0 0 22px rgba(196, 57, 255, 0.1),
+      inset 0 0 16px rgba(211, 94, 255, 0.04);
+   transition:
+      background 180ms ease,
+      color 180ms ease,
+      box-shadow 180ms ease,
+      transform 180ms ease;
 }
 
 .btn:hover {
    color: #fff;
    background: rgba(174, 43, 221, 0.22);
-   box-shadow: 0 0 28px rgba(255, 79, 207, 0.24), inset 0 0 20px rgba(255, 79, 207, 0.08);
+   box-shadow:
+      0 0 28px rgba(255, 79, 207, 0.24),
+      inset 0 0 20px rgba(255, 79, 207, 0.08);
    transform: translateY(-2px);
 }
 
@@ -2361,7 +2400,11 @@ body::before {
 .github-labs,
 .github-sync-status,
 .markdown-modal__dialog {
-   background: linear-gradient(135deg, rgba(34, 15, 50, 0.78), rgba(13, 7, 24, 0.78));
+   background: linear-gradient(
+      135deg,
+      rgba(34, 15, 50, 0.78),
+      rgba(13, 7, 24, 0.78)
+   );
    border-color: rgba(209, 105, 255, 0.28);
    box-shadow: var(--neon-glow);
    backdrop-filter: blur(18px);
@@ -2382,7 +2425,11 @@ body::before {
 .file,
 .item {
    border-radius: 20px;
-   transition: border-color 200ms ease, background 200ms ease, box-shadow 200ms ease, transform 200ms ease;
+   transition:
+      border-color 200ms ease,
+      background 200ms ease,
+      box-shadow 200ms ease,
+      transform 200ms ease;
 }
 
 .card:hover,
@@ -2394,7 +2441,10 @@ body::before {
 .item:hover,
 .item[aria-current='true'] {
    border-color: rgba(255, 95, 216, 0.72);
-   box-shadow: 0 0 0 1px rgba(255, 95, 216, 0.12), 0 0 28px rgba(194, 43, 255, 0.17), inset 0 0 24px rgba(198, 54, 255, 0.055);
+   box-shadow:
+      0 0 0 1px rgba(255, 95, 216, 0.12),
+      0 0 28px rgba(194, 43, 255, 0.17),
+      inset 0 0 24px rgba(198, 54, 255, 0.055);
 }
 
 .card:hover,
@@ -2427,7 +2477,9 @@ input:focus,
 textarea:focus,
 select:focus {
    border-color: rgba(255, 93, 215, 0.85);
-   box-shadow: 0 0 0 3px rgba(209, 58, 255, 0.13), 0 0 22px rgba(209, 58, 255, 0.1);
+   box-shadow:
+      0 0 0 3px rgba(209, 58, 255, 0.13),
+      0 0 22px rgba(209, 58, 255, 0.1);
    outline: none;
 }
 
@@ -2435,7 +2487,11 @@ select:focus {
 .tag,
 button:not(.theme-toggle):not(.github-sync),
 .mobile-menu__nav {
-   transition: border-color 180ms ease, background 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+   transition:
+      border-color 180ms ease,
+      background 180ms ease,
+      box-shadow 180ms ease,
+      transform 180ms ease;
 }
 
 .tag-filter,
@@ -2478,19 +2534,29 @@ button:not(.theme-toggle):not(.github-sync),
 }
 
 @keyframes neon-orbit {
-   from { transform: translate3d(0, 0, 0) rotate(-4deg); }
-   to { transform: translate3d(-2%, 2%, 0) rotate(5deg); }
+   from {
+      transform: translate3d(0, 0, 0) rotate(-4deg);
+   }
+   to {
+      transform: translate3d(-2%, 2%, 0) rotate(5deg);
+   }
 }
 
 @media (max-width: 760px) {
    .header {
-      background: linear-gradient(180deg, rgba(10, 4, 18, 0.78), rgba(10, 4, 18, 0.18));
+      background: linear-gradient(
+         180deg,
+         rgba(10, 4, 18, 0.78),
+         rgba(10, 4, 18, 0.18)
+      );
    }
 
    .mobile-menu__nav {
       background: rgba(15, 6, 25, 0.96);
       border: 1px solid rgba(209, 105, 255, 0.32);
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.32), 0 0 24px rgba(190, 49, 255, 0.12);
+      box-shadow:
+         0 12px 40px rgba(0, 0, 0, 0.32),
+         0 0 24px rgba(190, 49, 255, 0.12);
       backdrop-filter: blur(18px);
       -webkit-backdrop-filter: blur(18px);
    }
@@ -2516,4 +2582,79 @@ button:not(.theme-toggle):not(.github-sync),
    .hero::before {
       animation: none;
    }
+}
+
+/* ============================================================
+   ПЕРЕОПРЕДЕЛЕНИЯ ДЛЯ ПРОИЗВОДИТЕЛЬНОСТИ (вставить в конец style.css)
+   ============================================================ */
+
+/* 1. Убираем backdrop-filter с массовых селекторов */
+.card,
+.mobile-menu__nav,
+.dashboard__glass,
+.github-sync,
+.theme-toggle {
+   -webkit-backdrop-filter: none !important;
+   backdrop-filter: none !important;
+   background: rgba(255, 255, 255, 0.06) !important;
+}
+
+/* 2. Progress-bar: width → transform (без Layout) */
+.progress__bar {
+   transition: transform 0.3s ease !important;
+   transform-origin: left center !important;
+}
+
+/* 3. Дашборд-бар: width → scaleX */
+.dashboard__bar-fill {
+   transition: transform 1200ms cubic-bezier(0.22, 1, 0.36, 1) !important;
+   transform-origin: left center !important;
+}
+
+/* 4. github-lab-card: all → конкретные свойства */
+.github-lab-card {
+   transition:
+      transform 0.3s ease,
+      border-color 0.3s ease,
+      box-shadow 0.3s ease !important;
+}
+
+/* 5. dashboard__kpi: убрать box-shadow из transition */
+.dashboard__kpi {
+   transition:
+      transform 220ms ease,
+      border-color 220ms ease,
+      background 220ms ease !important;
+}
+
+/* 6. CLS: зарезервировать место под список предметов */
+.subjects {
+   min-height: 320px !important;
+}
+
+/* 7. content-visibility для карточек */
+.card,
+.life-card,
+.subject {
+   content-visibility: auto !important;
+   contain-intrinsic-size: auto 150px !important;
+   contain: layout style paint !important;
+}
+
+/* 8. Экономия сети: системные шрифты вместо веб-шрифтов */
+.net-economy {
+   font-family:
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      'Segoe UI',
+      Roboto,
+      sans-serif !important;
+}
+.net-economy h1,
+.net-economy h2,
+.net-economy .card__title,
+.net-economy .hero__title,
+.net-economy .section__title {
+   font-family: inherit !important;
 }

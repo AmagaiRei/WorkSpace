@@ -1,5 +1,6 @@
-// !Общие функции для index.html и lab.html
-
+// ============================================================
+// Общие функции для index.html и lab.html
+// ============================================================
 const DATA_URL = 'data/subjects.json';
 
 const STATUS_LABELS = {
@@ -10,7 +11,7 @@ const STATUS_LABELS = {
 };
 
 export async function loadData() {
-   const response = await fetch(DATA_URL, { cache: 'no-cache' });
+   const response = await fetch(DATA_URL, { cache: 'force-cache' });
    if (!response.ok) {
       throw new Error(
          `Не удалось загрузить ${DATA_URL} (HTTP ${response.status})`,
@@ -19,7 +20,6 @@ export async function loadData() {
    return response.json();
 }
 
-// !Создаёт элемент. Текст всегда идёт через textContent — это защита от XSS.
 export function el(tag, { className, text, attrs } = {}, ...children) {
    const node = document.createElement(tag);
    if (className) node.className = className;

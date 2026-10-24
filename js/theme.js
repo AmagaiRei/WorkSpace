@@ -1,4 +1,7 @@
-// !Управление темой. Подключать в <head> БЕЗ defer — тогда тема применяется до отрисовки страницы (нет «вспышки»).
+// ============================================================
+// Управление темой (критичная часть теперь inline в index.html)
+// Здесь остаются только слушатели и View Transitions API
+// ============================================================
 const THEME_KEY = 'workspace-theme';
 const darkQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
@@ -7,16 +10,14 @@ function readSavedTheme() {
       const value = localStorage.getItem(THEME_KEY);
       return value === 'dark' || value === 'light' ? value : null;
    } catch {
-      return null; // !localStorage может быть недоступен (приватный режим, блокировка)
+      return null;
    }
 }
 
 function saveTheme(theme) {
    try {
       localStorage.setItem(THEME_KEY, theme);
-   } catch {
-      // !не критично: тема просто не запомнится
-   }
+   } catch {}
 }
 
 function applyTheme(theme) {
@@ -47,9 +48,6 @@ function updateToggle(theme) {
    }
 }
 
-// !Плавная смена темы: браузер делает снимок старой страницы и растворяет его в новую (View Transitions API).
-// !Градиенты фона нельзя анимировать обычным CSS transition, а так плавно меняется всё сразу.
-// !Если API нет или включено «уменьшить анимацию» — тема меняется мгновенно.
 function switchTheme(theme) {
    const reduceMotion = window.matchMedia(
       '(prefers-reduced-motion: reduce)',
@@ -61,10 +59,6 @@ function switchTheme(theme) {
    document.startViewTransition(() => applyTheme(theme));
 }
 
-// !1. Применяем тему сразу. В localStorage НЕ пишем: выбор сохраняется только по клику пользователя.
-applyTheme(readSavedTheme() ?? (darkQuery.matches ? 'dark' : 'light'));
-
-// !2. Кнопку и иконку можно найти только после разбора DOM.
 document.addEventListener('DOMContentLoaded', () => {
    updateToggle(currentTheme());
    document.getElementById('theme-toggle')?.addEventListener('click', () => {
@@ -74,7 +68,6 @@ document.addEventListener('DOMContentLoaded', () => {
    });
 });
 
-// !3. Пока пользователь не выбирал тему сам — следуем за настройкой ОС.
 darkQuery.addEventListener('change', (event) => {
    if (readSavedTheme() === null) switchTheme(event.matches ? 'dark' : 'light');
 });

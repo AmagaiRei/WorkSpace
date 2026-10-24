@@ -1,12 +1,9 @@
-// !Чистая логика - её легко тестировать и переиспользовать. как по мне
-
 export function normalize(value) {
    return String(value ?? '')
       .trim()
       .toLocaleLowerCase('ru');
 }
 
-// ! Уникальные теги по всем лабораторным: [{ key, label }], key — нормализованный.
 export function collectTags(subjects) {
    const unique = new Map();
    for (const subject of subjects) {
@@ -22,7 +19,6 @@ export function collectTags(subjects) {
       .sort((a, b) => a.label.localeCompare(b.label, 'ru'));
 }
 
-//!Прогресс предмета в процентах.
 export function calcProgress(labs = []) {
    const total = labs.length;
    if (total === 0) return { done: 0, total: 0, percent: 0 };
@@ -30,11 +26,6 @@ export function calcProgress(labs = []) {
    return { done, total, percent: Math.round((done / total) * 100) };
 }
 
-/**
- * !Фильтрует предметы по тексту и тегу.
- * !Прогресс считается по ВСЕМ лабораторным предмета — он не зависит от фильтра
- * @returns {{ subject: object, labs: object[], progress: object }[]}
- */
 export function filterSubjects(subjects, { query = '', tag = null } = {}) {
    const q = normalize(query);
 
@@ -64,7 +55,6 @@ export function filterSubjects(subjects, { query = '', tag = null } = {}) {
       })
       .filter(({ labs, titleMatches }) => {
          if (labs.length > 0) return true;
-         // !Предмет без подходящих лабораторных виден, только если нет тега и он сам подошёл под запрос.
          return !tag && (q === '' || titleMatches);
       })
       .map(({ subject, labs, progress }) => ({ subject, labs, progress }));

@@ -1,9 +1,11 @@
-/* !Оптимизация отрисовки: сохраняет тему, но уменьшает дорогие эффекты. */
+/* ============================================================
+   Оптимизация отрисовки — подключается после основного CSS
+   ============================================================ */
 :root {
    --ws-motion-fast: 120ms;
 }
 
-/* !Blur и несколько больших теней заставляют мобильные GPU перерисовывать большие области. */
+/* Убираем дорогой backdrop-filter с массовых селекторов */
 .header,
 .dashboard__glass,
 .life-card,
@@ -11,15 +13,12 @@
 .subject,
 .tag-pill,
 .theme-toggle,
-.github-sync,
-.ws-admin__backdrop,
-.ws-admin__dialog,
-.admin-panel-trigger {
+.github-sync {
    -webkit-backdrop-filter: none !important;
    backdrop-filter: none !important;
 }
 
-/* !Не анимируем свойства, которые вызывают полную перерисовку; оставляем только лёгкие переходы. */
+/* Только composited-свойства в transición */
 .card,
 .life-card,
 .tag-pill,
@@ -29,11 +28,12 @@
 .mobile-menu__nav,
 button,
 a {
-   transition-property: color, background-color, border-color, opacity, transform !important;
+   transition-property:
+      color, background-color, border-color, opacity, transform !important;
    transition-duration: 140ms !important;
 }
 
-/* !Отключаем постоянные декоративные свечения: они не несут функциональной нагрузки. */
+/* Отключаем постоянные декоративные анимации */
 .dashboard__glass::before,
 .dashboard__glass::after,
 .life-card::before,
@@ -44,23 +44,16 @@ a {
    animation: none !important;
 }
 
-/* !Браузер может отложить раскладку карточек ниже видимой области до прокрутки. */
-.card {
+/* content-visibility для карточек ниже области просмотра */
+.card,
+.life-card,
+.subject {
    content-visibility: auto;
    contain-intrinsic-size: auto 150px;
+   contain: layout style paint;
 }
 
-/* !На компьютерах тоже уменьшаем работу композитора при наведении. */
-@media (hover: hover) and (pointer: fine) {
-   .card:hover,
-   .life-card:hover,
-   .tag-pill:hover,
-   button:hover {
-      filter: none !important;
-   }
-}
-
-/* !На телефонах отключаем особенно дорогие свечения и сокращаем эффекты движения. */
+/* На мобилках убираем дорогое */
 @media (max-width: 760px), (hover: none) {
    *,
    *::before,
@@ -95,7 +88,6 @@ a {
    }
 }
 
-/* !Пользовательские настройки уменьшения движения имеют приоритет над декоративными анимациями. */
 @media (prefers-reduced-motion: reduce) {
    *,
    *::before,
