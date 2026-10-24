@@ -1,15 +1,178 @@
 <!doctype html>
 <html lang="ru">
-<head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Центр синхронизации WorkSpace с GitHub"><title>Центр синхронизации — WorkSpace</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css"><link rel="stylesheet" href="css/sync-center.css"><script src="js/theme.js"></script><script type="module" src="js/menu.js"></script><script type="module" src="js/sync-center.js"></script>
-</head><body>
-<header class="header"><a class="logo" href="index.html"><span lang="ja">雨</span> Amagai Rei <span lang="ja">雨</span></a><nav class="nav" aria-label="Основная навигация"><a href="index.html">Главная</a><a href="index.html#tasks">Предметы</a><a href="sync.html" aria-current="page">Синхронизация</a></nav><div class="header__actions"><button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false" aria-label="Переключить тему"><span class="theme-toggle__icon" aria-hidden="true">🌙</span></button></div></header>
-<main class="sync-page"><section class="sync-hero"><span class="sync-eyebrow">✦ WORKSPACE / GITHUB API</span><h1>Центр синхронизации</h1><p>Подключись к репозиторию, выбери файлы и отправь все изменения одним коммитом. Можно добавлять новые файлы и обновлять существующие.</p></section>
-<div class="sync-layout"><section class="sync-panel"><h2>01 / Подключение</h2><p class="sync-muted">Токен хранится только в памяти вкладки: не сохраняется в браузере и не попадает в исходники.</p><div class="sync-field"><label for="token">GitHub fine-grained token</label><input class="sync-input" id="token" type="password" autocomplete="off" spellcheck="false" placeholder="github_pat_…"><span class="sync-muted">Для репозитория AmagaiRei/WorkSpace нужны права Contents: Read and write.</span></div><div class="sync-actions"><button class="sync-btn" id="connect" type="button">Проверить подключение</button><button class="sync-btn sync-btn--secondary" id="disconnect" type="button" disabled>Очистить токен</button></div><div class="sync-status" id="connection-status" role="status" aria-live="polite">Не подключено. Введи токен и проверь доступ.</div><div class="sync-stat-grid"><div class="sync-stat"><strong id="stat-files">—</strong><span>Файлов в репозитории</span></div><div class="sync-stat"><strong id="stat-selected">0</strong><span>Выбрано файлов</span></div><div class="sync-stat"><strong id="stat-errors">0</strong><span>Ошибок</span></div></div><p class="sync-warning">⚠️ Не вставляй токен в исходники или чаты. Пока токен активен, вредоносный скрипт на странице потенциально может его прочитать. Используй только доверенную версию сайта.</p></section>
-<section class="sync-panel"><h2>02 / Файлы и коммит</h2><p class="sync-muted">Добавь файлы и проверь путь в репозитории. Пример: <code>data/labs/databases/lab-01/README.md</code>.</p><label class="sync-drop" id="drop-zone" for="file-picker"><strong>＋ Добавить файлы</strong><span class="sync-muted">Нажми или перетащи файлы сюда</span></label><input id="file-picker" class="sync-hidden" type="file" multiple><div id="file-list" class="sync-file-list" aria-live="polite"><p class="sync-muted">Пока нет выбранных файлов.</p></div><div class="sync-field"><label for="commit-message">Сообщение коммита</label><input class="sync-input" id="commit-message" maxlength="200" value="Update files via WorkSpace sync center"></div><div class="sync-actions"><button class="sync-btn" id="push" type="button" disabled>Создать один коммит</button><button class="sync-btn sync-btn--secondary" id="clear-files" type="button">Очистить список</button></div><div class="sync-status" id="push-status" role="status" aria-live="polite">После подключения добавь файлы и создай коммит.</div></section></div>
-<section class="sync-panel sync-log-panel"><h2>Журнал операций</h2><p class="sync-muted">Показывает результат и причину ошибок в текущей вкладке. Журнал не сохраняется после перезагрузки.</p><div id="sync-log" class="sync-log"><div class="sync-log-item">Операции ещё не выполнялись.</div></div></section></main><footer class="footer"><p>WorkSpace · Центр синхронизации</p></footer>
-</body></html>
+   <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <meta
+         name="description"
+         content="Центр синхронизации WorkSpace с GitHub"
+      />
+      <title>Центр синхронизации — WorkSpace</title>
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+      <link
+         href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;800&display=swap"
+         rel="stylesheet"
+      />
+      <link rel="stylesheet" href="css/style.css" />
+      <link rel="stylesheet" href="css/sync-center.css" />
+      <script src="js/theme.js"></script>
+      <script type="module" src="js/menu.js"></script>
+      <script type="module" src="js/sync-center.js"></script>
+   </head>
+   <body>
+      <header class="header">
+         <a class="logo" href="index.html"
+            ><span lang="ja">雨</span> Amagai Rei <span lang="ja">雨</span></a
+         >
+         <nav class="nav" aria-label="Основная навигация">
+            <a href="index.html">Главная</a
+            ><a href="index.html#tasks">Предметы</a
+            ><a href="sync.html" aria-current="page">Синхронизация</a>
+         </nav>
+         <div class="header__actions">
+            <button
+               class="theme-toggle"
+               id="theme-toggle"
+               type="button"
+               aria-pressed="false"
+               aria-label="Переключить тему"
+            >
+               <span class="theme-toggle__icon" aria-hidden="true">🌙</span>
+            </button>
+         </div>
+      </header>
+      <main class="sync-page">
+         <section class="sync-hero">
+            <span class="sync-eyebrow">✦ WORKSPACE / GITHUB API</span>
+            <h1>Центр синхронизации</h1>
+            <p>
+               Подключись к репозиторию, выбери файлы и отправь все изменения
+               одним коммитом. Можно добавлять новые файлы и обновлять
+               существующие.
+            </p>
+         </section>
+         <div class="sync-layout">
+            <section class="sync-panel">
+               <h2>01 / Подключение</h2>
+               <p class="sync-muted">
+                  Токен хранится только в памяти вкладки: не сохраняется в
+                  браузере и не попадает в исходники.
+               </p>
+               <div class="sync-field">
+                  <label for="token">GitHub fine-grained token</label
+                  ><input
+                     class="sync-input"
+                     id="token"
+                     type="password"
+                     autocomplete="off"
+                     spellcheck="false"
+                     placeholder="github_pat_…"
+                  /><span class="sync-muted"
+                     >Для репозитория AmagaiRei/WorkSpace нужны права Contents:
+                     Read and write.</span
+                  >
+               </div>
+               <div class="sync-actions">
+                  <button class="sync-btn" id="connect" type="button">
+                     Проверить подключение</button
+                  ><button
+                     class="sync-btn sync-btn--secondary"
+                     id="disconnect"
+                     type="button"
+                     disabled
+                  >
+                     Очистить токен
+                  </button>
+               </div>
+               <div
+                  class="sync-status"
+                  id="connection-status"
+                  role="status"
+                  aria-live="polite"
+               >
+                  Не подключено. Введи токен и проверь доступ.
+               </div>
+               <div class="sync-stat-grid">
+                  <div class="sync-stat">
+                     <strong id="stat-files">—</strong
+                     ><span>Файлов в репозитории</span>
+                  </div>
+                  <div class="sync-stat">
+                     <strong id="stat-selected">0</strong
+                     ><span>Выбрано файлов</span>
+                  </div>
+                  <div class="sync-stat">
+                     <strong id="stat-errors">0</strong><span>Ошибок</span>
+                  </div>
+               </div>
+               <p class="sync-warning">
+                  ⚠️ Не вставляй токен в исходники или чаты. Пока токен активен,
+                  вредоносный скрипт на странице потенциально может его
+                  прочитать. Используй только доверенную версию сайта.
+               </p>
+            </section>
+            <section class="sync-panel">
+               <h2>02 / Файлы и коммит</h2>
+               <p class="sync-muted">
+                  Добавь файлы и проверь путь в репозитории. Пример:
+                  <code>data/labs/databases/lab-01/README.md</code>.
+               </p>
+               <label class="sync-drop" id="drop-zone" for="file-picker"
+                  ><strong>＋ Добавить файлы</strong
+                  ><span class="sync-muted"
+                     >Нажми или перетащи файлы сюда</span
+                  ></label
+               ><input
+                  id="file-picker"
+                  class="sync-hidden"
+                  type="file"
+                  multiple
+               />
+               <div id="file-list" class="sync-file-list" aria-live="polite">
+                  <p class="sync-muted">Пока нет выбранных файлов.</p>
+               </div>
+               <div class="sync-field">
+                  <label for="commit-message">Сообщение коммита</label
+                  ><input
+                     class="sync-input"
+                     id="commit-message"
+                     maxlength="200"
+                     value="Update files via WorkSpace sync center"
+                  />
+               </div>
+               <div class="sync-actions">
+                  <button class="sync-btn" id="push" type="button" disabled>
+                     Создать один коммит</button
+                  ><button
+                     class="sync-btn sync-btn--secondary"
+                     id="clear-files"
+                     type="button"
+                  >
+                     Очистить список
+                  </button>
+               </div>
+               <div
+                  class="sync-status"
+                  id="push-status"
+                  role="status"
+                  aria-live="polite"
+               >
+                  После подключения добавь файлы и создай коммит.
+               </div>
+            </section>
+         </div>
+         <section class="sync-panel sync-log-panel">
+            <h2>Журнал операций</h2>
+            <p class="sync-muted">
+               Показывает результат и причину ошибок в текущей вкладке. Журнал
+               не сохраняется после перезагрузки.
+            </p>
+            <div id="sync-log" class="sync-log">
+               <div class="sync-log-item">Операции ещё не выполнялись.</div>
+            </div>
+         </section>
+      </main>
+      <footer class="footer"><p>WorkSpace · Центр синхронизации</p></footer>
+   </body>
+</html>
