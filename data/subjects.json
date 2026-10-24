@@ -49,7 +49,68 @@
       {
          "id": "hardware",
          "title": "Архитектура аппаратных средств",
-         "labs": []
+         "labs": [
+            {
+               "id": 1,
+               "title": "Практическая работа - 01",
+               "description": "Описание материнской платы по характеристикам",
+               "date": "2026-10-20",
+               "status": "done",
+               "tags": [],
+               "report": "data/labs/hardware/lab-01/Practice-01.docx",
+               "archive": "",
+               "code": [],
+               "screenshots": []
+            },
+            {
+               "id": 2,
+               "title": "Практическая работа - 02",
+               "description": "Таблицы истинности",
+               "date": "2026-10-20",
+               "status": "done",
+               "tags": [],
+               "report": "data/labs/hardware/lab-02/Practice-02.docx",
+               "archive": "",
+               "code": [],
+               "screenshots": []
+            },
+            {
+               "id": 3,
+               "title": "Практическая работа - 03",
+               "description": "Вариант 8. Таблицы истинности\n A = 0, B = 0, C = 0.",
+               "date": "2026-10-20",
+               "status": "done",
+               "tags": [],
+               "report": "data/labs/hardware/lab-03/Practice-03.docx",
+               "archive": "",
+               "code": [],
+               "screenshots": []
+            },
+            {
+               "id": 4,
+               "title": "Практическая работа - 04",
+               "description": "Описание процессора. Выполнить полное описание процессора в соответствии с вариантом (вариант задания соответствует номеру по списку):",
+               "date": "2026-10-20",
+               "status": "done",
+               "tags": [],
+               "report": "data/labs/hardware/lab-04/Practice-04.docx",
+               "archive": "",
+               "code": [],
+               "screenshots": []
+            },
+            {
+               "id": 5,
+               "title": "Практическая работа - 05",
+               "description": "Сравнение всех типов микропроцессоров",
+               "date": "2026-10-20",
+               "status": "done",
+               "tags": [],
+               "report": "data/labs/hardware/lab-05/Pratice-05.docx",
+               "archive": "",
+               "code": [],
+               "screenshots": []
+            }
+         ]
       },
       {
          "id": "graphics",
@@ -74,7 +135,7 @@
                   "Справочники",
                   "Проектирование БД"
                ],
-               "report": "data/labs/databases/lab-01/Lab01.docx",
+               "report": "data/labs/databases/lab-01/CDev26_Pr_01_grIP2-26_Morodetskii_Ruslan.docx",
                "archive": "data/labs/databases/lab-01/project.zip",
                "code": [],
                "screenshots": []
@@ -100,7 +161,7 @@
                   "JOIN",
                   "INNER JOIN"
                ],
-               "report": "data/labs/databases/lab-02/Lab02.docx",
+               "report": "data/labs/databases/lab-02/CDev26_Pr_02_grIP2-26_Morodetskii_Ruslan.docx",
                "archive": "data/labs/databases/lab-02/project.zip",
                "code": [
                   "data/labs/databases/lab-02/code/business_clothing.sql"
@@ -133,7 +194,7 @@
                   "CREATE TABLE",
                   "INSERT"
                ],
-               "report": "data/labs/databases/lab-03/Lab03.docx",
+               "report": "data/labs/databases/lab-03/CDev26_Pr_03_grIP2-26_Morodetskii_Ruslan.docx",
                "archive": "data/labs/databases/lab-03/project.zip",
                "code": [
                   "data/labs/databases/lab-03/code/business_clothing2.sql"
