@@ -2658,3 +2658,63 @@ button:not(.theme-toggle):not(.github-sync),
 .net-economy .section__title {
    font-family: inherit !important;
 }
+/* ============================================================
+   Переопределения производительности (добавить в конец style.css)
+   ============================================================ */
+.card,
+.mobile-menu__nav,
+.dashboard__glass,
+.github-sync,
+.theme-toggle {
+   -webkit-backdrop-filter: none !important;
+   backdrop-filter: none !important;
+}
+
+.dashboard__bar-fill {
+   width: 100% !important;
+   transition: transform 1200ms cubic-bezier(0.22, 1, 0.36, 1) !important;
+   transform-origin: left center !important;
+}
+
+.github-lab-card {
+   transition:
+      transform 0.3s ease,
+      border-color 0.3s ease,
+      box-shadow 0.3s ease !important;
+}
+
+.dashboard__kpi {
+   transition:
+      transform 220ms ease,
+      border-color 220ms ease,
+      background 220ms ease !important;
+}
+
+.subjects {
+   min-height: 320px !important;
+}
+
+.card,
+.life-card,
+.subject {
+   content-visibility: auto !important;
+   contain-intrinsic-size: auto 150px !important;
+   contain: layout style paint !important;
+}
+
+.net-economy {
+   font-family:
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      'Segoe UI',
+      Roboto,
+      sans-serif !important;
+}
+.net-economy h1,
+.net-economy h2,
+.net-economy .card__title,
+.net-economy .hero__title,
+.net-economy .section__title {
+   font-family: inherit !important;
+}

@@ -1,32 +1,23 @@
 /* ============================================================
-   Montserrat — сам-хостинг, только критичные начертания,
-   font-display для подавления CLS, размеры выровнены под fallback
+   Montserrat — сам-хостинг, Cyrillic + Latin
    ============================================================ */
 @font-face {
    font-family: 'Montserrat';
-   src: url('./montserrat-v26-latin-400.woff2') format('woff2');
+   src: url('./montserrat-v31-cyrillic_latin-regular.woff2') format('woff2');
    font-weight: 400;
    font-style: normal;
    font-display: swap;
-   ascent-override: 90%;
-   descent-override: 20%;
-   line-gap-override: 0%;
-   size-adjust: 105%;
 }
 
 @font-face {
    font-family: 'Montserrat';
-   src: url('./montserrat-v26-latin-700.woff2') format('woff2');
+   src: url('./montserrat-v31-cyrillic_latin-700.woff2') format('woff2');
    font-weight: 700;
    font-style: normal;
    font-display: optional;
-   ascent-override: 90%;
-   descent-override: 20%;
-   line-gap-override: 0%;
-   size-adjust: 105%;
 }
 
-/* При экстремально слабой сети — системный шрифт, веб-шрифт не грузим */
+/* На экстремально слабой сети — системный шрифт, веб-шрифт не грузим */
 .net-economy {
    font-family:
       system-ui,

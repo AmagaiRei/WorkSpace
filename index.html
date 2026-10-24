@@ -9,7 +9,7 @@
       />
       <title>Мои задания — Руслан Мородецкий</title>
 
-      <!-- Критичные стили inline — браузер не блокирует парсинг HTML -->
+      <!-- Критичные стили inline (без переменных из внешнего CSS) -->
       <style>
          html {
             box-sizing: border-box;
@@ -17,6 +17,8 @@
          body {
             margin: 0;
             font-family: system-ui, sans-serif;
+            color: #e8e2f0;
+            background: #140c20;
          }
          .header {
             display: flex;
@@ -37,13 +39,13 @@
             display: flex;
             flex-direction: column;
             padding: 1rem;
-            border: 1px solid var(--line);
+            border: 1px solid #33244f;
             border-radius: 12px;
-            background: var(--glass);
+            background: #1e132b;
          }
          .empty {
             text-align: center;
-            color: var(--white-soft);
+            color: #9a8ab0;
          }
          [data-theme='dark'] {
             --bg: #140c20;
@@ -54,14 +56,7 @@
          }
       </style>
 
-      <!-- Шрифты: сам-хостинг, предзагрузка только Regular 400 -->
-      <link
-         rel="preload"
-         href="./fonts/montserrat-v26-latin-400.woff2"
-         as="font"
-         type="font/woff2"
-         crossorigin
-      />
+      <!-- Шрифты: сам-хостинг. Положите .woff2 файлы в /fonts/ вручную, иначе загрузки не будет -->
       <link
          rel="stylesheet"
          href="./fonts/montserrat.css"
@@ -69,7 +64,7 @@
          onload="this.media = 'all'"
       />
 
-      <!-- Остальной CSS не блокирует первичный рендеринг -->
+      <!-- Остальной CSS не блокирует рендеринг -->
       <link
          rel="stylesheet"
          href="css/style.css"
@@ -107,7 +102,7 @@
          onload="this.media = 'all'"
       />
 
-      <!-- Тема: критичная часть inline (без блокировки парсера) -->
+      <!-- Тема: критичная часть inline -->
       <script>
          (function () {
             const key = 'workspace-theme';
@@ -129,11 +124,10 @@
          })();
       </script>
 
-      <script type="module" src="js/menu.js"></script>
       <script type="module" src="js/adaptive-loader.js"></script>
+      <script type="module" src="js/theme.js"></script>
+      <script type="module" src="js/menu.js"></script>
       <script type="module" src="js/index.js"></script>
-
-      <!-- Админ-панель — ленивая, по горячей клавише -->
       <script type="module" src="js/admin/admin-loader.js"></script>
 
       <script
@@ -374,10 +368,11 @@
          </p>
       </footer>
 
-      <!-- Service Worker — регистрация не блокирует загрузку -->
       <script>
          if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('./sw.js').catch(() => {});
+            navigator.serviceWorker
+               .register('./sw.js')
+               .catch((err) => console.warn('SW registration failed:', err));
          }
       </script>
    </body>

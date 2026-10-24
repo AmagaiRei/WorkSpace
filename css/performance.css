@@ -1,24 +1,16 @@
-/* ============================================================
-   Оптимизация отрисовки — подключается после основного CSS
-   ============================================================ */
 :root {
    --ws-motion-fast: 120ms;
 }
 
-/* Убираем дорогой backdrop-filter с массовых селекторов */
-.header,
-.dashboard__glass,
-.life-card,
 .card,
-.subject,
-.tag-pill,
-.theme-toggle,
-.github-sync {
+.mobile-menu__nav,
+.dashboard__glass,
+.github-sync,
+.theme-toggle {
    -webkit-backdrop-filter: none !important;
    backdrop-filter: none !important;
 }
 
-/* Только composited-свойства в transición */
 .card,
 .life-card,
 .tag-pill,
@@ -33,7 +25,24 @@ a {
    transition-duration: 140ms !important;
 }
 
-/* Отключаем постоянные декоративные анимации */
+.dashboard__bar-fill {
+   width: 100% !important;
+   transform-origin: left center !important;
+   transition: transform 0.3s ease !important;
+}
+
+.progress__bar {
+   transform-origin: left center !important;
+}
+
+.card,
+.life-card,
+.subject {
+   content-visibility: auto !important;
+   contain-intrinsic-size: auto 150px !important;
+   contain: layout style paint !important;
+}
+
 .dashboard__glass::before,
 .dashboard__glass::after,
 .life-card::before,
@@ -44,16 +53,6 @@ a {
    animation: none !important;
 }
 
-/* content-visibility для карточек ниже области просмотра */
-.card,
-.life-card,
-.subject {
-   content-visibility: auto;
-   contain-intrinsic-size: auto 150px;
-   contain: layout style paint;
-}
-
-/* На мобилках убираем дорогое */
 @media (max-width: 760px), (hover: none) {
    *,
    *::before,
@@ -96,4 +95,22 @@ a {
       transition: none !important;
       scroll-behavior: auto !important;
    }
+}
+
+/* Эффекты только для мощных устройств и хорошей сети */
+.perf-high.net-rich .card {
+   backdrop-filter: blur(8px);
+   -webkit-backdrop-filter: blur(8px);
+   background: rgba(255, 255, 255, 0.08);
+}
+
+.perf-high.net-rich .dashboard__glass {
+   backdrop-filter: blur(16px);
+   -webkit-backdrop-filter: blur(16px);
+   box-shadow: 0 18px 50px rgba(30, 15, 46, 0.2);
+}
+
+.perf-high.net-rich .hero::before {
+   filter: blur(12px);
+   animation: neon-orbit 16s ease-in-out infinite alternate;
 }

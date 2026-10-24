@@ -1,6 +1,3 @@
-// ============================================================
-// Дашборд прогресса — отмена rAF, нет лишних замыканий
-// ============================================================
 import { el } from './common.js';
 
 const STATUS_ITEMS = [
@@ -13,12 +10,12 @@ const STATUS_ITEMS = [
 const prefersReducedMotion = window.matchMedia(
    '(prefers-reduced-motion: reduce)',
 );
+const rafMap = new WeakMap();
 
-let rafId = null;
-
-function cancelAnimation() {
-   if (rafId) cancelAnimationFrame(rafId);
-   rafId = null;
+function cancelAnimation(element) {
+   const id = rafMap.get(element);
+   if (id) cancelAnimationFrame(id);
+   rafMap.delete(element);
 }
 
 export function calculateStatistics(subjects) {
@@ -75,7 +72,7 @@ function createKpiCard({ key, label, icon, className }, value) {
 }
 
 function animateNumber(element, target, duration = 1100) {
-   cancelAnimation();
+   cancelAnimation(element);
    if (prefersReducedMotion.matches || target === 0) {
       element.textContent = String(target);
       return;
@@ -87,13 +84,15 @@ function animateNumber(element, target, duration = 1100) {
       const eased = 1 - (1 - progress) ** 3;
       element.textContent = String(Math.round(target * eased));
       if (progress < 1) {
-         rafId = requestAnimationFrame(frame);
+         const id = requestAnimationFrame(frame);
+         rafMap.set(element, id);
       } else {
-         rafId = null;
+         rafMap.delete(element);
       }
    };
 
-   rafId = requestAnimationFrame(frame);
+   const id = requestAnimationFrame(frame);
+   rafMap.set(element, id);
 }
 
 function createProgress(stats) {
@@ -123,7 +122,7 @@ function createProgress(stats) {
 
 function getHint(stats) {
    if (stats.total === 0) return 'Пока нет лабораторных';
-   if (stats.remaining === 0) return 'Всё сдано';
+   if (stats.remaining === 0) return 'Всё сданo';
 
    const hint = `Осталось доработать ${stats.remaining} ${pluralizeWork(stats.remaining)}`;
    if (stats.progress > 0) {
@@ -185,7 +184,7 @@ export function renderDashboard(
       ),
    );
 
-   cancelAnimation();
+   cancelAnimation(document.querySelector('.dashboard__bar-fill'));
    for (const item of STATUS_ITEMS) {
       const valueElement = container.querySelector(
          `[data-kpi-value="${item.key}"]`,
@@ -212,13 +211,15 @@ export function renderDashboard(
             const eased = 1 - (1 - progress) ** 3;
             percent.textContent = `${Math.round(stats.percent * eased)}%`;
             if (progress < 1) {
-               rafId = requestAnimationFrame(animatePercent);
+               const id = requestAnimationFrame(animatePercent);
+               rafMap.set(percent, id);
             } else {
-               rafId = null;
+               rafMap.delete(percent);
             }
          };
 
-         rafId = requestAnimationFrame(animatePercent);
+         const id = requestAnimationFrame(animatePercent);
+         rafMap.set(percent, id);
       });
    });
 }

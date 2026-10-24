@@ -1,6 +1,3 @@
-// ============================================================
-// Общие функции для index.html и lab.html
-// ============================================================
 const DATA_URL = 'data/subjects.json';
 
 const STATUS_LABELS = {
@@ -11,7 +8,7 @@ const STATUS_LABELS = {
 };
 
 export async function loadData() {
-   const response = await fetch(DATA_URL, { cache: 'force-cache' });
+   const response = await fetch(DATA_URL);
    if (!response.ok) {
       throw new Error(
          `Не удалось загрузить ${DATA_URL} (HTTP ${response.status})`,

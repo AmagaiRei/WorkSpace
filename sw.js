@@ -1,10 +1,8 @@
-// ============================================================
-// Service Worker для WorkSpace — кэш-first, офлайн, stale-while-revalidate
-// ============================================================
-const CACHE = 'workspace-v1';
+const CACHE = 'workspace-v2';
 const ASSETS = [
    './',
    './index.html',
+   './lab.html',
    './css/style.css',
    './css/performance.css',
    './js/index.js',
@@ -12,12 +10,17 @@ const ASSETS = [
    './js/theme.js',
    './js/adaptive-loader.js',
    './data/subjects.json',
-   './fonts/montserrat-v26-latin-400.woff2',
-   './fonts/montserrat.css',
 ];
 
 self.addEventListener('install', (event) => {
-   event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(ASSETS)));
+   event.waitUntil(
+      caches
+         .open(CACHE)
+         .then((cache) => cache.addAll(ASSETS))
+         .catch((err) => {
+            console.warn('SW install cache failed:', err);
+         }),
+   );
 });
 
 self.addEventListener('activate', (event) => {
@@ -34,34 +37,43 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
    const { request } = event;
+
+   if (request.method !== 'GET') return;
+
    const url = new URL(request.url);
 
-   // GitHub API — только сеть (или кэш при офлайне), без долгого хранения
    if (url.hostname === 'api.github.com') {
       event.respondWith(networkFirst(request));
       return;
    }
 
-   // Статика, HTML, JSON, шрифты — кэш-first с фоновым обновлением
    event.respondWith(staleWhileRevalidate(request));
 });
 
 async function staleWhileRevalidate(request) {
    const cached = await caches.match(request);
-   const networkPromise = fetch(request).then((response) => {
-      if (response.ok) {
-         const clone = response.clone();
+   try {
+      const network = await fetch(request);
+      if (network.ok) {
+         const clone = network.clone();
          caches.open(CACHE).then((cache) => cache.put(request, clone));
       }
-      return response;
-   });
-   return cached || networkPromise;
+      return network;
+   } catch {
+      return (
+         cached ||
+         new Response('Offline', { status: 503, statusText: 'Offline' })
+      );
+   }
 }
 
 async function networkFirst(request) {
    try {
       return await fetch(request);
    } catch {
-      return caches.match(request);
+      return (
+         caches.match(request) ||
+         new Response('Offline', { status: 503, statusText: 'Offline' })
+      );
    }
 }

@@ -20,24 +20,18 @@ import {
    isBackgroundSyncDisabled,
 } from './adaptive-loader.js';
 
-// ============================================================
-// Состояние страницы
-// ============================================================
 const state = { subjects: [], query: '', tag: null };
 const openIds = new Set();
 
 const README_SYNC = {
    overrideTitle: true,
-   concurrency: maxConcurrencyByProfile(3), // 1 при slow-2g, иначе 3
+   concurrency: maxConcurrencyByProfile(3),
 };
 const readmes = new Map();
 const readmePending = new Set();
 const labIndex = new Map();
 let readmeSyncRunning = false;
 
-// ============================================================
-// DOM ссылки
-// ============================================================
 const ui = {
    subjects: document.getElementById('subjects'),
    search: document.getElementById('search'),
@@ -46,9 +40,6 @@ const ui = {
    count: document.getElementById('results-count'),
 };
 
-// ============================================================
-// Утилиты
-// ============================================================
 function yieldToMain() {
    if (typeof scheduler !== 'undefined' && scheduler.yield) {
       return scheduler.yield();
@@ -63,9 +54,6 @@ function yieldToMain() {
 
 const RENDER_BATCH = 6;
 
-// ============================================================
-// Фабрика элементов
-// ============================================================
 function createTagPill({ key, label }) {
    return el('button', {
       className: 'tag-pill',
@@ -147,9 +135,6 @@ function createLabCard(subjectId, lab) {
    );
 }
 
-// ============================================================
-// Фоновая синхронизация README — чанки с уступкой потоку
-// ============================================================
 function patchLabCard(key) {
    const entry = labIndex.get(key);
    const card = ui.subjects.querySelector(
@@ -182,7 +167,7 @@ async function syncLab(key) {
 
 async function syncReadmes() {
    if (readmeSyncRunning) return;
-   if (isBackgroundSyncDisabled()) return; // экономия трафика при slow-2g
+   if (isBackgroundSyncDisabled()) return;
 
    readmeSyncRunning = true;
 
@@ -212,9 +197,6 @@ async function syncReadmes() {
    readmeSyncRunning = false;
 }
 
-// ============================================================
-// Рендер предметов — фрагменты + scheduler.yield()
-// ============================================================
 function createSubject({ subject, labs, progress }, filtersActive) {
    const summaryText = progress.total
       ? `${progress.done} из ${progress.total} сдано`
@@ -271,7 +253,6 @@ async function render() {
       }
    }
 
-   // Очистка старых обработчиков перед заменой DOM
    for (const old of ui.subjects.children) {
       if (old._destroy) old._destroy();
    }
@@ -296,25 +277,14 @@ async function render() {
       : '';
 }
 
-// ============================================================
-// События — дебаунс поиска + AbortController
-// ============================================================
-let renderController = null;
+let searchTimer = null;
 
 function bindEvents() {
    ui.search.addEventListener('input', (event) => {
-      if (renderController) renderController.abort();
-      renderController = new AbortController();
-
+      clearTimeout(searchTimer);
       state.query = event.target.value;
-
-      setTimeout(async () => {
-         if (renderController.signal.aborted) return;
-         try {
-            await render();
-         } catch (e) {
-            if (e.name !== 'AbortError') throw e;
-         }
+      searchTimer = setTimeout(() => {
+         render();
       }, 150);
    });
 
@@ -353,9 +323,6 @@ function renderLifeProject(project, container) {
    );
 }
 
-// ============================================================
-// Инициализация
-// ============================================================
 async function init() {
    try {
       const data = await loadData();
@@ -371,7 +338,6 @@ async function init() {
       bindEvents();
       bindGitHubSync();
 
-      // Критичный рендер списка — сразу
       await render();
       document.getElementById(hash)?.scrollIntoView();
 
@@ -381,7 +347,6 @@ async function init() {
       );
       renderContacts(data.profile);
 
-      // Некритичное — в idle (дашборд, фоновая синхронизация README)
       if (typeof requestIdleCallback !== 'undefined') {
          requestIdleCallback(
             async () => {
@@ -405,12 +370,11 @@ async function init() {
    }
 }
 
-// Очистка памяти при уходе со страницы
 window.addEventListener('pagehide', () => {
    readmes.clear();
    readmePending.clear();
    readmeSyncRunning = false;
-   if (renderController) renderController.abort();
+   clearTimeout(searchTimer);
 });
 
 init();

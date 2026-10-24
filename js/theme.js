@@ -1,7 +1,3 @@
-// ============================================================
-// Управление темой (критичная часть теперь inline в index.html)
-// Здесь остаются только слушатели и View Transitions API
-// ============================================================
 const THEME_KEY = 'workspace-theme';
 const darkQuery = window.matchMedia('(prefers-color-scheme: dark)');
 

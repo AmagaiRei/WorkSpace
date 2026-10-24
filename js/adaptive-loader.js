@@ -1,6 +1,3 @@
-// ============================================================
-// Адаптивная загрузка ресурсов через Network Information API
-// ============================================================
 const ni =
    navigator.connection ||
    navigator.mozConnection ||
@@ -27,22 +24,29 @@ export const NETWORK_PROFILE = (() => {
 
    document.documentElement.classList.add(`net-${profile}`);
 
+   const mem = navigator.deviceMemory;
+   const cores = navigator.hardwareConcurrency;
+   let perf = 'low';
+   if ((mem && mem >= 8) || (cores && cores >= 8)) perf = 'high';
+   else if ((mem && mem >= 4) || (cores && cores >= 4)) perf = 'medium';
+   document.documentElement.classList.add(`perf-${perf}`);
+
    return {
       profile,
       saveData: Boolean(saveData),
       downlink,
       effectiveType,
+      perf,
    };
 })();
 
-// Хелпер: ограничить параллелизм фоновых fetch'ов по профилю сети
 export function maxConcurrencyByProfile(defaultConcurrency = 3) {
-   if (NETWORK_PROFILE.profile === 'economy') return 1;
-   if (NETWORK_PROFILE.profile === 'limited') return 2;
+   const p = NETWORK_PROFILE.profile;
+   if (p === 'economy') return 1;
+   if (p === 'limited') return 2;
    return defaultConcurrency;
 }
 
-// Хелпер: нужно ли вообще отключать фоновую синхронизацию (README и т.п.)
 export function isBackgroundSyncDisabled() {
    return NETWORK_PROFILE.profile === 'economy';
 }

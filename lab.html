@@ -5,13 +5,6 @@
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <title>Лабораторная — Руслан Мородецкий</title>
       <link
-         rel="preload"
-         href="./fonts/montserrat-v26-latin-400.woff2"
-         as="font"
-         type="font/woff2"
-         crossorigin
-      />
-      <link
          rel="stylesheet"
          href="./fonts/montserrat.css"
          media="print"
@@ -61,6 +54,8 @@
             }
          })();
       </script>
+      <script type="module" src="js/adaptive-loader.js"></script>
+      <script type="module" src="js/theme.js"></script>
       <script type="module" src="js/menu.js"></script>
       <script
          defer
@@ -165,7 +160,9 @@
 
       <script>
          if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('./sw.js').catch(() => {});
+            navigator.serviceWorker
+               .register('./sw.js')
+               .catch((err) => console.warn('SW registration failed:', err));
          }
       </script>
    </body>
