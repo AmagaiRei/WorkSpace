@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Скрипт для скачивания шрифтов Montserrat и JetBrains Mono в формате WOFF2
     Запуск: .\fonts\download-fonts.ps1
