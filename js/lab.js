@@ -749,3 +749,16 @@ async function init() {
 }
 
 init();
+
+// !Service Worker регистрация для офлайн поддержки
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then((registration) => {
+        console.log('[SW] Зарегистрирован:', registration.scope);
+      })
+      .catch((error) => {
+        console.warn('[SW] Ошибка регистрации:', error);
+      });
+  });
+}

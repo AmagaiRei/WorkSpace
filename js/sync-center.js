@@ -81,3 +81,16 @@ async function createCommit(){
 function disconnect(){token='';branch='';baseCommit='';ui.token.value='';ui.disconnect.disabled=true;ui['stat-files'].textContent='—';status(ui['connection-status'],'Токен очищен из памяти этой вкладки.');log('Токен очищен из памяти.');updateStats();}
 ui.connect.addEventListener('click',connect);ui.disconnect.addEventListener('click',disconnect);ui['file-picker'].addEventListener('change',e=>{addFiles(e.target.files);e.target.value='';});ui['clear-files'].addEventListener('click',()=>{stagedFiles=[];renderFiles();status(ui['push-status'],'Список файлов очищен.');});ui.push.addEventListener('click',()=>createCommit().catch(error=>{status(ui['push-status'],error.message,'error');log(error.message,'error');}));
 ui['drop-zone'].addEventListener('dragover',e=>{e.preventDefault();ui['drop-zone'].classList.add('is-dragging');});ui['drop-zone'].addEventListener('dragleave',()=>ui['drop-zone'].classList.remove('is-dragging'));ui['drop-zone'].addEventListener('drop',e=>{e.preventDefault();ui['drop-zone'].classList.remove('is-dragging');addFiles(e.dataTransfer.files);});updateStats();
+
+// !Service Worker регистрация для офлайн поддержки
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then((registration) => {
+        console.log('[SW] Зарегистрирован:', registration.scope);
+      })
+      .catch((error) => {
+        console.warn('[SW] Ошибка регистрации:', error);
+      });
+  });
+}
