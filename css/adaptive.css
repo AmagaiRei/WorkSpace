@@ -1,0 +1,359 @@
+/* ==========================================================================
+   ADAPTIVE.CSS — Прогрессивное улучшение по классам на <html>
+   Загружается после theme-system.css, до style.css
+   ========================================================================== */
+
+/* ==========================================================================
+   1. СЕТЕВЫЕ ПРОФИЛИ (.net-*)
+   ========================================================================== */
+
+/* Экономный режим: медленный интернет, save-data, 2G/Slow-3G */
+html.net-economy {
+  /* Отключаем все фоновые картинки и декоративные элементы */
+  --ws-bg-pattern: none;
+  --ws-glass-opacity: 0.85;
+  --ws-glass-blur: 0;
+  --ws-neon-intensity: 0;
+  --ws-animation-duration: 0.01ms;
+  --ws-transition-duration: 0.01ms;
+}
+
+html.net-economy .hero__waves,
+html.net-economy .dashboard__glass::before,
+html.net-economy .dashboard__glass::after,
+html.net-economy .life-card::before,
+html.net-economy .life-card::after,
+html.net-economy .neon-orbit,
+html.net-economy .neon-glow,
+html.net-economy .github-sync::before {
+  display: none !important;
+}
+
+html.net-economy .card,
+html.net-economy .life-card,
+html.net-economy .subject,
+html.net-economy .dashboard__glass {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background: var(--ws-surface) !important;
+  border: 1px solid var(--ws-border) !important;
+  box-shadow: var(--ws-shadow-sm) !important;
+}
+
+/* Ограниченный: 3G, слабый 4G */
+html.net-limited {
+  --ws-glass-opacity: 0.9;
+  --ws-glass-blur: 4px;
+  --ws-neon-intensity: 0.3;
+  --ws-animation-duration: 150ms;
+  --ws-transition-duration: 150ms;
+}
+
+html.net-limited .hero__waves {
+  opacity: 0.3;
+}
+
+html.net-limited .dashboard__glass::before,
+html.net-limited .dashboard__glass::after,
+html.net-limited .life-card::before,
+html.net-limited .life-card::after {
+  opacity: 0.3;
+}
+
+/* Богатый: хороший 4G, WiFi, Ethernet */
+html.net-rich {
+  --ws-glass-opacity: 0.95;
+  --ws-glass-blur: 12px;
+  --ws-neon-intensity: 1;
+  --ws-animation-duration: 300ms;
+  --ws-transition-duration: 200ms;
+}
+
+/* ==========================================================================
+   2. ПРОИЗВОДИТЕЛЬНОСТЬ (.perf-*)
+   ========================================================================== */
+
+/* Низкая производительность: старое железо, слабый GPU, low battery */
+html.perf-low {
+  --ws-glass-blur: 0;
+  --ws-glass-opacity: 0.9;
+  --ws-neon-intensity: 0;
+  --ws-animation-duration: 0.01ms;
+  --ws-transition-duration: 0.01ms;
+  --ws-shadow-intensity: 0.5;
+}
+
+html.perf-low .hero__waves,
+html.perf-low .dashboard__glass::before,
+html.perf-low .dashboard__glass::after,
+html.perf-low .life-card::before,
+html.perf-low .life-card::after,
+html.perf-low .neon-orbit,
+html.perf-low .neon-glow,
+html.perf-low .github-sync::before,
+html.perf-low .card::before,
+html.perf-low .card::after {
+  display: none !important;
+}
+
+html.perf-low .card,
+html.perf-low .life-card,
+html.perf-low .subject,
+html.perf-low .dashboard__glass,
+html.perf-low .header {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background: var(--ws-surface) !important;
+  border: 1px solid var(--ws-border) !important;
+  box-shadow: var(--ws-shadow-sm) !important;
+  transform: none !important;
+  transition: none !important;
+  animation: none !important;
+}
+
+html.perf-low .dashboard__bar-fill {
+  transition: width 200ms linear !important;
+}
+
+/* Средняя производительность */
+html.perf-medium {
+  --ws-glass-blur: 8px;
+  --ws-glass-opacity: 0.92;
+  --ws-neon-intensity: 0.6;
+  --ws-animation-duration: 200ms;
+  --ws-transition-duration: 180ms;
+  --ws-shadow-intensity: 0.75;
+}
+
+html.perf-medium .dashboard__glass::before,
+html.perf-medium .dashboard__glass::after,
+html.perf-medium .life-card::before,
+html.perf-medium .life-card::after {
+  opacity: 0.5;
+}
+
+/* Высокая производительность: современное железо, дискретный GPU */
+html.perf-high {
+  --ws-glass-blur: 16px;
+  --ws-glass-opacity: 0.95;
+  --ws-neon-intensity: 1;
+  --ws-animation-duration: 300ms;
+  --ws-transition-duration: 200ms;
+  --ws-shadow-intensity: 1;
+}
+
+/* ==========================================================================
+   3. REDUCED MOTION (.reduce-motion)
+   ========================================================================== */
+
+html.reduce-motion {
+  --ws-animation-duration: 0.01ms;
+  --ws-transition-duration: 0.01ms;
+}
+
+html.reduce-motion *,
+html.reduce-motion *::before,
+html.reduce-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* Отключаем конкретные анимации */
+html.reduce-motion .hero__waves,
+html.reduce-motion .dashboard__glass::before,
+html.reduce-motion .dashboard__glass::after,
+html.reduce-motion .life-card::before,
+html.reduce-motion .life-card::after,
+html.reduce-motion .neon-orbit,
+html.reduce-motion .neon-glow,
+html.reduce-motion .github-sync::before {
+  animation: none !important;
+}
+
+/* ==========================================================================
+   4. LOW BATTERY (.low-battery)
+   ========================================================================== */
+
+html.low-battery {
+  --ws-glass-blur: 0;
+  --ws-glass-opacity: 0.9;
+  --ws-neon-intensity: 0;
+  --ws-animation-duration: 0.01ms;
+  --ws-transition-duration: 0.01ms;
+  --ws-shadow-intensity: 0.5;
+}
+
+html.low-battery .hero__waves,
+html.low-battery .dashboard__glass::before,
+html.low-battery .dashboard__glass::after,
+html.low-battery .life-card::before,
+html.low-battery .life-card::after,
+html.low-battery .neon-orbit,
+html.low-battery .neon-glow,
+html.low-battery .github-sync::before {
+  display: none !important;
+}
+
+html.low-battery .card,
+html.low-battery .life-card,
+html.low-battery .subject,
+html.low-battery .dashboard__glass,
+html.low-battery .header {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background: var(--ws-surface) !important;
+  border: 1px solid var(--ws-border) !important;
+  box-shadow: var(--ws-shadow-sm) !important;
+}
+
+/* ==========================================================================
+   5. SAVE DATA (.save-data) — если отдельно от net-economy
+   ========================================================================== */
+
+html.save-data:not(.net-economy) {
+  --ws-glass-blur: 4px;
+  --ws-glass-opacity: 0.88;
+  --ws-neon-intensity: 0.2;
+}
+
+html.save-data .hero__waves {
+  opacity: 0.2;
+}
+
+/* ==========================================================================
+   6. HIGH CONTRAST (.high-contrast)
+   ========================================================================== */
+
+html.high-contrast {
+  --ws-text: #ffffff;
+  --ws-text-muted: #cccccc;
+  --ws-surface: #000000;
+  --ws-surface-elevated: #111111;
+  --ws-border: #ffffff;
+  --ws-border-strong: #ffffff;
+  --ws-accent: #ffff00;
+  --ws-accent-glow: #ffff00;
+  --ws-focus-ring: #ffff00;
+  --ws-glass-opacity: 1;
+  --ws-glass-blur: 0;
+  --ws-neon-intensity: 0;
+}
+
+html.high-contrast .card,
+html.high-contrast .life-card,
+html.high-contrast .subject,
+html.high-contrast .dashboard__glass,
+html.high-contrast .header {
+  border: 2px solid var(--ws-border) !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  background: var(--ws-surface) !important;
+}
+
+html.high-contrast a,
+html.high-contrast button {
+  border-color: currentColor !important;
+}
+
+html.high-contrast .btn,
+html.high-contrast .tag-pill {
+  border: 2px solid currentColor;
+  background: transparent;
+}
+
+html.high-contrast .btn:hover,
+html.high-contrast .tag-pill:hover {
+  background: var(--ws-accent);
+  color: #000;
+}
+
+/* ==========================================================================
+   7. МОБИЛЬНЫЕ УСТРОЙСТВА (медиа-запросы как fallback)
+   ========================================================================== */
+
+/* На маленьких экранах уменьшаем эффекты даже если профиль не определился */
+@media (max-width: 480px) {
+  html:not(.perf-high):not(.net-rich) {
+    --ws-glass-blur: 4px;
+    --ws-glass-opacity: 0.9;
+    --ws-neon-intensity: 0.3;
+  }
+
+  html:not(.perf-high):not(.net-rich) .hero__waves {
+    opacity: 0.2;
+  }
+}
+
+/* Touch-устройства: убираем hover-эффекты */
+@media (hover: none) and (pointer: coarse) {
+  html.perf-high .card:hover,
+  html.perf-high .life-card:hover {
+    transform: none !important;
+  }
+}
+
+/* ==========================================================================
+   8. ПЕЧАТЬ — убираем всё декоративное
+   ========================================================================== */
+
+@media print {
+  .hero__waves,
+  .dashboard__glass::before,
+  .dashboard__glass::after,
+  .life-card::before,
+  .life-card::after,
+  .neon-orbit,
+  .neon-glow,
+  .github-sync::before,
+  .theme-toggle,
+  .github-sync,
+  .mobile-menu {
+    display: none !important;
+  }
+
+  .card,
+  .life-card,
+  .subject,
+  .dashboard__glass,
+  .header {
+    backdrop-filter: none !important;
+    background: white !important;
+    color: black !important;
+    border: 1px solid #ccc !important;
+    box-shadow: none !important;
+  }
+}
+
+/* ==========================================================================
+   9. УТИЛИТЫ ДЛЯ JS — классы для динамического управления
+   ========================================================================== */
+
+/* Эти классы могут добавляться JS для принудительного отключения эффектов */
+html.no-glass .dashboard__glass,
+html.no-glass .life-card,
+html.no-glass .card,
+html.no-glass .subject,
+html.no-glass .header {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background: var(--ws-surface) !important;
+}
+
+html.no-neon .neon-orbit,
+html.no-neon .neon-glow,
+html.no-neon .dashboard__glass::before,
+html.no-neon .dashboard__glass::after,
+html.no-neon .life-card::before,
+html.no-neon .life-card::after,
+html.no-neon .github-sync::before {
+  display: none !important;
+}
+
+html.no-animations *,
+html.no-animations *::before,
+html.no-animations *::after {
+  animation: none !important;
+  transition: none !important;
+}
