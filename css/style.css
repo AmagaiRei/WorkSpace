@@ -2137,3 +2137,124 @@ summary.tree__row::-webkit-details-marker {
     transform: none;
   }
 }
+
+
+.subjects {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+}
+
+.subject {
+  width: 100%;
+  min-width: 0;
+  overflow: clip;
+  border-radius: 18px;
+  background: linear-gradient(110deg, rgba(42, 22, 62, 0.92), rgba(67, 20, 88, 0.76));
+  border-color: rgba(208, 92, 255, 0.34);
+  box-shadow: 0 5px 22px rgba(10, 2, 22, 0.12);
+}
+
+.subject:hover,
+.subject[open] {
+  border-color: rgba(226, 151, 255, 0.9);
+  box-shadow: 0 0 0 1px rgba(205, 83, 255, 0.12), 0 0 24px rgba(185, 36, 255, 0.12);
+}
+
+.subject__summary {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 14px 22px;
+  min-height: 76px;
+  padding: 18px 62px 18px 24px;
+}
+
+.subject__title {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: clamp(0.98rem, 1.6vw, 1.12rem);
+  line-height: 1.35;
+}
+
+.subject__count {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.subject__summary > .progress {
+  flex: 0 1 180px;
+  width: min(180px, 20vw);
+  min-width: 92px;
+  margin-left: auto;
+}
+
+.subject__content {
+  padding: 2px 24px 24px;
+  border-top: 1px solid rgba(226, 151, 255, 0.14);
+}
+
+.subject__content > .grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+  gap: 14px;
+  padding-top: 20px;
+}
+
+.subject .card {
+  min-width: 0;
+  height: 100%;
+  padding: 20px;
+  border-color: rgba(226, 151, 255, 0.22);
+  border-radius: 16px;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(191, 47, 224, 0.12));
+}
+
+.subject .card:hover {
+  border-color: rgba(226, 151, 255, 0.72);
+  box-shadow: 0 0 20px rgba(191, 47, 224, 0.12);
+}
+
+@media (max-width: 700px) {
+  .subject__summary {
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    padding: 16px 48px 16px 16px;
+  }
+
+  .subject__title {
+    flex: 1 1 100%;
+    padding-right: 4px;
+  }
+
+  .subject__count {
+    font-size: 0.8rem;
+  }
+
+  .subject__summary > .progress {
+    flex: 1 1 100px;
+    width: auto;
+    max-width: 160px;
+    margin-left: 0;
+  }
+
+  .subject__summary::after {
+    right: 20px;
+  }
+
+  .subject__content {
+    padding: 0 14px 16px;
+  }
+
+  .subject__content > .grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+    padding-top: 14px;
+  }
+
+  .subject .card {
+    padding: 17px;
+  }
+}
