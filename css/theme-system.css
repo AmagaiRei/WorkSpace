@@ -17,7 +17,14 @@ html {
 body {
   margin: 0;
   font-family: var(--font-ui);
-  background: var(--color-bg-base);
+  background:
+    radial-gradient(ellipse at 88% 4%, rgba(182, 36, 255, 0.18), transparent 38%),
+    radial-gradient(ellipse at 8% 72%, rgba(104, 28, 150, 0.18), transparent 42%),
+    radial-gradient(ellipse at 92% 92%, rgba(182, 36, 255, 0.12), transparent 36%),
+    linear-gradient(160deg, #0a0516 0%, #100821 48%, #190a2a 100%);
+  background-color: var(--color-bg-base);
+  background-repeat: no-repeat;
+  background-size: cover;
   color: var(--color-text-primary);
   line-height: var(--leading-normal);
   min-height: 100vh;
@@ -197,10 +204,13 @@ body {
 .hero {
   padding: var(--space-2xl) var(--space-xl);
   text-align: center;
-  max-width: var(--max-width-container);
-  margin: 0 auto;
+  max-width: none;
+  margin: 0;
   width: 100%;
   position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: transparent;
 }
 
 .hero__title {
@@ -237,36 +247,25 @@ body {
 /* !Hero waves — декоративный SVG внизу героя */
 .hero__waves {
   position: absolute;
-  bottom: -2px;
+  z-index: -1;
+  bottom: -1px;
   left: 0;
   width: 100%;
-  height: clamp(190px, 32vh, 360px);
-  opacity: 0.24;
-  filter: drop-shadow(0 -8px 26px rgba(182, 36, 255, 0.12));
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    #000 0%,
-    #000 38%,
-    rgba(0, 0, 0, 0.7) 62%,
-    transparent 100%
-  );
-  mask-image: linear-gradient(
-    to bottom,
-    #000 0%,
-    #000 38%,
-    rgba(0, 0, 0, 0.7) 62%,
-    transparent 100%
-  );
+  height: clamp(150px, 24vh, 280px);
+  opacity: 0.12;
+  filter: none;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.55) 42%, transparent 88%);
+  mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.55) 42%, transparent 88%);
 }
 
 .hero::after {
   content: "";
   position: absolute;
-  z-index: 0;
+  z-index: -1;
   inset: auto 0 -1px;
   height: clamp(100px, 16vh, 190px);
   pointer-events: none;
-  background: linear-gradient(to bottom, transparent, var(--color-bg-base) 96%);
+  background: linear-gradient(to bottom, transparent 0%, rgba(13, 8, 27, 0.18) 55%, transparent 100%);
 }
 
 .hero__content {
@@ -495,8 +494,8 @@ select:focus {
   margin-top: auto;
   padding: var(--space-xl);
   text-align: center;
-  border-top: 1px solid var(--color-border-dim);
-  background: var(--color-bg-surface);
+  border-top: 1px solid rgba(182, 36, 255, 0.08);
+  background: linear-gradient(to bottom, transparent, rgba(10, 5, 22, 0.16));
 }
 
 .socials {
