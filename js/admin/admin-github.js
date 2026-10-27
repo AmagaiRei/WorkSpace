@@ -1,6 +1,6 @@
-//! Публикация лабораторной в GitHub ОДНИМ коммитом через Git Data API:
-//! blobs → tree → commit → обновление ref (без force).
-//! Если ветка успела уйти вперёд, GitHub вернёт 422 — тогда читаем состояние заново и повторяем.
+// ! Публикация лабораторной в GitHub ОДНИМ коммитом через Git Data API:
+// ! blobs → tree → commit → обновление ref (без force).
+// ! Если ветка успела уйти вперёд, GitHub вернёт 422 — тогда читаем состояние заново и повторяем.
 
 import {
   SUBJECTS_PATH,
@@ -88,7 +88,7 @@ async function api(token, repo, path, { method = "GET", body } = {}) {
   );
 }
 
-/** Проверка токена до сохранения: репозиторий виден и запись разрешена. */
+/*! * Проверка токена до сохранения: репозиторий виден и запись разрешена. */
 export async function verifyToken(token, repo) {
   const info = await api(token, repo, "");
   if (info.permissions && info.permissions.push === false) {
@@ -277,7 +277,7 @@ export async function publishLab({
   }
 }
 
-/* ---------- Редактирование: тоже один коммит ---------- */
+/*! ---------- Редактирование: тоже один коммит ---------- */
 
 async function attemptEdit(ctx, blobCache) {
   const { token, repo, draft, onProgress } = ctx;

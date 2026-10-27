@@ -1,0 +1,93 @@
+/*! ==========================================================================
+   PRINT.CSS — Print styles (removes decorative elements)
+   ========================================================================== */
+
+@media print {
+  .hero__waves,
+  .dashboard__glass::before,
+  .dashboard__glass::after,
+  .life-card::before,
+  .life-card::after,
+  .neon-orbit,
+  .neon-glow,
+  .github-sync::before,
+  .theme-toggle,
+  .github-sync,
+  .mobile-menu,
+  .admin-panel-trigger,
+  .header,
+  .footer,
+  .breadcrumbs,
+  .lab-sidebar,
+  .downloads,
+  .file-grid,
+  .explorer__path,
+  .lab-panel--screenshots,
+  .file-button,
+  .text-link,
+  .hint,
+  .fv__tabs,
+  .fv-start,
+  .fv-files-btn,
+  .fv-backdrop,
+  .fv-toast,
+  .fv__actions,
+  .tree-search {
+    display: none !important;
+  }
+
+  body {
+    background: #fff !important;
+    color: #000 !important;
+    min-height: 0;
+  }
+
+  .page-head {
+    padding-top: 0;
+  }
+
+  .lab-head,
+  .lab-section {
+    max-width: none;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .lab-head *,
+  .lab-section * {
+    color: #000 !important;
+    background: transparent !important;
+    border-color: #999 !important;
+    text-shadow: none !important;
+  }
+
+  .lab-layout {
+    display: block;
+  }
+
+  .fv-code,
+  .fv-md {
+    max-height: none;
+    overflow: visible;
+  }
+
+  .fv-code pre {
+    white-space: pre-wrap;
+  }
+
+  .fv {
+    break-inside: avoid;
+  }
+
+  .card,
+  .life-card,
+  .subject,
+  .dashboard__glass,
+  .header {
+    backdrop-filter: none !important;
+    background: white !important;
+    color: black !important;
+    border: 1px solid #ccc !important;
+    box-shadow: none !important;
+  }
+}

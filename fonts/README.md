@@ -2,6 +2,10 @@
 
 This directory should contain the following font files (WOFF2 format):
 
+## Space Grotesk (Display font)
+
+- SpaceGrotesk-VariableFont_wght.woff2 (weights 300-700, variable)
+
 ## Montserrat (Sans-serif)
 
 - Montserrat-Light.woff2 (weight 300)
@@ -17,18 +21,30 @@ This directory should contain the following font files (WOFF2 format):
 - JetBrainsMono-Medium.woff2 (weight 500)
 - JetBrainsMono-Bold.woff2 (weight 700)
 
+## Optional: Variable fonts (single file, multiple weights)
+
+- Montserrat-VariableFont_wght.woff2 (weights 300-800)
+- JetBrainsMono-VariableFont_wght.woff2 (weights 400-700)
+
 ## Where to download
+
+### Space Grotesk
+
+- GitHub: https://github.com/googlefonts/space-grotesk/releases
+- Google Fonts: https://fonts.google.com/specimen/Space+Grotesk
+- google-webfonts-helper: https://google-webfonts-helper.herokuapp.com/fonts/space-grotesk
 
 ### Montserrat
 
 - Google Fonts: https://fonts.google.com/specimen/Montserrat
-- Or use `google-webfonts-helper` to download WOFF2 files with specific weights
+- google-webfonts-helper: https://google-webfonts-helper.herokuapp.com/fonts/montserrat
 
 ### JetBrains Mono
 
 - Official: https://www.jetbrains.com/lp/mono/
 - GitHub: https://github.com/JetBrains/JetBrainsMono/releases
 - Google Fonts: https://fonts.google.com/specimen/JetBrains+Mono
+- google-webfonts-helper: https://google-webfonts-helper.herokuapp.com/fonts/jetbrains-mono
 
 ## How to generate WOFF2 from TTF/OTF
 
@@ -42,4 +58,4 @@ pyftsubset Montserrat-Regular.ttf --flavor=woff2 --output-file=Montserrat-Regula
 
 ## Note
 
-The CSS in `theme-system.css` references these files with `@font-face` declarations using `font-display: swap` for optimal loading performance.
+The CSS in `css/tokens/design-tokens.css` references these files with `@font-face` declarations using `font-display: swap` for optimal loading performance.

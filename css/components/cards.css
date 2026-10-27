@@ -1,0 +1,430 @@
+/*! ==========================================================================
+   CARDS — Grid, Card, Subject, Dashboard, Life Card
+   ========================================================================== */
+
+/*! ==========================================================================
+   SECTION LAYOUT
+   ========================================================================== */
+
+.section {
+  padding: var(--space-2xl) var(--space-xl);
+  max-width: var(--max-width-container);
+  margin: 0 auto;
+  width: 100%;
+}
+
+.section__title {
+  font-family: var(--font-display);
+  font-size: var(--text-section);
+  font-weight: var(--weight-bold);
+  margin: 0 0 var(--space-sm);
+  background: linear-gradient(
+    135deg,
+    var(--color-text-primary),
+    var(--color-brand-purple)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.section__lead {
+  color: var(--color-text-muted);
+  margin: 0 0 var(--space-xl);
+}
+
+.section--tight {
+  padding-top: 56px;
+  padding-bottom: 0;
+}
+
+.section--last {
+  padding-bottom: 96px;
+}
+
+/*! ==========================================================================
+   GRID & CARD
+   ========================================================================== */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 24px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 28px;
+  background: var(--glass-base);
+  border: 1px solid var(--color-border-dim);
+  border-radius: 20px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition:
+    border-color var(--duration-smooth) var(--ease-out),
+    background var(--duration-smooth) var(--ease-out);
+}
+
+.card:hover {
+  border-color: var(--color-text-primary);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.card__subject {
+  font-weight: 500;
+  font-size: 0.8rem;
+  color: var(--color-accent-purple-soft);
+}
+
+.card__title {
+  margin: 0;
+  font-weight: 700;
+  font-size: 1.15rem;
+  line-height: 1.3;
+}
+
+.card__text {
+  margin: 0;
+  font-weight: 300;
+  font-size: 0.92rem;
+  color: var(--color-text-muted);
+}
+
+/*! Пустое описание (нет ни в JSON, ни в README) не занимает место в карточке */
+.card__text:empty {
+  display: none;
+}
+
+/*! Описание подгружается из README: курсив, приглушение и иконка.
+   Анимация отключается общим правилом prefers-reduced-motion ниже по файлу */
+.card--loading .card__text {
+  font-style: italic;
+  opacity: 0.65;
+  animation: card-text-pulse 1.2s ease-in-out infinite;
+}
+
+.card--loading .card__text:not(:empty)::after {
+  content: " 🔄";
+}
+
+@keyframes card-text-pulse {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.card__meta {
+  margin-top: auto;
+  padding-top: 14px;
+  font-weight: 500;
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+}
+
+/*! ==========================================================================
+   SUBJECTS / ACCORDIONS
+   ========================================================================== */
+
+.subjects {
+  display: grid;
+  gap: 16px;
+}
+
+.subject {
+  background: var(--glass-base);
+  border: 1px solid var(--color-border-dim);
+  border-radius: 20px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: border-color var(--duration-smooth) var(--ease-out);
+}
+
+.subject:hover,
+.subject[open] {
+  border-color: var(--color-text-primary);
+}
+
+.subject__summary {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 20px;
+  padding: 22px 64px 22px 28px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.subject__summary::-webkit-details-marker {
+  display: none;
+}
+
+.subject__summary::after {
+  content: "";
+  position: absolute;
+  right: 28px;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  border-right: 3px solid var(--color-text-primary);
+  border-bottom: 3px solid var(--color-text-primary);
+  transform: translateY(-70%) rotate(45deg);
+  transition: transform var(--duration-smooth) var(--ease-out);
+}
+
+.subject[open] > .subject__summary::after {
+  transform: translateY(-30%) rotate(-135deg);
+}
+
+.subject__title {
+  flex: 1 1 280px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  line-height: 1.3;
+}
+
+.subject__count {
+  font-weight: 500;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.subject__content {
+  padding: 0 28px 28px;
+}
+
+.subject .card {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.subject .card:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+}
+
+/*! ==========================================================================
+   DASHBOARD / GLASS CARDS
+   ========================================================================== */
+
+.dashboard {
+  margin-top: var(--space-xl);
+  text-align: left;
+}
+
+.dashboard__glass {
+  padding: var(--space-lg);
+  border-radius: var(--radius-lg);
+  background: var(--glass-base);
+  backdrop-filter: blur(var(--blur-md));
+  -webkit-backdrop-filter: blur(var(--blur-md));
+  border: 1px solid var(--color-border-glass);
+  box-shadow: var(--shadow-md), var(--glow-inset);
+  transition:
+    border-color var(--duration-smooth) var(--ease-out),
+    box-shadow var(--duration-smooth) var(--ease-out);
+}
+
+.dashboard__glass:hover {
+  border-color: var(--color-border-glass-hover);
+  box-shadow: var(--shadow-lg), var(--glow-inset);
+}
+
+.dashboard__loading {
+  color: var(--color-text-muted);
+  text-align: center;
+  padding: var(--space-lg);
+}
+
+/*! Dashboard KPI cards */
+.dashboard__kpi {
+  background: var(--glass-base);
+  border: 1px solid var(--color-border-dim);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  backdrop-filter: blur(var(--blur-sm));
+  transition:
+    border-color var(--duration-smooth) var(--ease-out),
+    background var(--duration-smooth) var(--ease-out),
+    box-shadow var(--duration-smooth) var(--ease-out);
+}
+
+.dashboard__kpi:hover {
+  border-color: var(--color-neon-cyan);
+  background: var(--glass-elevated);
+  box-shadow: var(--glow-cyan);
+}
+
+/*! ==========================================================================
+   LIFE CARD (main project highlight)
+   ========================================================================== */
+
+.life-card {
+  isolation: isolate;
+  border: 1px solid rgba(139, 92, 246, 0.6) !important;
+  background:
+    radial-gradient(
+      ellipse at 92% 8%,
+      rgba(139, 92, 246, 0.22),
+      transparent 42%
+    ),
+    radial-gradient(
+      ellipse at 8% 100%,
+      rgba(34, 211, 238, 0.1),
+      transparent 48%
+    ),
+    linear-gradient(125deg, rgba(30, 15, 45, 0.96), rgba(75, 25, 103, 0.94)) !important;
+  box-shadow:
+    0 0 0 1px rgba(139, 92, 246, 0.2),
+    0 0 22px rgba(139, 92, 246, 0.17),
+    0 0 44px rgba(139, 92, 246, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.11) !important;
+  transition:
+    border-color var(--duration-smooth) var(--ease-out),
+    box-shadow var(--duration-smooth) var(--ease-out),
+    transform var(--duration-smooth) var(--ease-out);
+}
+
+.life-card::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    transparent 25%,
+    rgba(139, 92, 246, 0.07),
+    transparent 72%
+  );
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .life-card:hover,
+  a.life-card:hover {
+    border-color: var(--color-brand-purple) !important;
+    box-shadow:
+      0 0 0 1px rgba(139, 92, 246, 0.36),
+      0 0 28px rgba(139, 92, 246, 0.28),
+      0 0 58px rgba(139, 92, 246, 0.22),
+      inset 0 0 28px rgba(139, 92, 246, 0.09) !important;
+    transform: translateY(-2px);
+  }
+}
+
+/*! ==========================================================================
+   TAGS INSIDE CARDS
+   ========================================================================== */
+
+.card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.card__tag {
+  padding: 1px 10px;
+  font-weight: 500;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border-dim);
+  border-radius: 999px;
+}
+
+/*! ==========================================================================
+   SEMANTIC STATUS COLORS (using neon tokens)
+   ========================================================================== */
+
+.status--success,
+.text-success {
+  color: var(--color-success);
+}
+
+.status--warning,
+.text-warning {
+  color: var(--color-warning);
+}
+
+.status--info,
+.text-info {
+  color: var(--color-info);
+}
+
+.status--error,
+.text-error {
+  color: var(--color-error);
+}
+
+.status--in-progress {
+  color: var(--color-in-progress);
+}
+
+.status--new {
+  color: var(--color-new);
+}
+
+.badge {
+  display: inline-block;
+  padding: 2px 12px;
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+}
+
+.badge--done {
+  color: #9be8c0;
+}
+.badge--progress {
+  color: #ffd98a;
+}
+.badge--todo {
+  color: var(--color-text-muted);
+}
+.badge--idea {
+  color: #f0b8ff;
+}
+
+/*! ==========================================================================
+   PROGRESS BAR
+   ========================================================================== */
+
+.progress {
+  flex: 1 1 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.progress__track {
+  flex: 1;
+  height: 8px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+}
+
+.progress__bar {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-brand-purple), #d58bf0);
+  border-radius: inherit;
+  transition: width 0.3s ease;
+}
+
+.progress__text {
+  min-width: 4ch;
+  font-weight: 500;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  text-align: right;
+}

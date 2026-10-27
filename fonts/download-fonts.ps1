@@ -1,6 +1,6 @@
 ﻿<#
 .SYNOPSIS
-    Скрипт для скачивания шрифтов Montserrat и JetBrains Mono в формате WOFF2
+    Скрипт для скачивания шрифтов Space Grotesk, Montserrat и JetBrains Mono в формате WOFF2
     Запуск: .\fonts\download-fonts.ps1
 
 .DESCRIPTION
@@ -18,6 +18,7 @@ Write-Host "📥 Проверка шрифтов в $FontsDir" -ForegroundColor 
 Write-Host ""
 
 $RequiredFonts = @(
+    "SpaceGrotesk-VariableFont_wght.woff2",
     "Montserrat-Light.woff2",
     "Montserrat-Regular.woff2",
     "Montserrat-Medium.woff2",
@@ -36,7 +37,17 @@ Write-Host "📋 ИНСТРУКЦИЯ ПО СКАЧИВАНИЮ ШРИФТОВ" 
 Write-Host "===========================================" -ForegroundColor Green
 Write-Host ""
 
-Write-Host "1. Montserrat (6 начертаний):" -ForegroundColor Yellow
+Write-Host "1. Space Grotesk (Variable font, weights 300-700):" -ForegroundColor Yellow
+Write-Host "   - SpaceGrotesk-VariableFont_wght.woff2 (300-700)"
+Write-Host ""
+Write-Host "   Скачать: https://github.com/googlefonts/space-grotesk/releases" -ForegroundColor Cyan
+Write-Host "   Или: https://google-webfonts-helper.herokuapp.com/fonts/space-grotesk" -ForegroundColor Cyan
+Write-Host "   Выбрать: Latin, Latin Extended, Cyrillic" -ForegroundColor Gray
+Write-Host "   Форматы: WOFF2 Variable font only" -ForegroundColor Gray
+Write-Host "   Начертания: 300-700 (variable)" -ForegroundColor Gray
+Write-Host ""
+
+Write-Host "2. Montserrat (6 начертаний):" -ForegroundColor Yellow
 Write-Host "   - Montserrat-Light.woff2 (300)"
 Write-Host "   - Montserrat-Regular.woff2 (400)"
 Write-Host "   - Montserrat-Medium.woff2 (500)"
@@ -50,7 +61,7 @@ Write-Host "   Форматы: WOFF2 only" -ForegroundColor Gray
 Write-Host "   Начертания: 300, 400, 500, 600, 700, 800" -ForegroundColor Gray
 Write-Host ""
 
-Write-Host "2. JetBrains Mono (3 начертания):" -ForegroundColor Yellow
+Write-Host "3. JetBrains Mono (3 начертания):" -ForegroundColor Yellow
 Write-Host "   - JetBrainsMono-Regular.woff2 (400)"
 Write-Host "   - JetBrainsMono-Medium.woff2 (500)"
 Write-Host "   - JetBrainsMono-Bold.woff2 (700)"
@@ -59,14 +70,16 @@ Write-Host "   Скачать: https://github.com/JetBrains/JetBrainsMono/releas
 Write-Host "   Или: https://google-webfonts-helper.herokuapp.com/fonts/jetbrains-mono" -ForegroundColor Cyan
 Write-Host ""
 
-Write-Host "3. Положите все файлы в папку: $FontsDir" -ForegroundColor Green
+Write-Host "4. Положите все файлы в папку: $FontsDir" -ForegroundColor Green
 Write-Host ""
 
-Write-Host "4. Структура должна быть:" -ForegroundColor Green
+Write-Host "5. Структура должна быть:" -ForegroundColor Green
 Write-Host "   fonts/" -ForegroundColor Gray
 foreach ($font in $RequiredFonts) {
     Write-Host "   ├── $font" -ForegroundColor Gray
 }
+Write-Host "   ├── Montserrat-VariableFont_wght.woff2 (опционально)" -ForegroundColor Gray
+Write-Host "   ├── JetBrainsMono-VariableFont_wght.woff2 (опционально)" -ForegroundColor Gray
 Write-Host "   └── README.md" -ForegroundColor Gray
 Write-Host ""
 

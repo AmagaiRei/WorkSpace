@@ -1,6 +1,6 @@
 #!/bin/bash
-# Скрипт для скачивания шрифтов Montserrat и JetBrains Mono в формате WOFF2
-# Запуск: bash fonts/download-fonts.sh
+# ! Скрипт для скачивания шрифтов Montserrat, JetBrains Mono и Space Grotesk в формате WOFF2
+# ! Запуск: bash fonts/download-fonts.sh
 
 set -e
 
@@ -9,36 +9,21 @@ cd "$FONTS_DIR"
 
 echo "📥 Скачивание шрифтов в $FONTS_DIR"
 
-# Функция для скачивания и конвертации
-download_and_convert() {
-    local font_name="$1"
-    local weights="$2"
-    local source_url="$3"
-
-    echo "  📦 $font_name..."
-
-    # Временная директория
-    tmpdir=$(mktemp -d)
-    trap "rm -rf $tmpdir" EXIT
-
-    # Скачиваем TTF файлы (пример для Google Fonts)
-    # Для Montserrat используем google-webfonts-helper или прямые ссылки
-    # Здесь пример с использованием wget + fonttools для конвертации
-
-    # NOTE: Этот скрипт требует установленных fonttools (pip install fonttools)
-    # Если fonttools не установлен, можно скачать готовые WOFF2 файлы вручную
-}
-
-# Montserrat (weights: 300, 400, 500, 600, 700, 800)
-# Ссылки на WOFF2 можно получить с https://google-webfonts-helper.herokuapp.com/fonts/montserrat
-# Или скачать вручную с Google Fonts
-
 echo "
 ===========================================
 📋 ИНСТРУКЦИЯ ПО СКАЧИВАНИЮ ШРИФТОВ
 ===========================================
 
-1. Montserrat (6 начертаний):
+1. Space Grotesk (Variable font, weights 300-700):
+   - SpaceGrotesk-VariableFont_wght.woff2 (300-700)
+
+   Скачать: https://github.com/googlefonts/space-grotesk/releases
+   Или: https://google-webfonts-helper.herokuapp.com/fonts/space-grotesk
+   Выбрать: Latin, Latin Extended, Cyrillic
+   Форматы: WOFF2 Variable font only
+   Начертания: 300-700 (variable)
+
+2. Montserrat (6 начертаний):
    - Montserrat-Light.woff2 (300)
    - Montserrat-Regular.woff2 (400)
    - Montserrat-Medium.woff2 (500)
@@ -51,7 +36,7 @@ echo "
    Форматы: WOFF2 only
    Начертания: 300, 400, 500, 600, 700, 800
 
-2. JetBrains Mono (3 начертания):
+3. JetBrains Mono (3 начертания):
    - JetBrainsMono-Regular.woff2 (400)
    - JetBrainsMono-Medium.woff2 (500)
    - JetBrainsMono-Bold.woff2 (700)
@@ -59,10 +44,11 @@ echo "
    Скачать: https://github.com/JetBrains/JetBrainsMono/releases
    Или: https://google-webfonts-helper.herokuapp.com/fonts/jetbrains-mono
 
-3. Положите все файлы в папку: $FONTS_DIR
+4. Положите все файлы в папку: $FONTS_DIR
 
-4. Структура должна быть:
+5. Структура должна быть:
    fonts/
+   ├── SpaceGrotesk-VariableFont_wght.woff2
    ├── Montserrat-Light.woff2
    ├── Montserrat-Regular.woff2
    ├── Montserrat-Medium.woff2
@@ -72,14 +58,17 @@ echo "
    ├── JetBrainsMono-Regular.woff2
    ├── JetBrainsMono-Medium.woff2
    ├── JetBrainsMono-Bold.woff2
+   ├── Montserrat-VariableFont_wght.woff2 (опционально)
+   ├── JetBrainsMono-VariableFont_wght.woff2 (опционально)
    └── README.md
 
 ===========================================
 "
 
-# Проверка наличия файлов
+# ! Проверка наличия файлов
 echo "🔍 Проверка существующих файлов:"
 for font in \
+  "SpaceGrotesk-VariableFont_wght.woff2" \
   "Montserrat-Light.woff2" \
   "Montserrat-Regular.woff2" \
   "Montserrat-Medium.woff2" \

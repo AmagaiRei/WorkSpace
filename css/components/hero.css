@@ -1,0 +1,89 @@
+/*! ==========================================================================
+   HERO SECTION
+   ========================================================================== */
+
+.hero {
+  padding: var(--space-2xl) var(--space-xl);
+  text-align: center;
+  max-width: none;
+  margin: 0;
+  width: 100%;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: transparent;
+}
+
+.hero__title {
+  font-family: var(--font-display);
+  font-size: var(--text-hero);
+  font-weight: var(--weight-bold);
+  margin: 0 0 var(--space-sm);
+  background: linear-gradient(
+    135deg,
+    var(--color-text-primary),
+    var(--color-neon-cyan)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero__subtitle {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: var(--weight-light);
+  color: var(--color-text-muted);
+  margin: 0 0 var(--space-md);
+}
+
+.hero__text {
+  max-width: var(--max-width-prose);
+  margin: 0 auto var(--space-xl);
+  color: var(--color-text-muted);
+  font-size: var(--text-body);
+  line-height: var(--leading-relaxed);
+}
+
+/*! Hero waves — декоративный SVG внизу героя */
+.hero__waves {
+  position: absolute;
+  z-index: -1;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: clamp(150px, 24vh, 280px);
+  opacity: 0.12;
+  filter: none;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    rgba(0, 0, 0, 0.55) 42%,
+    transparent 88%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    rgba(0, 0, 0, 0.55) 42%,
+    transparent 88%
+  );
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: auto 0 -1px;
+  height: clamp(100px, 16vh, 190px);
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(13, 8, 27, 0.18) 55%,
+    transparent 100%
+  );
+}
+
+.hero__content {
+  z-index: 1;
+}

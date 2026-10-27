@@ -1,0 +1,117 @@
+/*! ==========================================================================
+   UTILITIES — Helper classes for JS toggling and common patterns
+   ========================================================================== */
+
+/*! ==========================================================================
+   GLASS SURFACE HELPERS (for JS toggling)
+   ========================================================================== */
+
+.glass-surface {
+  background: var(--glass-base);
+  backdrop-filter: blur(var(--blur-md));
+  -webkit-backdrop-filter: blur(var(--blur-md));
+  border: 1px solid var(--color-border-glass);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md), var(--glow-inset);
+}
+
+.glass-surface-elevated {
+  background: var(--glass-elevated);
+  backdrop-filter: blur(var(--blur-lg));
+  -webkit-backdrop-filter: blur(var(--blur-lg));
+  border: 1px solid var(--color-border-glass-hover);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg), var(--glow-inset);
+}
+
+/*! ==========================================================================
+   NEON GLOW HELPERS — Using 6 accent colors
+   ========================================================================== */
+
+.neon-glow-purple {
+  box-shadow: var(--glow-purple);
+}
+
+.neon-glow-pink {
+  box-shadow: var(--glow-pink);
+}
+
+.neon-glow-cyan {
+  box-shadow: var(--glow-cyan);
+}
+
+.neon-glow-orange {
+  box-shadow: var(--glow-orange);
+}
+
+.neon-glow-blue {
+  box-shadow: var(--glow-blue);
+}
+
+.neon-glow-green {
+  box-shadow: var(--glow-green);
+}
+
+/*! ==========================================================================
+   TEXT GRADIENT HELPERS
+   ========================================================================== */
+
+.text-gradient-brand {
+  background: linear-gradient(
+    135deg,
+    var(--color-text-primary),
+    var(--color-brand-purple)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-neon {
+  background: linear-gradient(
+    135deg,
+    var(--color-neon-cyan),
+    var(--color-brand-purple),
+    var(--color-neon-orange)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/*! ==========================================================================
+   PROJECT DOCS LINK
+   ========================================================================== */
+
+.project-docs__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  color: var(--color-accent-purple);
+  text-decoration: none;
+  text-shadow: 0 0 12px rgba(139, 92, 246, 0.18);
+  transition:
+    gap var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out),
+    text-shadow var(--duration-fast) var(--ease-out);
+}
+
+.project-docs__link:hover {
+  gap: 0.65rem;
+  color: var(--color-accent-pink);
+  text-decoration: underline;
+  text-shadow: 0 0 14px rgba(244, 114, 182, 0.42);
+}
+
+.project-docs__link:focus-visible {
+  outline: 2px solid var(--color-brand-purple);
+  outline-offset: 5px;
+  border-radius: 2px;
+}

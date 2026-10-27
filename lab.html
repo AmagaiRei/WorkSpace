@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Лабораторная — Руслан Мородецкий</title>
 
-    <!-- Inline critical CSS для мгновенного первого кадра -->
+    <!--! Inline critical CSS для мгновенного первого кадра -->
     <style>
       /* Critical CSS — минимальные стили для первого рендера */
       *,
@@ -21,9 +21,9 @@
         --ws-text-muted: #b8a8d0;
         --ws-border: #2a1a3a;
         --ws-border-strong: #3d2a52;
-        --ws-accent: #9c27c4;
-        --ws-accent-glow: #d463ff;
-        --ws-focus-ring: #d463ff;
+        --ws-accent: #8b5cf6;
+        --ws-accent-glow: #a78bfa;
+        --ws-focus-ring: #8b5cf6;
         --ws-shadow-sm: 0 2px 8px rgba(10, 4, 20, 0.4);
         --ws-shadow-md: 0 8px 24px rgba(10, 4, 20, 0.5);
         --ws-shadow-lg: 0 16px 48px rgba(10, 4, 20, 0.6);
@@ -112,7 +112,7 @@
         font-size: 0.9rem;
         border: none;
         border-radius: var(--ws-radius-md);
-        background: linear-gradient(135deg, var(--ws-accent), #7b1fa2);
+        background: linear-gradient(135deg, var(--ws-accent), #6d28d9);
         color: #fff;
         cursor: pointer;
         text-decoration: none;
@@ -122,7 +122,7 @@
       }
       .btn:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 24px rgba(156, 39, 196, 0.4);
+        box-shadow: 0 8px 24px rgba(139, 92, 246, 0.4);
       }
       .visually-hidden {
         position: absolute;
@@ -230,14 +230,14 @@
       }
     </style>
 
-    <!-- Адаптивный загрузчик — ДО CSS, чтобы классы успели примениться -->
-    <script type="module" src="js/adaptive-loader.js"></script>
+    <!--! Адаптивный загрузчик — ДО CSS, чтобы классы успели примениться -->
+    <script type="module" src="js/adaptive/adaptive-loader.js"></script>
 
-    <!-- Critical CSS + fonts — блокирующий рендер, но минимальный -->
+    <!--! Critical CSS + fonts — блокирующий рендер, но минимальный -->
     <link rel="preload" as="style" href="css/critical.css" />
     <link rel="stylesheet" href="css/critical.css" />
 
-    <!-- Font preloads — только самые нужные начертения -->
+    <!--! Font preloads — только самые нужные начертения -->
     <link
       rel="preload"
       as="font"
@@ -257,6 +257,13 @@
       as="font"
       type="font/woff2"
       crossorigin
+      href="fonts/SpaceGrotesk-VariableFont_wght.woff2"
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
       href="fonts/Montserrat-Regular.woff2"
     />
     <link
@@ -267,33 +274,33 @@
       href="fonts/JetBrainsMono-Regular.woff2"
     />
 
-    <!-- Preconnect для внешних CDN -->
+    <!--! Preconnect для внешних CDN -->
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
 
-    <!-- Modulepreload для критических JS -->
-    <link rel="modulepreload" href="js/common.js" />
-    <link rel="modulepreload" href="js/lab.js" />
-    <link rel="modulepreload" href="js/menu.js" />
-    <link rel="modulepreload" href="js/theme.js" />
-    <link rel="modulepreload" href="js/adaptive-store.js" />
+    <!--! Modulepreload для критических JS -->
+    <link rel="modulepreload" href="js/utils/common.js" />
+    <link rel="modulepreload" href="js/core/lab.js" />
+    <link rel="modulepreload" href="js/components/menu.js" />
+    <link rel="modulepreload" href="js/components/theme.js" />
+    <link rel="modulepreload" href="js/adaptive/adaptive-store.js" />
 
-    <!-- Components CSS — ленивая загрузка -->
-    <link rel="preload" as="style" href="css/components.css" />
+    <!--! Theme CSS — ленивая загрузка (включает components, motion, adaptive, utilities) -->
+    <link rel="preload" as="style" href="css/theme.css" />
     <link
       rel="stylesheet"
-      href="css/components.css"
+      href="css/theme.css"
       media="print"
       onload="this.media = 'all'"
     />
 
-    <!-- Тёмная тема — применяется до отрисовки (нет мигания) -->
-    <script src="js/theme.js"></script>
+    <!--! Тёмная тема — применяется до отрисовки (нет мигания) -->
+    <script src="js/components/theme.js"></script>
 
-    <!-- Основные модули -->
-    <script type="module" src="js/menu.js"></script>
-    <script type="module" src="js/lab.js"></script>
+    <!--! Основные модули -->
+    <script type="module" src="js/components/menu.js"></script>
+    <script type="module" src="js/core/lab.js"></script>
 
-    <!-- Внешние библиотеки (defer) -->
+    <!--! Внешние библиотеки (defer) -->
     <script
       defer
       src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"
@@ -307,10 +314,10 @@
       src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"
     ></script>
 
-    <!-- Noscript fallback для отключённого JS -->
+    <!--! Noscript fallback для отключённого JS -->
     <noscript>
       <link rel="stylesheet" href="css/critical.css" />
-      <link rel="stylesheet" href="css/components.css" />
+      <link rel="stylesheet" href="css/theme.css" />
       <style>
         /* Fallback для тёмной темы без JS */
         html {
@@ -324,7 +331,7 @@
     </noscript>
   </head>
   <body>
-    <!-- SVG Sprite — подключается первым для использования через <use> -->
+    <!--! SVG Sprite — подключается первым для использования через <use> -->
     <svg style="display: none">
       <use href="images/icons.svg#icon-github"></use>
       <use href="images/icons.svg#icon-telegram"></use>

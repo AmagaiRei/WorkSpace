@@ -9,15 +9,8 @@ const STATIC_ASSETS = [
   "/index.html",
   "/lab.html",
   "/sync.html",
-  "/css/theme-system.css",
-  "/css/adaptive.css",
-  "/css/style.css",
-  "/css/performance.css",
-  "/css/smooth-motion.css",
-  "/css/admin-panel.css",
-  "/css/markdown-modal.css",
-  "/css/file-manager.css",
-  "/css/sync-center.css",
+  "/css/critical.css",
+  "/css/theme.css",
   "/js/theme.js",
   "/js/menu.js",
   "/js/index.js",
@@ -30,10 +23,10 @@ const STATIC_ASSETS = [
   "/fonts/README.md",
 ];
 
-// Ресурсы, которые кэшируем с network-first стратегией
+// !Ресурсы, которые кэшируем с network-first стратегией
 const NETWORK_FIRST = ["/api/", "/data/"];
 
-// Ресурсы, которые кэшируем с cache-first стратегией
+// !Ресурсы, которые кэшируем с cache-first стратегией
 const CACHE_FIRST = [
   "/fonts/",
   "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css",
@@ -42,7 +35,7 @@ const CACHE_FIRST = [
   "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js",
 ];
 
-// Установка SW
+// !Установка SW
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
@@ -62,7 +55,7 @@ self.addEventListener("install", (event) => {
   self.skipWaiting();
 });
 
-// Активация — очистка старых кэшей
+// !Активация — очистка старых кэшей
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
@@ -80,7 +73,7 @@ self.addEventListener("activate", (event) => {
   self.clients.claim();
 });
 
-// Стратегия: Stale-While-Revalidate для статических ресурсов
+// !Стратегия: Stale-While-Revalidate для статических ресурсов
 async function staleWhileRevalidate(request) {
   const cache = await caches.open(CACHE_NAME);
   const cachedResponse = await cache.match(request);
@@ -99,7 +92,7 @@ async function staleWhileRevalidate(request) {
   return cachedResponse || fetchPromise;
 }
 
-// Стратегия: Network First для API/данных
+// !Стратегия: Network First для API/данных
 async function networkFirst(request) {
   const cache = await caches.open(CACHE_NAME);
 
@@ -122,7 +115,7 @@ async function networkFirst(request) {
   }
 }
 
-// Стратегия: Cache First для шрифтов и внешних ресурсов
+// !Стратегия: Cache First для шрифтов и внешних ресурсов
 async function cacheFirst(request) {
   const cache = await caches.open(CACHE_NAME);
   const cachedResponse = await cache.match(request);
@@ -150,7 +143,7 @@ async function cacheFirst(request) {
   }
 }
 
-// Основной fetch handler
+// !Основной fetch handler
 self.addEventListener("fetch", (event) => {
   const { request } = event;
   const url = new URL(request.url);
@@ -192,7 +185,7 @@ self.addEventListener("fetch", (event) => {
   event.respondWith(handler);
 });
 
-// Обработка сообщений от клиента
+// !Обработка сообщений от клиента
 self.addEventListener("message", (event) => {
   if (event.data === "skipWaiting") {
     self.skipWaiting();
@@ -205,7 +198,7 @@ self.addEventListener("message", (event) => {
   }
 });
 
-// Push уведомления (если понадобятся)
+// !Push уведомления (если понадобятся)
 self.addEventListener("push", (event) => {
   if (!event.data) return;
 

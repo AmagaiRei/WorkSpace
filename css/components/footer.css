@@ -1,0 +1,49 @@
+/*! ==========================================================================
+   FOOTER
+   ========================================================================== */
+
+.footer {
+  margin-top: auto;
+  padding: var(--space-xl);
+  text-align: center;
+  border-top: 1px solid rgba(139, 92, 246, 0.08);
+  background: linear-gradient(to bottom, transparent, rgba(10, 5, 22, 0.16));
+}
+
+.socials {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-md);
+}
+
+.socials a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-circle);
+  background: var(--color-bg-deep);
+  border: 1px solid var(--color-border-dim);
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition:
+    color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .socials a:hover {
+    color: var(--color-neon-cyan);
+    border-color: var(--color-neon-cyan);
+    transform: translateY(-2px);
+  }
+}
+
+.footer__note {
+  font-size: var(--text-small);
+  color: var(--color-text-dim);
+  margin: 0;
+}

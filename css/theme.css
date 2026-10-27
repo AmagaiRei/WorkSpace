@@ -1,0 +1,22 @@
+/*! ==========================================================================
+   THEME.CSS — Main entry point for WorkSpace design system
+   Import order matters: tokens → components → motion → adaptive → utilities
+   ========================================================================== */
+
+/*! 1. Design Tokens (foundation) */
+@import "./tokens/design-tokens.css";
+
+/*! 2. Components (UI components built on tokens) */
+@import "./components/index.css";
+
+/*! 3. Motion (animations and transitions) */
+@import "./motion/index.css";
+
+/*! 4. Adaptive (performance/network profiles) */
+@import "./adaptive/index.css";
+
+/*! 5. Utilities (helper classes) */
+@import "./utilities/index.css";
+
+/*! 6. Print styles */
+@import "./print.css";

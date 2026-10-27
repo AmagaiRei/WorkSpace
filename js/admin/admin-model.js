@@ -1,5 +1,5 @@
-//! Чистая логика админки: проверка формы, пути файлов, слияние в subjects.json.
-//! Здесь нет DOM и сети — модуль легко тестировать в Node.
+// ! Чистая логика админки: проверка формы, пути файлов, слияние в subjects.json.
+// ! Здесь нет DOM и сети — модуль легко тестировать в Node.
 
 export const SUBJECTS_PATH = "data/subjects.json";
 export const MAX_FILE_BYTES = 25 * 1024 * 1024; // base64 раздувает файл на ~33%
@@ -65,7 +65,7 @@ export function nextLabId(subject) {
   return Math.max(0, ...ids) + 1;
 }
 
-/**
+/*! *
  * Превращает FileList кода (файлы или папка) в [{path, file}] без мусора.
  * У выбранной папки webkitRelativePath = "Корень/src/A.cs" — корень отбрасываем.
  */
@@ -141,7 +141,7 @@ export function validateDraft(draft, data) {
   return errors;
 }
 
-/** Карта «путь в репозитории → File». Дубликаты имён — ошибка. */
+/*! * Карта «путь в репозитории → File». Дубликаты имён — ошибка. */
 export function planFiles(draft) {
   const base = labFolder(draft.subjectId, draft.id);
   const planned = new Map();
@@ -162,7 +162,7 @@ export function planFiles(draft) {
 
 const naturalOrder = new Intl.Collator("ru", { numeric: true });
 
-/** Запись лабораторной в том же формате, что и остальные в subjects.json. */
+/*! * Запись лабораторной в том же формате, что и остальные в subjects.json. */
 export function buildLabEntry(draft, planned) {
   const base = labFolder(draft.subjectId, draft.id);
   const paths = [...planned.keys()];
@@ -192,7 +192,7 @@ export function buildLabEntry(draft, planned) {
   };
 }
 
-/** Добавляет лабораторную в разобранный subjects.json. Мутирует и возвращает data. */
+/*! * Добавляет лабораторную в разобранный subjects.json. Мутирует и возвращает data. */
 export function mergeLab(data, subjectId, entry) {
   const subject = data.subjects?.find((s) => s.id === subjectId);
   if (!subject)
@@ -260,7 +260,7 @@ function insertIntoText(text, subjectId, entry) {
   return `${text.slice(0, lastEnd)},${eol}${objIndent}${body}${text.slice(lastEnd)}`;
 }
 
-/**
+/*! *
  * Возвращает новый текст subjects.json с добавленной лабораторной.
  * Обычный случай — точечная вставка: в git-диффе только новые строки.
  * Если вставка невозможна (номер не последний, нестандартная вёрстка) —
@@ -289,7 +289,7 @@ export function addLabToText(originalText, subjectId, entry) {
   return serializeLike(originalText, data);
 }
 
-/**
+/*! *
  * Сериализует объект так же, как был оформлен исходный текст:
  * тот же отступ, переводы строк (CRLF/LF), BOM и перевод строки в конце.
  * Иначе git покажет «изменён весь файл».
@@ -303,9 +303,9 @@ export function serializeLike(originalText, data) {
   return bom + body + tail;
 }
 
-/* ---------- Редактирование существующей лабораторной ---------- */
+/*! ---------- Редактирование существующей лабораторной ---------- */
 
-/** Проверка формы редактирования: номер и предмет менять нельзя, файлы необязательны. */
+/*! * Проверка формы редактирования: номер и предмет менять нельзя, файлы необязательны. */
 export function validateEditDraft(draft, original) {
   const errors = [];
   if (!draft.title.trim()) errors.push("Введи название лабораторной.");
@@ -352,7 +352,7 @@ export function validateEditDraft(draft, original) {
   return errors;
 }
 
-/**
+/*! *
  * План правки: что загрузить, что удалить и какой будет запись в subjects.json.
  * existingPaths — файлы папки лабораторной в репозитории (нужны, чтобы заменить код целиком).
  */
@@ -437,7 +437,7 @@ export function buildEditPlan(draft, original, existingPaths = []) {
   return { entry, upload, remove, changed };
 }
 
-/**
+/*! *
  * Заменяет запись одной лабораторной в тексте subjects.json, не трогая остальной текст:
  * в git-диффе меняется только эта запись. Если не получилось — пересборка в том же стиле.
  */

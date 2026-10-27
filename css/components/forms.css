@@ -1,0 +1,142 @@
+/*! ==========================================================================
+   FORM ELEMENTS — Search, Inputs, Form Elements
+   ========================================================================== */
+
+.search {
+  padding: var(--space-sm) var(--space-md);
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+  border: 1px solid var(--color-border-dim);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-surface);
+  color: var(--color-text-primary);
+  width: 100%;
+  max-width: 320px;
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
+}
+
+.search::placeholder {
+  color: var(--color-text-dim);
+}
+
+.search:focus {
+  border-color: var(--color-accent-cyan);
+  box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.2);
+  outline: none;
+}
+
+input,
+textarea,
+select {
+  color: var(--color-text-primary);
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border-dim);
+  border-radius: var(--radius-md);
+  font-family: var(--font-ui);
+  font-size: var(--text-body);
+  padding: var(--space-sm) var(--space-md);
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--color-text-dim);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--color-accent-cyan);
+  box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.2);
+  outline: none;
+}
+
+/*! ==========================================================================
+   TOOLBAR — Search, Filters, Progress
+   ========================================================================== */
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.filters-reset {
+  min-height: 48px;
+  padding: 0 22px;
+  font: inherit;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  background: transparent;
+  border: 1px solid var(--color-border-dim);
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+}
+
+.filters-reset:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: var(--color-text-primary);
+}
+
+.tag-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.tag-filter,
+.tag {
+  color: var(--color-text-primary);
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-dim);
+  border-radius: var(--radius-pill);
+  padding: var(--space-xs) var(--space-md);
+  font-size: var(--text-small);
+  font-weight: var(--weight-medium);
+  cursor: pointer;
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    background var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .tag-filter:hover,
+  .tag:hover {
+    border-color: var(--color-neon-cyan);
+    background: color-mix(
+      in srgb,
+      var(--color-neon-cyan) 12%,
+      var(--color-bg-surface)
+    );
+    box-shadow: var(--glow-cyan);
+  }
+}
+
+.tag-filter[aria-pressed="true"] {
+  border-color: var(--color-neon-cyan);
+  background: color-mix(
+    in srgb,
+    var(--color-neon-cyan) 18%,
+    var(--color-bg-surface)
+  );
+  box-shadow: var(--glow-cyan);
+  color: var(--color-neon-cyan);
+}
+
+.results-count {
+  min-height: 1.6em;
+  margin: 0 0 16px;
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+}

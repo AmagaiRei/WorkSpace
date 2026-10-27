@@ -1,0 +1,18 @@
+/*! ==========================================================================
+   COMPONENTS — Main entry point
+   Imports all component styles
+   ========================================================================== */
+
+@import "./base.css";
+@import "./header.css";
+@import "./buttons.css";
+@import "./forms.css";
+@import "./cards.css";
+@import "./hero.css";
+@import "./footer.css";
+@import "./modals.css";
+@import "./tags.css";
+@import "./file-manager.css";
+@import "./sync-center.css";
+@import "./admin.css";
+@import "./admin-panel.css";

@@ -10,27 +10,27 @@
 
 ## Color Palette (Neon Cyberpunk)
 
-| Token                | Hex       | Role                                  |
-| -------------------- | --------- | ------------------------------------- |
-| `--bg-deep`          | `#080412` | Page background base                  |
-| `--bg-surface`       | `#0f081a` | Card/surface background               |
-| `--surface-elevated` | `#1a1028` | Elevated surfaces (modals, dropdowns) |
-| `--border-dim`       | `#2a1a3a` | Subtle borders                        |
-| `--border-neon`      | `#d463ff` | Active/focus borders (neon purple)    |
-| `--neon-purple`      | `#a855f7` | Primary accent                        |
-| `--neon-pink`        | `#ec4899` | Secondary accent                      |
-| `--neon-cyan`        | `#22d3ee` | Tertiary accent (code, links)         |
-| `--neon-orange`      | `#f97316` | Warning/active states                 |
-| `--neon-green`       | `#22c55e` | Success states                        |
-| `--text-primary`     | `#fafaff` | Primary text                          |
-| `--text-muted`       | `#b8a8d0` | Secondary text                        |
-| `--text-dim`         | `#7a6a9a` | Tertiary/disabled text                |
+| Token                  | Hex                     | Role                                  |
+| ---------------------- | ----------------------- | ------------------------------------- |
+| `--color-bg-deep`      | `#0a0516`               | Page background base                  |
+| `--color-bg-surface`   | `#130924`               | Card/surface background               |
+| `--color-bg-elevated`  | `#1a1030`               | Elevated surfaces (modals, dropdowns) |
+| `--color-border-dim`   | `rgba(182,36,255,0.15)` | Subtle borders                        |
+| `--color-border-neon`  | `#b624ff`               | Active/focus borders (neon purple)    |
+| `--color-neon-purple`  | `#b624ff`               | Primary accent                        |
+| `--color-neon-pink`    | `#f000ff`               | Secondary accent                      |
+| `--color-neon-cyan`    | `#00f0ff`               | Tertiary accent (code, links)         |
+| `--color-neon-orange`  | `#ff8c00`               | Warning/active states                 |
+| `--color-neon-green`   | `#00ff88`               | Success states                        |
+| `--color-text-primary` | `#f5f0ff`               | Primary text                          |
+| `--color-text-muted`   | `#b8a8d0`               | Secondary text                        |
+| `--color-text-dim`     | `#7a6a9a`               | Tertiary/disabled text                |
 
 **Glow system:**
 
-- `--glow-sm`: `0 0 8px rgba(168, 85, 247, 0.3), 0 0 16px rgba(236, 72, 153, 0.15)`
-- `--glow-md`: `0 0 16px rgba(168, 85, 247, 0.4), 0 0 32px rgba(236, 72, 153, 0.2), 0 0 48px rgba(34, 211, 238, 0.1)`
-- `--glow-lg`: `0 0 24px rgba(168, 85, 247, 0.5), 0 0 48px rgba(236, 72, 153, 0.3), 0 0 80px rgba(34, 211, 238, 0.15)`
+- `--glow-sm`: `var(--glow-blue)`
+- `--glow-md`: `0 0 20px rgba(182, 36, 255, 0.3), 0 0 40px rgba(0, 240, 255, 0.2)`
+- `--glow-lg`: `0 0 30px rgba(182, 36, 255, 0.4), 0 0 60px rgba(255, 140, 0, 0.2), 0 0 90px rgba(0, 240, 255, 0.15)`
 
 ---
 
@@ -105,10 +105,11 @@
 
 **Glass surfaces:**
 
-- Base: `rgba(15, 8, 26, 0.7)` + `backdrop-filter: blur(16px)`
-- Elevated: `rgba(26, 16, 40, 0.85)` + `backdrop-filter: blur(24px)`
-- Border: `1px solid rgba(212, 99, 255, 0.3)`
-- Hover: border `rgba(212, 99, 255, 0.8)` + `--glow-md`
+- Base: `rgba(23, 13, 43, 0.6)` + `backdrop-filter: blur(16px)`
+- Elevated: `rgba(23, 13, 43, 0.75)` + `backdrop-filter: blur(24px)`
+- Strong: `rgba(23, 13, 43, 0.9)` + `backdrop-filter: blur(32px)`
+- Border: `1px solid rgba(182, 36, 255, 0.3)`
+- Hover: border `rgba(182, 36, 255, 0.6)` + `--glow-md`
 
 **Neon accents applied to:**
 
@@ -167,7 +168,7 @@
 
 ## Implementation Priority
 
-1. **Token system** — consolidate all CSS custom properties into single source
+1. **Token system** — consolidate all CSS custom properties into `css/tokens/design-tokens.css`
 2. **Typography** — load Space Grotesk, apply scale
 3. **Hero** — refine layout, add atmospheric glow, distinctive CTA
 4. **Dashboard** — glass card with neon KPIs, animated progress bar
@@ -204,8 +205,8 @@
 
 After approval of this plan:
 
-1. Create `css/design-tokens.css` with consolidated tokens
-2. Update `css/theme-system.css` to use new tokens
+1. Create `css/tokens/design-tokens.css` with consolidated tokens
+2. Create `css/theme.css` as main entry point importing all modules
 3. Add Space Grotesk font loading
 4. Refactor hero, dashboard, subjects, cards with new design
 5. Add page-load animation sequence
