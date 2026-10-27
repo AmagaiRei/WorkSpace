@@ -192,19 +192,19 @@ git push
 
 ```json
 {
-   "subjects": [
-      {
-         "id": "programming",
-         "name": "Программирование",
-         "labs": [
-            {
-               "id": "lab-01",
-               "title": "Лабораторная работа № 1",
-               "tags": []
-            }
-         ]
-      }
-   ]
+  "subjects": [
+    {
+      "id": "programming",
+      "name": "Программирование",
+      "labs": [
+        {
+          "id": "lab-01",
+          "title": "Лабораторная работа № 1",
+          "tags": []
+        }
+      ]
+    }
+  ]
 }
 ```
 

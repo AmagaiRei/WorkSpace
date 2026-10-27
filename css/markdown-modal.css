@@ -126,9 +126,17 @@ body.md-modal-open {
   line-height: 1.25;
 }
 
-.md-modal__body h1 { font-size: 1.6rem; }
-.md-modal__body h2 { font-size: 1.3rem; padding-bottom: 0.3em; border-bottom: 1px solid var(--md-border); }
-.md-modal__body h3 { font-size: 1.1rem; }
+.md-modal__body h1 {
+  font-size: 1.6rem;
+}
+.md-modal__body h2 {
+  font-size: 1.3rem;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid var(--md-border);
+}
+.md-modal__body h3 {
+  font-size: 1.1rem;
+}
 
 .md-modal__body p,
 .md-modal__body ul,

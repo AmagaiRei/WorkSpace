@@ -182,7 +182,8 @@ textarea {
 input:focus,
 select:focus,
 textarea:focus {
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ws-purple, #a855f7) 22%, transparent);
+  box-shadow: 0 0 0 3px
+    color-mix(in srgb, var(--ws-purple, #a855f7) 22%, transparent);
 }
 
 .theme-toggle:hover,
@@ -214,8 +215,12 @@ textarea:focus {
 }
 
 @keyframes ws-page-enter {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes ws-content-enter {
@@ -263,8 +268,12 @@ textarea:focus {
 }
 
 @keyframes ws-fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @media (hover: none) {
@@ -311,7 +320,6 @@ textarea:focus {
   }
 }
 
-
 /* Раскрывающиеся списки и вложенные элементы */
 .subject {
   overflow: clip;
@@ -347,12 +355,24 @@ textarea:focus {
   animation: ws-dropdown-item 360ms var(--ease-smooth) both;
 }
 
-.subject[open] > .subject__content > *:nth-child(1) { animation-delay: 25ms; }
-.subject[open] > .subject__content > *:nth-child(2) { animation-delay: 55ms; }
-.subject[open] > .subject__content > *:nth-child(3) { animation-delay: 85ms; }
-.subject[open] > .subject__content > *:nth-child(4) { animation-delay: 115ms; }
-.subject[open] > .subject__content > *:nth-child(5) { animation-delay: 145ms; }
-.subject[open] > .subject__content > *:nth-child(n + 6) { animation-delay: 165ms; }
+.subject[open] > .subject__content > *:nth-child(1) {
+  animation-delay: 25ms;
+}
+.subject[open] > .subject__content > *:nth-child(2) {
+  animation-delay: 55ms;
+}
+.subject[open] > .subject__content > *:nth-child(3) {
+  animation-delay: 85ms;
+}
+.subject[open] > .subject__content > *:nth-child(4) {
+  animation-delay: 115ms;
+}
+.subject[open] > .subject__content > *:nth-child(5) {
+  animation-delay: 145ms;
+}
+.subject[open] > .subject__content > *:nth-child(n + 6) {
+  animation-delay: 165ms;
+}
 
 .tree__folder > summary {
   transition:
@@ -405,7 +425,6 @@ textarea:focus {
   }
 }
 
-
 /* !Единый фон без резких горизонтальных переходов */
 html,
 body {
@@ -415,18 +434,42 @@ body {
 
 body {
   background-image:
-    radial-gradient(ellipse at 12% 8%, rgba(126, 48, 170, 0.20), transparent 42%),
-    radial-gradient(ellipse at 88% 22%, rgba(205, 66, 179, 0.14), transparent 44%),
-    radial-gradient(ellipse at 52% 78%, rgba(93, 45, 145, 0.12), transparent 50%),
+    radial-gradient(
+      ellipse at 12% 8%,
+      rgba(126, 48, 170, 0.2),
+      transparent 42%
+    ),
+    radial-gradient(
+      ellipse at 88% 22%,
+      rgba(205, 66, 179, 0.14),
+      transparent 44%
+    ),
+    radial-gradient(
+      ellipse at 52% 78%,
+      rgba(93, 45, 145, 0.12),
+      transparent 50%
+    ),
     linear-gradient(145deg, #21142e 0%, #301b40 48%, #24152f 100%) !important;
   background-attachment: fixed !important;
 }
 
-:root[data-theme='dark'] body {
+:root[data-theme="dark"] body {
   background-image:
-    radial-gradient(ellipse at 12% 8%, rgba(126, 48, 170, 0.16), transparent 42%),
-    radial-gradient(ellipse at 88% 22%, rgba(205, 66, 179, 0.10), transparent 44%),
-    radial-gradient(ellipse at 52% 78%, rgba(93, 45, 145, 0.10), transparent 50%),
+    radial-gradient(
+      ellipse at 12% 8%,
+      rgba(126, 48, 170, 0.16),
+      transparent 42%
+    ),
+    radial-gradient(
+      ellipse at 88% 22%,
+      rgba(205, 66, 179, 0.1),
+      transparent 44%
+    ),
+    radial-gradient(
+      ellipse at 52% 78%,
+      rgba(93, 45, 145, 0.1),
+      transparent 50%
+    ),
     linear-gradient(145deg, #100a19 0%, #1b1028 48%, #120b1d 100%) !important;
 }
 
@@ -444,7 +487,9 @@ body {
 .subjects > details > summary,
 .subject > summary,
 .subjects summary {
-  transition: color var(--motion-normal) var(--ease-standard), background-color var(--motion-normal) var(--ease-standard);
+  transition:
+    color var(--motion-normal) var(--ease-standard),
+    background-color var(--motion-normal) var(--ease-standard);
 }
 
 .subjects > details[open] > :not(summary),
@@ -458,18 +503,38 @@ body {
   animation: ws-dropdown-child 360ms var(--ease-smooth) both;
 }
 
-.subjects > details[open] > :not(summary) > *:nth-child(2) { animation-delay: 35ms; }
-.subjects > details[open] > :not(summary) > *:nth-child(3) { animation-delay: 70ms; }
-.subjects > details[open] > :not(summary) > *:nth-child(4) { animation-delay: 105ms; }
+.subjects > details[open] > :not(summary) > *:nth-child(2) {
+  animation-delay: 35ms;
+}
+.subjects > details[open] > :not(summary) > *:nth-child(3) {
+  animation-delay: 70ms;
+}
+.subjects > details[open] > :not(summary) > *:nth-child(4) {
+  animation-delay: 105ms;
+}
 
 @keyframes ws-dropdown-open {
-  from { opacity: 0; transform: translateY(-10px); clip-path: inset(0 0 100% 0 round 12px); }
-  to { opacity: 1; transform: translateY(0); clip-path: inset(0 0 0 0 round 0); }
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+    clip-path: inset(0 0 100% 0 round 12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    clip-path: inset(0 0 0 0 round 0);
+  }
 }
 
 @keyframes ws-dropdown-child {
-  from { opacity: 0; transform: translateY(7px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* !Плавное открытие полноразмерных скриншотов */
@@ -492,18 +557,36 @@ dialog.lightbox .btn {
 }
 
 @keyframes ws-lightbox-in {
-  from { opacity: 0; transform: translateY(12px) scale(0.965); filter: blur(5px); }
-  to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.965);
+    filter: blur(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
 }
 
 @keyframes ws-lightbox-backdrop {
-  from { background-color: rgba(15, 5, 25, 0); }
-  to { background-color: rgba(15, 5, 25, 0.85); }
+  from {
+    background-color: rgba(15, 5, 25, 0);
+  }
+  to {
+    background-color: rgba(15, 5, 25, 0.85);
+  }
 }
 
 @keyframes ws-lightbox-image {
-  from { opacity: 0; transform: scale(0.975); }
-  to { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.975);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

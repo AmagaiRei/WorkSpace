@@ -1,10 +1,10 @@
 // !Управление темой — только тёмная. Подключать в <head> БЕЗ defer — тема применяется до отрисовки.
-const THEME_KEY = 'workspace-theme';
+const THEME_KEY = "workspace-theme";
 
 function applyDarkTheme() {
-  document.documentElement.setAttribute('data-theme', 'dark');
+  document.documentElement.setAttribute("data-theme", "dark");
   // Скрываем кнопку переключения темы, если она есть в DOM
-  const button = document.getElementById('theme-toggle');
+  const button = document.getElementById("theme-toggle");
   if (button) button.hidden = true;
 }
 
@@ -12,12 +12,12 @@ function applyDarkTheme() {
 applyDarkTheme();
 
 // Если DOM уже готов — скрываем toggle
-if (document.readyState !== 'loading') {
-  const button = document.getElementById('theme-toggle');
+if (document.readyState !== "loading") {
+  const button = document.getElementById("theme-toggle");
   if (button) button.hidden = true;
 } else {
-  document.addEventListener('DOMContentLoaded', () => {
-    const button = document.getElementById('theme-toggle');
+  document.addEventListener("DOMContentLoaded", () => {
+    const button = document.getElementById("theme-toggle");
     if (button) button.hidden = true;
   });
 }

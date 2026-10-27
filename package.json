@@ -1,12 +1,16 @@
 {
-   "name": "workspace",
-   "private": true,
-   "type": "module",
-   "engines": {
-      "node": ">=18"
-   },
-   "scripts": {
-      "sync": "node js/sync-local.mjs",
-      "sync:dry": "node js/sync-local.mjs --dry-run"
-   }
+  "name": "workspace",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "sync": "node js/sync-local.mjs",
+    "sync:dry": "node js/sync-local.mjs --dry-run"
+  },
+  "devDependencies": {
+    "@playwright/mcp": "^0.0.83",
+    "prettier": "^3.9.10"
+  }
 }

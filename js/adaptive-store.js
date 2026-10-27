@@ -29,11 +29,11 @@ export const adaptiveStore = {
 
 // Удобные селекторы для обратной совместимости
 export function getNetworkProfile() {
-  return profile?.netProfile || 'limited';
+  return profile?.netProfile || "limited";
 }
 
 export function getPerfProfile() {
-  return profile?.perfProfile || 'medium';
+  return profile?.perfProfile || "medium";
 }
 
 export function isReduceMotion() {
@@ -46,5 +46,8 @@ export function isLowBattery() {
 
 export function isHighContrast() {
   // Проверяем и класс на html, и профиль
-  return document.documentElement.classList.contains('high-contrast') || profile?.highContrast === true;
+  return (
+    document.documentElement.classList.contains("high-contrast") ||
+    profile?.highContrast === true
+  );
 }

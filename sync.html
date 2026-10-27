@@ -1,276 +1,626 @@
 <!doctype html>
 <html lang="ru">
-   <head>
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <meta
-         name="description"
-         content="Центр синхронизации WorkSpace с GitHub"
-      />
-      <title>Центр синхронизации — WorkSpace</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Центр синхронизации WorkSpace с GitHub" />
+    <title>Центр синхронизации — WorkSpace</title>
 
-      <!-- Inline critical CSS для мгновенного первого кадра -->
+    <!-- Inline critical CSS для мгновенного первого кадра -->
+    <style>
+      /* Critical CSS — минимальные стили для первого рендера */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      :root {
+        --ws-bg: #0a0414;
+        --ws-surface: #120a1f;
+        --ws-surface-elevated: #1a1028;
+        --ws-text: #f5f0ff;
+        --ws-text-muted: #b8a8d0;
+        --ws-border: #2a1a3a;
+        --ws-border-strong: #3d2a52;
+        --ws-accent: #9c27c4;
+        --ws-accent-glow: #d463ff;
+        --ws-focus-ring: #d463ff;
+        --ws-shadow-sm: 0 2px 8px rgba(10, 4, 20, 0.4);
+        --ws-shadow-md: 0 8px 24px rgba(10, 4, 20, 0.5);
+        --ws-shadow-lg: 0 16px 48px rgba(10, 4, 20, 0.6);
+        --ws-radius-sm: 8px;
+        --ws-radius-md: 12px;
+        --ws-radius-lg: 16px;
+        --ws-radius-xl: 24px;
+        --ws-space-xs: 4px;
+        --ws-space-sm: 8px;
+        --ws-space-md: 16px;
+        --ws-space-lg: 24px;
+        --ws-space-xl: 32px;
+        --ws-space-2xl: 48px;
+        --ws-font-sans:
+          "Montserrat", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+        --ws-font-mono: "JetBrains Mono", Fira Code, Consolas, monospace;
+        --ws-motion-fast: 120ms;
+        --ws-motion-normal: 200ms;
+        --ws-motion-slow: 350ms;
+        --ws-glass-blur: 12px;
+        --ws-glass-opacity: 0.95;
+        --ws-neon-intensity: 1;
+      }
+      html {
+        font-size: 16px;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      body {
+        margin: 0;
+        font-family: var(--ws-font-sans);
+        background: var(--ws-bg);
+        color: var(--ws-text);
+        line-height: 1.6;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+      .header {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--ws-space-md);
+        padding: var(--ws-space-md) var(--ws-space-xl);
+        background: rgba(18, 10, 31, 0.9);
+        backdrop-filter: blur(var(--ws-glass-blur));
+        border-bottom: 1px solid var(--ws-border);
+      }
+      .logo {
+        font-weight: 800;
+        font-size: 1.25rem;
+        color: var(--ws-text);
+        text-decoration: none;
+        letter-spacing: 0.5px;
+      }
+      .nav {
+        display: flex;
+        gap: var(--ws-space-lg);
+      }
+      .nav a {
+        color: var(--ws-text-muted);
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.9rem;
+        transition: color var(--ws-motion-fast);
+      }
+      .nav a:hover,
+      .nav a[aria-current] {
+        color: var(--ws-accent);
+      }
+      .header__actions {
+        display: flex;
+        align-items: center;
+        gap: var(--ws-space-sm);
+      }
+      .sync-page {
+        flex: 1;
+        padding: var(--ws-space-2xl) var(--ws-space-xl);
+        max-width: 1200px;
+        margin: 0 auto;
+        width: 100%;
+      }
+      .sync-hero {
+        text-align: center;
+        margin-bottom: var(--ws-space-2xl);
+      }
+      .sync-eyebrow {
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--ws-accent);
+        display: block;
+        margin-bottom: var(--ws-space-sm);
+      }
+      .sync-hero h1 {
+        font-size: clamp(2rem, 4vw, 3rem);
+        font-weight: 800;
+        margin: 0 0 var(--ws-space-md);
+        background: linear-gradient(135deg, #fff, var(--ws-accent));
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .sync-hero p {
+        color: var(--ws-text-muted);
+        max-width: 600px;
+        margin: 0 auto;
+      }
+      .sync-layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--ws-space-xl);
+      }
+      .sync-panel {
+        padding: var(--ws-space-xl);
+        border-radius: var(--ws-radius-lg);
+        background: var(--ws-surface);
+        border: 1px solid var(--ws-border);
+        transition:
+          border-color var(--ws-motion-normal),
+          box-shadow var(--ws-motion-normal);
+      }
+      .sync-panel:hover {
+        border-color: var(--ws-border-strong);
+        box-shadow: var(--ws-shadow-md);
+      }
+      .sync-panel h2 {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin: 0 0 var(--ws-space-xs);
+        display: flex;
+        align-items: center;
+        gap: var(--ws-space-sm);
+      }
+      .sync-muted {
+        color: var(--ws-text-muted);
+        font-size: 0.85rem;
+        line-height: 1.6;
+      }
+      .sync-field {
+        margin-top: var(--ws-space-lg);
+      }
+      .sync-field label {
+        display: block;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--ws-text-muted);
+        margin-bottom: var(--ws-space-xs);
+      }
+      .sync-input {
+        width: 100%;
+        padding: var(--ws-space-sm) var(--ws-space-md);
+        font-family: var(--ws-font-sans);
+        font-size: 0.9rem;
+        border: 1px solid var(--ws-border);
+        border-radius: var(--ws-radius-md);
+        background: var(--ws-bg);
+        color: var(--ws-text);
+        transition: border-color var(--ws-motion-fast);
+      }
+      .sync-input:focus {
+        outline: none;
+        border-color: var(--ws-accent);
+        box-shadow: 0 0 0 3px rgba(156, 39, 196, 0.2);
+      }
+      .sync-actions {
+        display: flex;
+        gap: var(--ws-space-md);
+        margin-top: var(--ws-space-lg);
+        flex-wrap: wrap;
+      }
+      .sync-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--ws-space-sm);
+        padding: var(--ws-space-sm) var(--ws-space-lg);
+        font-family: var(--ws-font-sans);
+        font-weight: 600;
+        font-size: 0.9rem;
+        border: none;
+        border-radius: var(--ws-radius-md);
+        background: linear-gradient(135deg, var(--ws-accent), #7b1fa2);
+        color: #fff;
+        cursor: pointer;
+        transition:
+          transform var(--ws-motion-fast),
+          box-shadow var(--ws-motion-fast);
+      }
+      .sync-btn:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(156, 39, 196, 0.4);
+      }
+      .sync-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+      }
+      .sync-btn--secondary {
+        background: transparent;
+        border: 1px solid var(--ws-border);
+        color: var(--ws-text);
+      }
+      .sync-btn--secondary:hover:not(:disabled) {
+        border-color: var(--ws-accent);
+        color: var(--ws-accent);
+        box-shadow: none;
+        transform: none;
+      }
+      .sync-status {
+        margin-top: var(--ws-space-lg);
+        padding: var(--ws-space-md);
+        border-radius: var(--ws-radius-md);
+        background: var(--ws-bg);
+        border: 1px solid var(--ws-border);
+        font-size: 0.85rem;
+        line-height: 1.5;
+      }
+      .sync-stat-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--ws-space-md);
+        margin-top: var(--ws-space-lg);
+        padding: var(--ws-space-md);
+        background: var(--ws-bg);
+        border-radius: var(--ws-radius-md);
+        border: 1px solid var(--ws-border);
+      }
+      .sync-stat {
+        text-align: center;
+      }
+      .sync-stat strong {
+        display: block;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--ws-text);
+      }
+      .sync-stat span {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--ws-text-muted);
+      }
+      .sync-warning {
+        margin-top: var(--ws-space-lg);
+        padding: var(--ws-space-md);
+        background: rgba(255, 152, 0, 0.1);
+        border: 1px solid rgba(255, 152, 0, 0.3);
+        border-radius: var(--ws-radius-md);
+        font-size: 0.75rem;
+        color: #ffb74d;
+      }
+      .sync-drop {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 160px;
+        border: 2px dashed var(--ws-border);
+        border-radius: var(--ws-radius-lg);
+        cursor: pointer;
+        transition:
+          border-color var(--ws-motion-fast),
+          background var(--ws-motion-fast);
+      }
+      .sync-drop:hover {
+        border-color: var(--ws-accent);
+        background: rgba(156, 39, 196, 0.05);
+      }
+      .sync-drop strong {
+        font-size: 1rem;
+      }
+      .sync-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+      .sync-file-list {
+        margin-top: var(--ws-space-lg);
+        max-height: 300px;
+        overflow-y: auto;
+      }
+      .sync-file-item {
+        display: flex;
+        align-items: center;
+        gap: var(--ws-space-md);
+        padding: var(--ws-space-sm) var(--ws-space-md);
+        background: var(--ws-bg);
+        border: 1px solid var(--ws-border);
+        border-radius: var(--ws-radius-md);
+        margin-bottom: var(--ws-space-sm);
+      }
+      .sync-file-item__info {
+        flex: 1;
+        min-width: 0;
+      }
+      .sync-file-item__name {
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .sync-file-item__path {
+        font-size: 0.75rem;
+        color: var(--ws-text-muted);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .sync-file-item__size {
+        font-size: 0.75rem;
+        color: var(--ws-text-muted);
+        font-family: var(--ws-font-mono);
+      }
+      .sync-file-item__remove {
+        background: none;
+        border: none;
+        color: var(--ws-text-muted);
+        cursor: pointer;
+        padding: var(--ws-space-xs);
+        font-size: 1.2rem;
+        line-height: 1;
+      }
+      .sync-file-item__remove:hover {
+        color: #ff6b6b;
+      }
+      .sync-log-panel {
+        grid-column: 1/-1;
+      }
+      .sync-log {
+        max-height: 300px;
+        overflow-y: auto;
+        padding: var(--ws-space-md);
+        background: var(--ws-bg);
+        border: 1px solid var(--ws-border);
+        border-radius: var(--ws-radius-md);
+        font-family: var(--ws-font-mono);
+        font-size: 0.8rem;
+        line-height: 1.6;
+      }
+      .sync-log-item {
+        padding: var(--ws-space-xs) 0;
+        border-bottom: 1px solid var(--ws-border);
+        opacity: 0.8;
+      }
+      .sync-log-item:last-child {
+        border-bottom: none;
+      }
+      .sync-log-item.error {
+        color: #ff6b6b;
+      }
+      .sync-log-item.success {
+        color: #69db7c;
+      }
+      .sync-log-item.warning {
+        color: #ffb74d;
+      }
+      .footer {
+        margin-top: auto;
+        padding: var(--ws-space-xl);
+        text-align: center;
+        border-top: 1px solid var(--ws-border);
+        background: var(--ws-surface);
+        color: var(--ws-text-muted);
+        font-size: 0.85rem;
+      }
+    </style>
+
+    <!-- Адаптивный загрузчик — ДО CSS, чтобы классы успели примениться -->
+    <script type="module" src="js/adaptive-loader.js"></script>
+
+    <!-- Асинхронная загрузка CSS через media="print" onload -->
+    <link rel="preload" as="style" href="css/theme-system.css" />
+    <link
+      rel="stylesheet"
+      href="css/theme-system.css"
+      media="print"
+      onload="this.media = 'all'"
+    />
+
+    <link rel="preload" as="style" href="css/adaptive.css" />
+    <link
+      rel="stylesheet"
+      href="css/adaptive.css"
+      media="print"
+      onload="this.media = 'all'"
+    />
+
+    <link rel="preload" as="style" href="css/style.css" />
+    <link
+      rel="stylesheet"
+      href="css/style.css"
+      media="print"
+      onload="this.media = 'all'"
+    />
+
+    <link rel="preload" as="style" href="css/performance.css" />
+    <link
+      rel="stylesheet"
+      href="css/performance.css"
+      media="print"
+      onload="this.media = 'all'"
+    />
+
+    <link rel="preload" as="style" href="css/smooth-motion.css" />
+    <link
+      rel="stylesheet"
+      href="css/smooth-motion.css"
+      media="print"
+      onload="this.media = 'all'"
+    />
+
+    <link rel="preload" as="style" href="css/sync-center.css" />
+    <link
+      rel="stylesheet"
+      href="css/sync-center.css"
+      media="print"
+      onload="this.media = 'all'"
+    />
+
+    <!-- Тёмная тема — применяется до отрисовки (нет мигания) -->
+    <script src="js/theme.js"></script>
+
+    <!-- Основные модули -->
+    <script type="module" src="js/menu.js"></script>
+    <script type="module" src="js/sync-center.js"></script>
+
+    <!-- Noscript fallback для отключённого JS -->
+    <noscript>
+      <link rel="stylesheet" href="css/theme-system.css" />
+      <link rel="stylesheet" href="css/adaptive.css" />
+      <link rel="stylesheet" href="css/style.css" />
+      <link rel="stylesheet" href="css/performance.css" />
+      <link rel="stylesheet" href="css/smooth-motion.css" />
+      <link rel="stylesheet" href="css/sync-center.css" />
       <style>
-         /* Critical CSS — минимальные стили для первого рендера */
-         *,*::before,*::after{box-sizing:border-box}
-         :root{
-            --ws-bg:#0a0414;--ws-surface:#120a1f;--ws-surface-elevated:#1a1028;
-            --ws-text:#f5f0ff;--ws-text-muted:#b8a8d0;--ws-border:#2a1a3a;
-            --ws-border-strong:#3d2a52;--ws-accent:#9c27c4;--ws-accent-glow:#d463ff;
-            --ws-focus-ring:#d463ff;--ws-shadow-sm:0 2px 8px rgba(10,4,20,.4);
-            --ws-shadow-md:0 8px 24px rgba(10,4,20,.5);--ws-shadow-lg:0 16px 48px rgba(10,4,20,.6);
-            --ws-radius-sm:8px;--ws-radius-md:12px;--ws-radius-lg:16px;--ws-radius-xl:24px;
-            --ws-space-xs:4px;--ws-space-sm:8px;--ws-space-md:16px;--ws-space-lg:24px;--ws-space-xl:32px;--ws-space-2xl:48px;
-            --ws-font-sans:'Montserrat',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-            --ws-font-mono:'JetBrains Mono',Fira Code,Consolas,monospace;
-            --ws-motion-fast:120ms;--ws-motion-normal:200ms;--ws-motion-slow:350ms;
-            --ws-glass-blur:12px;--ws-glass-opacity:.95;--ws-neon-intensity:1;
-         }
-         html{font-size:16px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
-         body{margin:0;font-family:var(--ws-font-sans);background:var(--ws-bg);color:var(--ws-text);line-height:1.6;min-height:100vh;display:flex;flex-direction:column}
-         .header{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;gap:var(--ws-space-md);padding:var(--ws-space-md) var(--ws-space-xl);background:rgba(18,10,31,.9);backdrop-filter:blur(var(--ws-glass-blur));border-bottom:1px solid var(--ws-border)}
-         .logo{font-weight:800;font-size:1.25rem;color:var(--ws-text);text-decoration:none;letter-spacing:.5px}
-         .nav{display:flex;gap:var(--ws-space-lg)}
-         .nav a{color:var(--ws-text-muted);text-decoration:none;font-weight:500;font-size:.9rem;transition:color var(--ws-motion-fast)}
-         .nav a:hover,.nav a[aria-current]{color:var(--ws-accent)}
-         .header__actions{display:flex;align-items:center;gap:var(--ws-space-sm)}
-         .sync-page{flex:1;padding:var(--ws-space-2xl) var(--ws-space-xl);max-width:1200px;margin:0 auto;width:100%}
-         .sync-hero{text-align:center;margin-bottom:var(--ws-space-2xl)}
-         .sync-eyebrow{font-size:.75rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--ws-accent);display:block;margin-bottom:var(--ws-space-sm)}
-         .sync-hero h1{font-size:clamp(2rem,4vw,3rem);font-weight:800;margin:0 0 var(--ws-space-md);background:linear-gradient(135deg,#fff,var(--ws-accent));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-         .sync-hero p{color:var(--ws-text-muted);max-width:600px;margin:0 auto}
-         .sync-layout{display:grid;grid-template-columns:1fr 1fr;gap:var(--ws-space-xl)}
-         .sync-panel{padding:var(--ws-space-xl);border-radius:var(--ws-radius-lg);background:var(--ws-surface);border:1px solid var(--ws-border);transition:border-color var(--ws-motion-normal),box-shadow var(--ws-motion-normal)}
-         .sync-panel:hover{border-color:var(--ws-border-strong);box-shadow:var(--ws-shadow-md)}
-         .sync-panel h2{font-size:1.25rem;font-weight:700;margin:0 0 var(--ws-space-xs);display:flex;align-items:center;gap:var(--ws-space-sm)}
-         .sync-muted{color:var(--ws-text-muted);font-size:.85rem;line-height:1.6}
-         .sync-field{margin-top:var(--ws-space-lg)}
-         .sync-field label{display:block;font-size:.8rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--ws-text-muted);margin-bottom:var(--ws-space-xs)}
-         .sync-input{width:100%;padding:var(--ws-space-sm) var(--ws-space-md);font-family:var(--ws-font-sans);font-size:.9rem;border:1px solid var(--ws-border);border-radius:var(--ws-radius-md);background:var(--ws-bg);color:var(--ws-text);transition:border-color var(--ws-motion-fast)}
-         .sync-input:focus{outline:none;border-color:var(--ws-accent);box-shadow:0 0 0 3px rgba(156,39,196,.2)}
-         .sync-actions{display:flex;gap:var(--ws-space-md);margin-top:var(--ws-space-lg);flex-wrap:wrap}
-         .sync-btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--ws-space-sm);padding:var(--ws-space-sm) var(--ws-space-lg);font-family:var(--ws-font-sans);font-weight:600;font-size:.9rem;border:none;border-radius:var(--ws-radius-md);background:linear-gradient(135deg,var(--ws-accent),#7b1fa2);color:#fff;cursor:pointer;transition:transform var(--ws-motion-fast),box-shadow var(--ws-motion-fast)}
-         .sync-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 24px rgba(156,39,196,.4)}
-         .sync-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
-         .sync-btn--secondary{background:transparent;border:1px solid var(--ws-border);color:var(--ws-text)}
-         .sync-btn--secondary:hover:not(:disabled){border-color:var(--ws-accent);color:var(--ws-accent);box-shadow:none;transform:none}
-         .sync-status{margin-top:var(--ws-space-lg);padding:var(--ws-space-md);border-radius:var(--ws-radius-md);background:var(--ws-bg);border:1px solid var(--ws-border);font-size:.85rem;line-height:1.5}
-         .sync-stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--ws-space-md);margin-top:var(--ws-space-lg);padding:var(--ws-space-md);background:var(--ws-bg);border-radius:var(--ws-radius-md);border:1px solid var(--ws-border)}
-         .sync-stat{text-align:center}
-         .sync-stat strong{display:block;font-size:1.5rem;font-weight:700;color:var(--ws-text)}
-         .sync-stat span{font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:var(--ws-text-muted)}
-         .sync-warning{margin-top:var(--ws-space-lg);padding:var(--ws-space-md);background:rgba(255,152,0,.1);border:1px solid rgba(255,152,0,.3);border-radius:var(--ws-radius-md);font-size:.75rem;color:#ffb74d}
-         .sync-drop{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:160px;border:2px dashed var(--ws-border);border-radius:var(--ws-radius-lg);cursor:pointer;transition:border-color var(--ws-motion-fast),background var(--ws-motion-fast)}
-         .sync-drop:hover{border-color:var(--ws-accent);background:rgba(156,39,196,.05)}
-         .sync-drop strong{font-size:1rem}
-         .sync-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-         .sync-file-list{margin-top:var(--ws-space-lg);max-height:300px;overflow-y:auto}
-         .sync-file-item{display:flex;align-items:center;gap:var(--ws-space-md);padding:var(--ws-space-sm) var(--ws-space-md);background:var(--ws-bg);border:1px solid var(--ws-border);border-radius:var(--ws-radius-md);margin-bottom:var(--ws-space-sm)}
-         .sync-file-item__info{flex:1;min-width:0}
-         .sync-file-item__name{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-         .sync-file-item__path{font-size:.75rem;color:var(--ws-text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-         .sync-file-item__size{font-size:.75rem;color:var(--ws-text-muted);font-family:var(--ws-font-mono)}
-         .sync-file-item__remove{background:none;border:none;color:var(--ws-text-muted);cursor:pointer;padding:var(--ws-space-xs);font-size:1.2rem;line-height:1}
-         .sync-file-item__remove:hover{color:#ff6b6b}
-         .sync-log-panel{grid-column:1/-1}
-         .sync-log{max-height:300px;overflow-y:auto;padding:var(--ws-space-md);background:var(--ws-bg);border:1px solid var(--ws-border);border-radius:var(--ws-radius-md);font-family:var(--ws-font-mono);font-size:.8rem;line-height:1.6}
-         .sync-log-item{padding:var(--ws-space-xs) 0;border-bottom:1px solid var(--ws-border);opacity:.8}
-         .sync-log-item:last-child{border-bottom:none}
-         .sync-log-item.error{color:#ff6b6b}
-         .sync-log-item.success{color:#69db7c}
-         .sync-log-item.warning{color:#ffb74d}
-         .footer{margin-top:auto;padding:var(--ws-space-xl);text-align:center;border-top:1px solid var(--ws-border);background:var(--ws-surface);color:var(--ws-text-muted);font-size:.85rem}
+        /* Fallback для тёмной темы без JS */
+        html {
+          background: var(--ws-bg);
+          color: var(--ws-text);
+        }
+        .theme-toggle {
+          display: none !important;
+        }
       </style>
-
-      <!-- Адаптивный загрузчик — ДО CSS, чтобы классы успели примениться -->
-      <script type="module" src="js/adaptive-loader.js"></script>
-
-      <!-- Асинхронная загрузка CSS через media="print" onload -->
-      <link rel="preload" as="style" href="css/theme-system.css" />
-      <link rel="stylesheet" href="css/theme-system.css" media="print" onload="this.media='all'" />
-
-      <link rel="preload" as="style" href="css/adaptive.css" />
-      <link rel="stylesheet" href="css/adaptive.css" media="print" onload="this.media='all'" />
-
-      <link rel="preload" as="style" href="css/style.css" />
-      <link rel="stylesheet" href="css/style.css" media="print" onload="this.media='all'" />
-
-      <link rel="preload" as="style" href="css/performance.css" />
-      <link rel="stylesheet" href="css/performance.css" media="print" onload="this.media='all'" />
-
-      <link rel="preload" as="style" href="css/smooth-motion.css" />
-      <link rel="stylesheet" href="css/smooth-motion.css" media="print" onload="this.media='all'" />
-
-      <link rel="preload" as="style" href="css/sync-center.css" />
-      <link rel="stylesheet" href="css/sync-center.css" media="print" onload="this.media='all'" />
-
-      <!-- Тёмная тема — применяется до отрисовки (нет мигания) -->
-      <script src="js/theme.js"></script>
-
-      <!-- Основные модули -->
-      <script type="module" src="js/menu.js"></script>
-      <script type="module" src="js/sync-center.js"></script>
-
-      <!-- Noscript fallback для отключённого JS -->
-      <noscript>
-         <link rel="stylesheet" href="css/theme-system.css" />
-         <link rel="stylesheet" href="css/adaptive.css" />
-         <link rel="stylesheet" href="css/style.css" />
-         <link rel="stylesheet" href="css/performance.css" />
-         <link rel="stylesheet" href="css/smooth-motion.css" />
-         <link rel="stylesheet" href="css/sync-center.css" />
-         <style>
-            /* Fallback для тёмной темы без JS */
-            html { background: var(--ws-bg); color: var(--ws-text); }
-            .theme-toggle { display: none !important; }
-         </style>
-      </noscript>
-   </head>
-   <body>
-      <header class="header">
-         <a class="logo" href="index.html"
-            ><span lang="ja">雨</span> Amagai Rei <span lang="ja">雨</span></a
-         >
-         <nav class="nav" aria-label="Основная навигация">
-            <a href="index.html">Главная</a
-            ><a href="index.html#tasks">Предметы</a
-            ><a href="sync.html" aria-current="page">Синхронизация</a>
-         </nav>
-         <div class="header__actions">
-            <!-- theme-toggle скрыт через theme.js (тёмная тема) -->
-         </div>
-      </header>
-      <main class="sync-page">
-         <section class="sync-hero">
-            <span class="sync-eyebrow">✦ WORKSPACE / GITHUB API</span>
-            <h1>Центр синхронизации</h1>
-            <p>
-               Подключись к репозиторию, выбери файлы и отправь все изменения
-               одним коммитом. Можно добавлять новые файлы и обновлять
-               существующие.
-            </p>
-         </section>
-         <div class="sync-layout">
-            <section class="sync-panel">
-               <h2>01 / Подключение</h2>
-               <p class="sync-muted">
-                  Токен хранится только в памяти вкладки: не сохраняется в
-                  браузере и не попадает в исходники.
-               </p>
-               <div class="sync-field">
-                  <label for="token">GitHub fine-grained token</label
-                  ><input
-                     class="sync-input"
-                     id="token"
-                     type="password"
-                     autocomplete="off"
-                     spellcheck="false"
-                     placeholder="github_pat_…"
-                  /><span class="sync-muted"
-                     >Для репозитория AmagaiRei/WorkSpace нужны права Contents:
-                     Read and write.</span
-                  >
-               </div>
-               <div class="sync-actions">
-                  <button class="sync-btn" id="connect" type="button">
-                     Проверить подключение</button
-                  ><button
-                     class="sync-btn sync-btn--secondary"
-                     id="disconnect"
-                     type="button"
-                     disabled
-                  >
-                     Очистить токен
-                  </button>
-               </div>
-               <div
-                  class="sync-status"
-                  id="connection-status"
-                  role="status"
-                  aria-live="polite"
-               >
-                  Не подключено. Введи токен и проверь доступ.
-               </div>
-               <div class="sync-stat-grid">
-                  <div class="sync-stat">
-                     <strong id="stat-files">—</strong
-                     ><span>Файлов в репозитории</span>
-                  </div>
-                  <div class="sync-stat">
-                     <strong id="stat-selected">0</strong
-                     ><span>Выбрано файлов</span>
-                  </div>
-                  <div class="sync-stat">
-                     <strong id="stat-errors">0</strong><span>Ошибок</span>
-                  </div>
-               </div>
-               <p class="sync-warning">
-                  ⚠️ Не вставляй токен в исходники или чаты. Пока токен активен,
-                  вредоносный скрипт на странице потенциально может его
-                  прочитать. Используй только доверенную версию сайта.
-               </p>
-            </section>
-            <section class="sync-panel">
-               <h2>02 / Файлы и коммит</h2>
-               <p class="sync-muted">
-                  Добавь файлы и проверь путь в репозитории. Пример:
-                  <code>data/labs/databases/lab-01/README.md</code>.
-               </p>
-               <label class="sync-drop" id="drop-zone" for="file-picker"
-                  ><strong>＋ Добавить файлы</strong
-                  ><span class="sync-muted"
-                     >Нажми или перетащи файлы сюда</span
-                  ></label
-               ><input
-                  id="file-picker"
-                  class="sync-hidden"
-                  type="file"
-                  multiple
-               />
-               <div id="file-list" class="sync-file-list" aria-live="polite">
-                  <p class="sync-muted">Пока нет выбранных файлов.</p>
-               </div>
-               <div class="sync-field">
-                  <label for="commit-message">Сообщение коммита</label
-                  ><input
-                     class="sync-input"
-                     id="commit-message"
-                     maxlength="200"
-                     value="Update files via WorkSpace sync center"
-                  />
-               </div>
-               <div class="sync-actions">
-                  <button class="sync-btn" id="push" type="button" disabled>
-                     Создать один коммит</button
-                  ><button
-                     class="sync-btn sync-btn--secondary"
-                     id="clear-files"
-                     type="button"
-                  >
-                     Очистить список
-                  </button>
-               </div>
-               <div
-                  class="sync-status"
-                  id="push-status"
-                  role="status"
-                  aria-live="polite"
-               >
-                  После подключения добавь файлы и создай коммит.
-               </div>
-            </section>
-         </div>
-         <section class="sync-panel sync-log-panel">
-            <h2>Журнал операций</h2>
-            <p class="sync-muted">
-               Показывает результат и причину ошибок в текущей вкладке. Журнал
-               не сохраняется после перезагрузки.
-            </p>
-            <div id="sync-log" class="sync-log">
-               <div class="sync-log-item">Операции ещё не выполнялись.</div>
+    </noscript>
+  </head>
+  <body>
+    <header class="header">
+      <a class="logo" href="index.html"
+        ><span lang="ja">雨</span> Amagai Rei <span lang="ja">雨</span></a
+      >
+      <nav class="nav" aria-label="Основная навигация">
+        <a href="index.html">Главная</a><a href="index.html#tasks">Предметы</a
+        ><a href="sync.html" aria-current="page">Синхронизация</a>
+      </nav>
+      <div class="header__actions">
+        <!-- theme-toggle скрыт через theme.js (тёмная тема) -->
+      </div>
+    </header>
+    <main class="sync-page">
+      <section class="sync-hero">
+        <span class="sync-eyebrow">✦ WORKSPACE / GITHUB API</span>
+        <h1>Центр синхронизации</h1>
+        <p>
+          Подключись к репозиторию, выбери файлы и отправь все изменения одним
+          коммитом. Можно добавлять новые файлы и обновлять существующие.
+        </p>
+      </section>
+      <div class="sync-layout">
+        <section class="sync-panel">
+          <h2>01 / Подключение</h2>
+          <p class="sync-muted">
+            Токен хранится только в памяти вкладки: не сохраняется в браузере и
+            не попадает в исходники.
+          </p>
+          <div class="sync-field">
+            <label for="token">GitHub fine-grained token</label
+            ><input
+              class="sync-input"
+              id="token"
+              type="password"
+              autocomplete="off"
+              spellcheck="false"
+              placeholder="github_pat_…"
+            /><span class="sync-muted"
+              >Для репозитория AmagaiRei/WorkSpace нужны права Contents: Read
+              and write.</span
+            >
+          </div>
+          <div class="sync-actions">
+            <button class="sync-btn" id="connect" type="button">
+              Проверить подключение</button
+            ><button
+              class="sync-btn sync-btn--secondary"
+              id="disconnect"
+              type="button"
+              disabled
+            >
+              Очистить токен
+            </button>
+          </div>
+          <div
+            class="sync-status"
+            id="connection-status"
+            role="status"
+            aria-live="polite"
+          >
+            Не подключено. Введи токен и проверь доступ.
+          </div>
+          <div class="sync-stat-grid">
+            <div class="sync-stat">
+              <strong id="stat-files">—</strong
+              ><span>Файлов в репозитории</span>
             </div>
-         </section>
-      </main>
-      <footer class="footer"><p>WorkSpace · Центр синхронизации</p></footer>
-   </body>
+            <div class="sync-stat">
+              <strong id="stat-selected">0</strong><span>Выбрано файлов</span>
+            </div>
+            <div class="sync-stat">
+              <strong id="stat-errors">0</strong><span>Ошибок</span>
+            </div>
+          </div>
+          <p class="sync-warning">
+            ⚠️ Не вставляй токен в исходники или чаты. Пока токен активен,
+            вредоносный скрипт на странице потенциально может его прочитать.
+            Используй только доверенную версию сайта.
+          </p>
+        </section>
+        <section class="sync-panel">
+          <h2>02 / Файлы и коммит</h2>
+          <p class="sync-muted">
+            Добавь файлы и проверь путь в репозитории. Пример:
+            <code>data/labs/databases/lab-01/README.md</code>.
+          </p>
+          <label class="sync-drop" id="drop-zone" for="file-picker"
+            ><strong>＋ Добавить файлы</strong
+            ><span class="sync-muted"
+              >Нажми или перетащи файлы сюда</span
+            ></label
+          ><input id="file-picker" class="sync-hidden" type="file" multiple />
+          <div id="file-list" class="sync-file-list" aria-live="polite">
+            <p class="sync-muted">Пока нет выбранных файлов.</p>
+          </div>
+          <div class="sync-field">
+            <label for="commit-message">Сообщение коммита</label
+            ><input
+              class="sync-input"
+              id="commit-message"
+              maxlength="200"
+              value="Update files via WorkSpace sync center"
+            />
+          </div>
+          <div class="sync-actions">
+            <button class="sync-btn" id="push" type="button" disabled>
+              Создать один коммит</button
+            ><button
+              class="sync-btn sync-btn--secondary"
+              id="clear-files"
+              type="button"
+            >
+              Очистить список
+            </button>
+          </div>
+          <div
+            class="sync-status"
+            id="push-status"
+            role="status"
+            aria-live="polite"
+          >
+            После подключения добавь файлы и создай коммит.
+          </div>
+        </section>
+      </div>
+      <section class="sync-panel sync-log-panel">
+        <h2>Журнал операций</h2>
+        <p class="sync-muted">
+          Показывает результат и причину ошибок в текущей вкладке. Журнал не
+          сохраняется после перезагрузки.
+        </p>
+        <div id="sync-log" class="sync-log">
+          <div class="sync-log-item">Операции ещё не выполнялись.</div>
+        </div>
+      </section>
+    </main>
+    <footer class="footer"><p>WorkSpace · Центр синхронизации</p></footer>
+  </body>
 </html>

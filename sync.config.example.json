@@ -1,7 +1,7 @@
 {
-   "localDir": "ПУТЬ_К_ПАПКЕ (абсолютный, например D:\\Study\\WorkSpace)",
-   "owner": "AmagaiRei",
-   "repo": "WorkSpace",
-   "branch": "main",
-   "include": ["data/labs/"]
+  "localDir": "ПУТЬ_К_ПАПКЕ (абсолютный, например D:\\Study\\WorkSpace)",
+  "owner": "AmagaiRei",
+  "repo": "WorkSpace",
+  "branch": "main",
+  "include": ["data/labs/"]
 }

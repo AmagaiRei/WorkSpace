@@ -1,182 +1,402 @@
 <!doctype html>
 <html lang="ru">
-   <head>
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <title>Лабораторная — Руслан Мородецкий</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Лабораторная — Руслан Мородецкий</title>
 
-      <!-- Inline critical CSS для мгновенного первого кадра -->
+    <!-- Inline critical CSS для мгновенного первого кадра -->
+    <style>
+      /* Critical CSS — минимальные стили для первого рендера */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      :root {
+        --ws-bg: #0a0414;
+        --ws-surface: #120a1f;
+        --ws-surface-elevated: #1a1028;
+        --ws-text: #f5f0ff;
+        --ws-text-muted: #b8a8d0;
+        --ws-border: #2a1a3a;
+        --ws-border-strong: #3d2a52;
+        --ws-accent: #9c27c4;
+        --ws-accent-glow: #d463ff;
+        --ws-focus-ring: #d463ff;
+        --ws-shadow-sm: 0 2px 8px rgba(10, 4, 20, 0.4);
+        --ws-shadow-md: 0 8px 24px rgba(10, 4, 20, 0.5);
+        --ws-shadow-lg: 0 16px 48px rgba(10, 4, 20, 0.6);
+        --ws-radius-sm: 8px;
+        --ws-radius-md: 12px;
+        --ws-radius-lg: 16px;
+        --ws-radius-xl: 24px;
+        --ws-space-xs: 4px;
+        --ws-space-sm: 8px;
+        --ws-space-md: 16px;
+        --ws-space-lg: 24px;
+        --ws-space-xl: 32px;
+        --ws-space-2xl: 48px;
+        --ws-font-sans:
+          "Montserrat", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+        --ws-font-mono: "JetBrains Mono", Fira Code, Consolas, monospace;
+        --ws-motion-fast: 120ms;
+        --ws-motion-normal: 200ms;
+        --ws-motion-slow: 350ms;
+        --ws-glass-blur: 12px;
+        --ws-glass-opacity: 0.95;
+        --ws-neon-intensity: 1;
+      }
+      html {
+        font-size: 16px;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      body {
+        margin: 0;
+        font-family: var(--ws-font-sans);
+        background: var(--ws-bg);
+        color: var(--ws-text);
+        line-height: 1.6;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+      .header {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--ws-space-md);
+        padding: var(--ws-space-md) var(--ws-space-xl);
+        background: rgba(18, 10, 31, 0.9);
+        backdrop-filter: blur(var(--ws-glass-blur));
+        border-bottom: 1px solid var(--ws-border);
+      }
+      .logo {
+        font-weight: 800;
+        font-size: 1.25rem;
+        color: var(--ws-text);
+        text-decoration: none;
+        letter-spacing: 0.5px;
+      }
+      .nav {
+        display: flex;
+        gap: var(--ws-space-lg);
+      }
+      .nav a {
+        color: var(--ws-text-muted);
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.9rem;
+        transition: color var(--ws-motion-fast);
+      }
+      .nav a:hover {
+        color: var(--ws-accent);
+      }
+      .header__actions {
+        display: flex;
+        align-items: center;
+        gap: var(--ws-space-sm);
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--ws-space-sm);
+        padding: var(--ws-space-sm) var(--ws-space-lg);
+        font-family: var(--ws-font-sans);
+        font-weight: 600;
+        font-size: 0.9rem;
+        border: none;
+        border-radius: var(--ws-radius-md);
+        background: linear-gradient(135deg, var(--ws-accent), #7b1fa2);
+        color: #fff;
+        cursor: pointer;
+        text-decoration: none;
+        transition:
+          transform var(--ws-motion-fast),
+          box-shadow var(--ws-motion-fast);
+      }
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(156, 39, 196, 0.4);
+      }
+      .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+      .search {
+        padding: var(--ws-space-sm) var(--ws-space-md);
+        font-family: var(--ws-font-sans);
+        font-size: 0.9rem;
+        border: 1px solid var(--ws-border);
+        border-radius: var(--ws-radius-md);
+        background: var(--ws-surface);
+        color: var(--ws-text);
+        width: 100%;
+        max-width: 320px;
+      }
+      .section {
+        padding: var(--ws-space-2xl) var(--ws-space-xl);
+        max-width: 1200px;
+        margin: 0 auto;
+        width: 100%;
+      }
+      .section__title {
+        font-size: 1.75rem;
+        font-weight: 800;
+        margin: 0 0 var(--ws-space-sm);
+        background: linear-gradient(135deg, var(--ws-text), var(--ws-accent));
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .section__lead {
+        color: var(--ws-text-muted);
+        margin: 0 0 var(--ws-space-xl);
+      }
+      .page-head {
+        padding: var(--ws-space-lg) var(--ws-space-xl);
+        max-width: 1200px;
+        margin: 0 auto;
+        width: 100%;
+      }
+      .breadcrumbs {
+        display: flex;
+        gap: var(--ws-space-sm);
+        font-size: 0.85rem;
+        color: var(--ws-text-muted);
+        flex-wrap: wrap;
+      }
+      .breadcrumbs a {
+        color: var(--ws-text-muted);
+        text-decoration: none;
+        transition: color var(--ws-motion-fast);
+      }
+      .breadcrumbs a:hover {
+        color: var(--ws-accent);
+      }
+      .breadcrumbs .sep {
+        color: var(--ws-border);
+      }
+      .footer {
+        margin-top: auto;
+        padding: var(--ws-space-xl);
+        text-align: center;
+        border-top: 1px solid var(--ws-border);
+        background: var(--ws-surface);
+      }
+      .socials {
+        display: flex;
+        justify-content: center;
+        gap: var(--ws-space-lg);
+        margin-bottom: var(--ws-space-md);
+      }
+      .socials a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--ws-bg);
+        border: 1px solid var(--ws-border);
+        color: var(--ws-text-muted);
+        text-decoration: none;
+        transition:
+          color var(--ws-motion-fast),
+          border-color var(--ws-motion-fast),
+          transform var(--ws-motion-fast);
+      }
+      .socials a:hover {
+        color: var(--ws-accent);
+        border-color: var(--ws-accent);
+        transform: translateY(-2px);
+      }
+      .footer__note {
+        font-size: 0.8rem;
+        color: var(--ws-text-muted);
+        margin: 0;
+      }
+    </style>
+
+    <!-- Адаптивный загрузчик — ДО CSS, чтобы классы успели примениться -->
+    <script type="module" src="js/adaptive-loader.js"></script>
+
+    <!-- Асинхронная загрузка CSS через media="print" onload -->
+    <link rel="preload" as="style" href="css/theme-system.css" />
+    <link
+      rel="stylesheet"
+      href="css/theme-system.css"
+      media="print"
+      onload="this.media = 'all'"
+    />
+
+    <link rel="preload" as="style" href="css/adaptive.css" />
+    <link
+      rel="stylesheet"
+      href="css/adaptive.css"
+      media="print"
+      onload="this.media = 'all'"
+    />
+
+    <link rel="preload" as="style" href="css/style.css" />
+    <link
+      rel="stylesheet"
+      href="css/style.css"
+      media="print"
+      onload="this.media = 'all'"
+    />
+
+    <link rel="preload" as="style" href="css/performance.css" />
+    <link
+      rel="stylesheet"
+      href="css/performance.css"
+      media="print"
+      onload="this.media = 'all'"
+    />
+
+    <link rel="preload" as="style" href="css/smooth-motion.css" />
+    <link
+      rel="stylesheet"
+      href="css/smooth-motion.css"
+      media="print"
+      onload="this.media = 'all'"
+    />
+
+    <link rel="preload" as="style" href="css/markdown-modal.css" />
+    <link
+      rel="stylesheet"
+      href="css/markdown-modal.css"
+      media="print"
+      onload="this.media = 'all'"
+    />
+
+    <link rel="preload" as="style" href="css/file-manager.css" />
+    <link
+      rel="stylesheet"
+      href="css/file-manager.css"
+      media="print"
+      onload="this.media = 'all'"
+    />
+
+    <!-- Тёмная тема — применяется до отрисовки (нет мигания) -->
+    <script src="js/theme.js"></script>
+
+    <!-- Основные модули -->
+    <script type="module" src="js/menu.js"></script>
+    <script type="module" src="js/lab.js"></script>
+
+    <!-- Внешние библиотеки (defer) -->
+    <script
+      defer
+      src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"
+    ></script>
+    <script
+      defer
+      src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"
+    ></script>
+    <script
+      defer
+      src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"
+    ></script>
+
+    <!-- Noscript fallback для отключённого JS -->
+    <noscript>
+      <link rel="stylesheet" href="css/theme-system.css" />
+      <link rel="stylesheet" href="css/adaptive.css" />
+      <link rel="stylesheet" href="css/style.css" />
+      <link rel="stylesheet" href="css/performance.css" />
+      <link rel="stylesheet" href="css/smooth-motion.css" />
+      <link rel="stylesheet" href="css/markdown-modal.css" />
+      <link rel="stylesheet" href="css/file-manager.css" />
       <style>
-         /* Critical CSS — минимальные стили для первого рендера */
-         *,*::before,*::after{box-sizing:border-box}
-         :root{
-            --ws-bg:#0a0414;--ws-surface:#120a1f;--ws-surface-elevated:#1a1028;
-            --ws-text:#f5f0ff;--ws-text-muted:#b8a8d0;--ws-border:#2a1a3a;
-            --ws-border-strong:#3d2a52;--ws-accent:#9c27c4;--ws-accent-glow:#d463ff;
-            --ws-focus-ring:#d463ff;--ws-shadow-sm:0 2px 8px rgba(10,4,20,.4);
-            --ws-shadow-md:0 8px 24px rgba(10,4,20,.5);--ws-shadow-lg:0 16px 48px rgba(10,4,20,.6);
-            --ws-radius-sm:8px;--ws-radius-md:12px;--ws-radius-lg:16px;--ws-radius-xl:24px;
-            --ws-space-xs:4px;--ws-space-sm:8px;--ws-space-md:16px;--ws-space-lg:24px;--ws-space-xl:32px;--ws-space-2xl:48px;
-            --ws-font-sans:'Montserrat',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-            --ws-font-mono:'JetBrains Mono',Fira Code,Consolas,monospace;
-            --ws-motion-fast:120ms;--ws-motion-normal:200ms;--ws-motion-slow:350ms;
-            --ws-glass-blur:12px;--ws-glass-opacity:.95;--ws-neon-intensity:1;
-         }
-         html{font-size:16px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
-         body{margin:0;font-family:var(--ws-font-sans);background:var(--ws-bg);color:var(--ws-text);line-height:1.6;min-height:100vh;display:flex;flex-direction:column}
-         .header{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;gap:var(--ws-space-md);padding:var(--ws-space-md) var(--ws-space-xl);background:rgba(18,10,31,.9);backdrop-filter:blur(var(--ws-glass-blur));border-bottom:1px solid var(--ws-border)}
-         .logo{font-weight:800;font-size:1.25rem;color:var(--ws-text);text-decoration:none;letter-spacing:.5px}
-         .nav{display:flex;gap:var(--ws-space-lg)}
-         .nav a{color:var(--ws-text-muted);text-decoration:none;font-weight:500;font-size:.9rem;transition:color var(--ws-motion-fast)}
-         .nav a:hover{color:var(--ws-accent)}
-         .header__actions{display:flex;align-items:center;gap:var(--ws-space-sm)}
-         .btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--ws-space-sm);padding:var(--ws-space-sm) var(--ws-space-lg);font-family:var(--ws-font-sans);font-weight:600;font-size:.9rem;border:none;border-radius:var(--ws-radius-md);background:linear-gradient(135deg,var(--ws-accent),#7b1fa2);color:#fff;cursor:pointer;text-decoration:none;transition:transform var(--ws-motion-fast),box-shadow var(--ws-motion-fast)}
-         .btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(156,39,196,.4)}
-         .visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-         .search{padding:var(--ws-space-sm) var(--ws-space-md);font-family:var(--ws-font-sans);font-size:.9rem;border:1px solid var(--ws-border);border-radius:var(--ws-radius-md);background:var(--ws-surface);color:var(--ws-text);width:100%;max-width:320px}
-         .section{padding:var(--ws-space-2xl) var(--ws-space-xl);max-width:1200px;margin:0 auto;width:100%}
-         .section__title{font-size:1.75rem;font-weight:800;margin:0 0 var(--ws-space-sm);background:linear-gradient(135deg,var(--ws-text),var(--ws-accent));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-         .section__lead{color:var(--ws-text-muted);margin:0 0 var(--ws-space-xl)}
-         .page-head{padding:var(--ws-space-lg) var(--ws-space-xl);max-width:1200px;margin:0 auto;width:100%}
-         .breadcrumbs{display:flex;gap:var(--ws-space-sm);font-size:.85rem;color:var(--ws-text-muted);flex-wrap:wrap}
-         .breadcrumbs a{color:var(--ws-text-muted);text-decoration:none;transition:color var(--ws-motion-fast)}
-         .breadcrumbs a:hover{color:var(--ws-accent)}
-         .breadcrumbs .sep{color:var(--ws-border)}
-         .footer{margin-top:auto;padding:var(--ws-space-xl);text-align:center;border-top:1px solid var(--ws-border);background:var(--ws-surface)}
-         .socials{display:flex;justify-content:center;gap:var(--ws-space-lg);margin-bottom:var(--ws-space-md)}
-         .socials a{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:var(--ws-bg);border:1px solid var(--ws-border);color:var(--ws-text-muted);text-decoration:none;transition:color var(--ws-motion-fast),border-color var(--ws-motion-fast),transform var(--ws-motion-fast)}
-         .socials a:hover{color:var(--ws-accent);border-color:var(--ws-accent);transform:translateY(-2px)}
-         .footer__note{font-size:.8rem;color:var(--ws-text-muted);margin:0}
+        /* Fallback для тёмной темы без JS */
+        html {
+          background: var(--ws-bg);
+          color: var(--ws-text);
+        }
+        .theme-toggle {
+          display: none !important;
+        }
       </style>
+    </noscript>
+  </head>
+  <body>
+    <header class="header">
+      <a class="logo" href="index.html"><span lang="ja">雨</span> Amagai Rei</a>
 
-      <!-- Адаптивный загрузчик — ДО CSS, чтобы классы успели примениться -->
-      <script type="module" src="js/adaptive-loader.js"></script>
+      <nav class="nav" aria-label="Основная навигация">
+        <a href="index.html">Главная</a>
+        <a href="index.html#tasks">Предметы</a>
+        <a href="#contacts">Контакты</a>
+      </nav>
 
-      <!-- Асинхронная загрузка CSS через media="print" onload -->
-      <link rel="preload" as="style" href="css/theme-system.css" />
-      <link rel="stylesheet" href="css/theme-system.css" media="print" onload="this.media='all'" />
-
-      <link rel="preload" as="style" href="css/adaptive.css" />
-      <link rel="stylesheet" href="css/adaptive.css" media="print" onload="this.media='all'" />
-
-      <link rel="preload" as="style" href="css/style.css" />
-      <link rel="stylesheet" href="css/style.css" media="print" onload="this.media='all'" />
-
-      <link rel="preload" as="style" href="css/performance.css" />
-      <link rel="stylesheet" href="css/performance.css" media="print" onload="this.media='all'" />
-
-      <link rel="preload" as="style" href="css/smooth-motion.css" />
-      <link rel="stylesheet" href="css/smooth-motion.css" media="print" onload="this.media='all'" />
-
-      <link rel="preload" as="style" href="css/markdown-modal.css" />
-      <link rel="stylesheet" href="css/markdown-modal.css" media="print" onload="this.media='all'" />
-
-      <link rel="preload" as="style" href="css/file-manager.css" />
-      <link rel="stylesheet" href="css/file-manager.css" media="print" onload="this.media='all'" />
-
-      <!-- Тёмная тема — применяется до отрисовки (нет мигания) -->
-      <script src="js/theme.js"></script>
-
-      <!-- Основные модули -->
-      <script type="module" src="js/menu.js"></script>
-      <script type="module" src="js/lab.js"></script>
-
-      <!-- Внешние библиотеки (defer) -->
-      <script defer src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
-      <script defer src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
-      <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-
-      <!-- Noscript fallback для отключённого JS -->
-      <noscript>
-         <link rel="stylesheet" href="css/theme-system.css" />
-         <link rel="stylesheet" href="css/adaptive.css" />
-         <link rel="stylesheet" href="css/style.css" />
-         <link rel="stylesheet" href="css/performance.css" />
-         <link rel="stylesheet" href="css/smooth-motion.css" />
-         <link rel="stylesheet" href="css/markdown-modal.css" />
-         <link rel="stylesheet" href="css/file-manager.css" />
-         <style>
-            /* Fallback для тёмной темы без JS */
-            html { background: var(--ws-bg); color: var(--ws-text); }
-            .theme-toggle { display: none !important; }
-         </style>
-      </noscript>
-   </head>
-   <body>
-      <header class="header">
-         <a class="logo" href="index.html"
-            ><span lang="ja">雨</span> Amagai Rei</a
-         >
-
-         <nav class="nav" aria-label="Основная навигация">
+      <div class="header__actions">
+        <details class="mobile-menu">
+          <summary class="mobile-menu__summary" aria-label="Меню"></summary>
+          <nav class="mobile-menu__nav" aria-label="Мобильная навигация">
             <a href="index.html">Главная</a>
             <a href="index.html#tasks">Предметы</a>
             <a href="#contacts">Контакты</a>
-         </nav>
+          </nav>
+        </details>
+      </div>
+    </header>
 
-         <div class="header__actions">
-            <details class="mobile-menu">
-               <summary
-                  class="mobile-menu__summary"
-                  aria-label="Меню"
-               ></summary>
-               <nav class="mobile-menu__nav" aria-label="Мобильная навигация">
-                  <a href="index.html">Главная</a>
-                  <a href="index.html#tasks">Предметы</a>
-                  <a href="#contacts">Контакты</a>
-               </nav>
-            </details>
-         </div>
-      </header>
+    <main>
+      <div class="page-head" id="lab-head">
+        <nav
+          class="breadcrumbs"
+          id="breadcrumbs"
+          aria-label="Хлебные крошки"
+        ></nav>
+      </div>
+      <div id="lab-body">
+        <p class="section section--tight empty">Загрузка…</p>
+      </div>
+    </main>
 
-      <main>
-         <div class="page-head" id="lab-head">
-            <nav
-               class="breadcrumbs"
-               id="breadcrumbs"
-               aria-label="Хлебные крошки"
-            ></nav>
-         </div>
-         <div id="lab-body">
-            <p class="section section--tight empty">Загрузка…</p>
-         </div>
-      </main>
-
-      <footer class="footer" id="contacts">
-         <div class="socials">
-            <a
-               data-contact="github"
-               href="#"
-               aria-label="GitHub"
-               title="GitHub"
-            >
-               <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <polyline points="8 7 3 12 8 17" />
-                  <polyline points="16 7 21 12 16 17" />
-                  <line x1="14" y1="5" x2="10" y2="19" />
-               </svg>
-            </a>
-            <a
-               data-contact="telegram"
-               href="#"
-               aria-label="Telegram"
-               title="Telegram"
-            >
-               <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M21.5 3.5 2.5 11l6 2.3 2 6.2 3.2-3.8 4.6 3.4z" />
-                  <path d="M8.5 13.3 21.5 3.5" />
-               </svg>
-            </a>
-            <a data-contact="email" href="#" aria-label="Почта" title="Почта">
-               <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <rect x="3" y="5" width="18" height="14" rx="2" />
-                  <polyline points="3 7 12 13 21 7" />
-               </svg>
-            </a>
-         </div>
-         <p class="footer__note">
-            <span lang="ja">雨</span> Amagai Rei <span lang="ja">雨</span>
-         </p>
-      </footer>
-   </body>
+    <footer class="footer" id="contacts">
+      <div class="socials">
+        <a data-contact="github" href="#" aria-label="GitHub" title="GitHub">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <polyline points="8 7 3 12 8 17" />
+            <polyline points="16 7 21 12 16 17" />
+            <line x1="14" y1="5" x2="10" y2="19" />
+          </svg>
+        </a>
+        <a
+          data-contact="telegram"
+          href="#"
+          aria-label="Telegram"
+          title="Telegram"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M21.5 3.5 2.5 11l6 2.3 2 6.2 3.2-3.8 4.6 3.4z" />
+            <path d="M8.5 13.3 21.5 3.5" />
+          </svg>
+        </a>
+        <a data-contact="email" href="#" aria-label="Почта" title="Почта">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="3" y="5" width="18" height="14" rx="2" />
+            <polyline points="3 7 12 13 21 7" />
+          </svg>
+        </a>
+      </div>
+      <p class="footer__note">
+        <span lang="ja">雨</span> Amagai Rei <span lang="ja">雨</span>
+      </p>
+    </footer>
+  </body>
 </html>
