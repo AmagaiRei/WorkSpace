@@ -311,77 +311,55 @@
     <!-- Адаптивный загрузчик — ДО CSS, чтобы классы успели примениться -->
     <script type="module" src="js/adaptive-loader.js"></script>
 
-    <!-- Design tokens — загружаются первой -->
-    <link rel="preload" as="style" href="css/design-tokens.css" />
-    <link
-      rel="stylesheet"
-      href="css/design-tokens.css"
-      media="print"
-      onload="this.media = 'all'"
-    />
+    <!-- Critical CSS + fonts — блокирующий рендер, но минимальный -->
+    <link rel="preload" as="style" href="css/critical.css" />
+    <link rel="stylesheet" href="css/critical.css" />
 
-    <!-- Space Grotesk font — preload для быстрой загрузки -->
+    <!-- Font preloads — только самые нужные начертения -->
     <link
       rel="preload"
       as="font"
       type="font/woff2"
       crossorigin
-      href="fonts/SpaceGrotesk-VariableFont_wght.woff2"
+      href="fonts/Montserrat-VariableFont_wght.woff2"
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href="fonts/JetBrainsMono-VariableFont_wght.woff2"
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href="fonts/Montserrat-Regular.woff2"
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href="fonts/JetBrainsMono-Regular.woff2"
     />
 
-    <!-- Асинхронная загрузка CSS через media="print" onload -->
-    <link rel="preload" as="style" href="css/theme-system.css" />
-    <link
-      rel="stylesheet"
-      href="css/theme-system.css"
-      media="print"
-      onload="this.media = 'all'"
-    />
+    <!-- Preconnect для внешних CDN -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
 
-    <link rel="preload" as="style" href="css/adaptive.css" />
-    <link
-      rel="stylesheet"
-      href="css/adaptive.css"
-      media="print"
-      onload="this.media = 'all'"
-    />
+    <!-- Modulepreload для критических JS — браузер начнёт загрузку и компиляцию раньше -->
+    <link rel="modulepreload" href="js/common.js" />
+    <link rel="modulepreload" href="js/index.js" />
+    <link rel="modulepreload" href="js/menu.js" />
+    <link rel="modulepreload" href="js/theme.js" />
+    <link rel="modulepreload" href="js/adaptive-store.js" />
 
-    <link rel="preload" as="style" href="css/style.css" />
+    <!-- Components CSS — ленивая загрузка -->
+    <link rel="preload" as="style" href="css/components.css" />
     <link
       rel="stylesheet"
-      href="css/style.css"
-      media="print"
-      onload="this.media = 'all'"
-    />
-
-    <link rel="preload" as="style" href="css/performance.css" />
-    <link
-      rel="stylesheet"
-      href="css/performance.css"
-      media="print"
-      onload="this.media = 'all'"
-    />
-
-    <link rel="preload" as="style" href="css/smooth-motion.css" />
-    <link
-      rel="stylesheet"
-      href="css/smooth-motion.css"
-      media="print"
-      onload="this.media = 'all'"
-    />
-
-    <link rel="preload" as="style" href="css/admin-panel.css" />
-    <link
-      rel="stylesheet"
-      href="css/admin-panel.css"
-      media="print"
-      onload="this.media = 'all'"
-    />
-
-    <link rel="preload" as="style" href="css/markdown-modal.css" />
-    <link
-      rel="stylesheet"
-      href="css/markdown-modal.css"
+      href="css/components.css"
       media="print"
       onload="this.media = 'all'"
     />
@@ -425,14 +403,8 @@
 
     <!-- Noscript fallback для отключённого JS -->
     <noscript>
-      <link rel="stylesheet" href="css/design-tokens.css" />
-      <link rel="stylesheet" href="css/theme-system.css" />
-      <link rel="stylesheet" href="css/adaptive.css" />
-      <link rel="stylesheet" href="css/style.css" />
-      <link rel="stylesheet" href="css/performance.css" />
-      <link rel="stylesheet" href="css/smooth-motion.css" />
-      <link rel="stylesheet" href="css/admin-panel.css" />
-      <link rel="stylesheet" href="css/markdown-modal.css" />
+      <link rel="stylesheet" href="css/critical.css" />
+      <link rel="stylesheet" href="css/components.css" />
       <link
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css"
@@ -450,6 +422,16 @@
     </noscript>
   </head>
   <body>
+    <!-- SVG Sprite — подключается первым для использования через <use> -->
+    <svg style="display: none">
+      <use href="images/icons.svg#icon-github-sync"></use>
+      <use href="images/icons.svg#icon-github"></use>
+      <use href="images/icons.svg#icon-telegram"></use>
+      <use href="images/icons.svg#icon-email"></use>
+      <use href="images/icons.svg#icon-menu"></use>
+      <use href="images/icons.svg#icon-close"></use>
+    </svg>
+
     <header class="header" id="home">
       <a class="logo" href="#home"
         ><span lang="ja">雨</span> Amagai Rei <span lang="ja">雨</span></a
@@ -471,32 +453,8 @@
         title="Обновить данные с GitHub"
       >
         <span class="github-sync__icon" aria-hidden="true">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M20 7V3.5M20 7h-3.5"
-              stroke="currentColor"
-              stroke-width="1.8"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M20 7a8 8 0 0 0-14-2M4 17v3.5M4 17h3.5"
-              stroke="currentColor"
-              stroke-width="1.8"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M4 17a8 8 0 0 0 14 2"
-              stroke="currentColor"
-              stroke-width="1.8"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
+          <svg class="icon" viewBox="0 0 24 24">
+            <use href="images/icons.svg#icon-github-sync"></use>
           </svg>
         </span>
       </button>
@@ -621,10 +579,8 @@
     <footer class="footer" id="contacts">
       <div class="socials">
         <a data-contact="github" href="#" aria-label="GitHub" title="GitHub">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <polyline points="8 7 3 12 8 17" />
-            <polyline points="16 7 21 12 16 17" />
-            <line x1="14" y1="5" x2="10" y2="19" />
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <use href="images/icons.svg#icon-github"></use>
           </svg>
         </a>
         <a
@@ -633,15 +589,13 @@
           aria-label="Telegram"
           title="Telegram"
         >
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M21.5 3.5 2.5 11l6 2.3 2 6.2 3.2-3.8 4.6 3.4z" />
-            <path d="M8.5 13.3 21.5 3.5" />
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <use href="images/icons.svg#icon-telegram"></use>
           </svg>
         </a>
         <a data-contact="email" href="#" aria-label="Почта" title="Почта">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <rect x="3" y="5" width="18" height="14" rx="2" />
-            <polyline points="3 7 12 13 21 7" />
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <use href="images/icons.svg#icon-email"></use>
           </svg>
         </a>
       </div>

@@ -233,59 +233,55 @@
     <!-- Адаптивный загрузчик — ДО CSS, чтобы классы успели примениться -->
     <script type="module" src="js/adaptive-loader.js"></script>
 
-    <!-- Асинхронная загрузка CSS через media="print" onload -->
-    <link rel="preload" as="style" href="css/theme-system.css" />
+    <!-- Critical CSS + fonts — блокирующий рендер, но минимальный -->
+    <link rel="preload" as="style" href="css/critical.css" />
+    <link rel="stylesheet" href="css/critical.css" />
+
+    <!-- Font preloads — только самые нужные начертения -->
     <link
-      rel="stylesheet"
-      href="css/theme-system.css"
-      media="print"
-      onload="this.media = 'all'"
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href="fonts/Montserrat-VariableFont_wght.woff2"
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href="fonts/JetBrainsMono-VariableFont_wght.woff2"
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href="fonts/Montserrat-Regular.woff2"
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href="fonts/JetBrainsMono-Regular.woff2"
     />
 
-    <link rel="preload" as="style" href="css/adaptive.css" />
-    <link
-      rel="stylesheet"
-      href="css/adaptive.css"
-      media="print"
-      onload="this.media = 'all'"
-    />
+    <!-- Preconnect для внешних CDN -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
 
-    <link rel="preload" as="style" href="css/style.css" />
-    <link
-      rel="stylesheet"
-      href="css/style.css"
-      media="print"
-      onload="this.media = 'all'"
-    />
+    <!-- Modulepreload для критических JS -->
+    <link rel="modulepreload" href="js/common.js" />
+    <link rel="modulepreload" href="js/lab.js" />
+    <link rel="modulepreload" href="js/menu.js" />
+    <link rel="modulepreload" href="js/theme.js" />
+    <link rel="modulepreload" href="js/adaptive-store.js" />
 
-    <link rel="preload" as="style" href="css/performance.css" />
+    <!-- Components CSS — ленивая загрузка -->
+    <link rel="preload" as="style" href="css/components.css" />
     <link
       rel="stylesheet"
-      href="css/performance.css"
-      media="print"
-      onload="this.media = 'all'"
-    />
-
-    <link rel="preload" as="style" href="css/smooth-motion.css" />
-    <link
-      rel="stylesheet"
-      href="css/smooth-motion.css"
-      media="print"
-      onload="this.media = 'all'"
-    />
-
-    <link rel="preload" as="style" href="css/markdown-modal.css" />
-    <link
-      rel="stylesheet"
-      href="css/markdown-modal.css"
-      media="print"
-      onload="this.media = 'all'"
-    />
-
-    <link rel="preload" as="style" href="css/file-manager.css" />
-    <link
-      rel="stylesheet"
-      href="css/file-manager.css"
+      href="css/components.css"
       media="print"
       onload="this.media = 'all'"
     />
@@ -313,18 +309,13 @@
 
     <!-- Noscript fallback для отключённого JS -->
     <noscript>
-      <link rel="stylesheet" href="css/theme-system.css" />
-      <link rel="stylesheet" href="css/adaptive.css" />
-      <link rel="stylesheet" href="css/style.css" />
-      <link rel="stylesheet" href="css/performance.css" />
-      <link rel="stylesheet" href="css/smooth-motion.css" />
-      <link rel="stylesheet" href="css/markdown-modal.css" />
-      <link rel="stylesheet" href="css/file-manager.css" />
+      <link rel="stylesheet" href="css/critical.css" />
+      <link rel="stylesheet" href="css/components.css" />
       <style>
         /* Fallback для тёмной темы без JS */
         html {
-          background: var(--ws-bg);
-          color: var(--ws-text);
+          background: var(--color-bg-base);
+          color: var(--color-text-primary);
         }
         .theme-toggle {
           display: none !important;
@@ -333,6 +324,15 @@
     </noscript>
   </head>
   <body>
+    <!-- SVG Sprite — подключается первым для использования через <use> -->
+    <svg style="display: none">
+      <use href="images/icons.svg#icon-github"></use>
+      <use href="images/icons.svg#icon-telegram"></use>
+      <use href="images/icons.svg#icon-email"></use>
+      <use href="images/icons.svg#icon-menu"></use>
+      <use href="images/icons.svg#icon-close"></use>
+    </svg>
+
     <header class="header">
       <a class="logo" href="index.html"><span lang="ja">雨</span> Amagai Rei</a>
 
@@ -370,10 +370,8 @@
     <footer class="footer" id="contacts">
       <div class="socials">
         <a data-contact="github" href="#" aria-label="GitHub" title="GitHub">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <polyline points="8 7 3 12 8 17" />
-            <polyline points="16 7 21 12 16 17" />
-            <line x1="14" y1="5" x2="10" y2="19" />
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <use href="images/icons.svg#icon-github"></use>
           </svg>
         </a>
         <a
@@ -382,15 +380,13 @@
           aria-label="Telegram"
           title="Telegram"
         >
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M21.5 3.5 2.5 11l6 2.3 2 6.2 3.2-3.8 4.6 3.4z" />
-            <path d="M8.5 13.3 21.5 3.5" />
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <use href="images/icons.svg#icon-telegram"></use>
           </svg>
         </a>
         <a data-contact="email" href="#" aria-label="Почта" title="Почта">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <rect x="3" y="5" width="18" height="14" rx="2" />
-            <polyline points="3 7 12 13 21 7" />
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <use href="images/icons.svg#icon-email"></use>
           </svg>
         </a>
       </div>

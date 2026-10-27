@@ -376,6 +376,106 @@ html.no-animations *::after {
 }
 
 /* ==========================================================================
+   ICONS — SVG Sprite sizing
+   ========================================================================== */
+
+.icon {
+  width: 1em;
+  height: 1em;
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
+   FONT FACE — Local fonts with font-display: swap
+   ========================================================================== */
+
+@font-face {
+  font-family: "Space Grotesk";
+  src: url("../fonts/SpaceGrotesk-VariableFont_wght.woff2") format("woff2");
+  font-weight: 300 700;
+  font-display: swap;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Montserrat";
+  src: url("../fonts/Montserrat-VariableFont_wght.woff2") format("woff2");
+  font-weight: 300 800;
+  font-display: swap;
+  font-style: normal;
+  unicode-range: U+0020-007F, U+0400-04FF; /* Latin + Cyrillic */
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("../fonts/JetBrainsMono-VariableFont_wght.woff2") format("woff2");
+  font-weight: 400 700;
+  font-display: swap;
+  font-style: normal;
+}
+
+/* Fallback for browsers without variable font support */
+@font-face {
+  font-family: "Montserrat";
+  src: url("../fonts/Montserrat-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+  unicode-range: U+0020-007F, U+0400-04FF;
+}
+
+@font-face {
+  font-family: "Montserrat";
+  src: url("../fonts/Montserrat-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-display: swap;
+  font-style: normal;
+  unicode-range: U+0020-007F, U+0400-04FF;
+}
+
+@font-face {
+  font-family: "Montserrat";
+  src: url("../fonts/Montserrat-SemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-display: swap;
+  font-style: normal;
+  unicode-range: U+0020-007F, U+0400-04FF;
+}
+
+@font-face {
+  font-family: "Montserrat";
+  src: url("../fonts/Montserrat-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+  font-style: normal;
+  unicode-range: U+0020-007F, U+0400-04FF;
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("../fonts/JetBrainsMono-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("../fonts/JetBrainsMono-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-display: swap;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("../fonts/JetBrainsMono-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+  font-style: normal;
+}
+
+/* ==========================================================================
    BACKGROUND PATTERN — subtle atmospheric gradients
    ========================================================================== */
 

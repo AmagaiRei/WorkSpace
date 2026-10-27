@@ -408,51 +408,55 @@
     <!-- Адаптивный загрузчик — ДО CSS, чтобы классы успели примениться -->
     <script type="module" src="js/adaptive-loader.js"></script>
 
-    <!-- Асинхронная загрузка CSS через media="print" onload -->
-    <link rel="preload" as="style" href="css/theme-system.css" />
+    <!-- Critical CSS + fonts — блокирующий рендер, но минимальный -->
+    <link rel="preload" as="style" href="css/critical.css" />
+    <link rel="stylesheet" href="css/critical.css" />
+
+    <!-- Font preloads — только самые нужные начертения -->
     <link
-      rel="stylesheet"
-      href="css/theme-system.css"
-      media="print"
-      onload="this.media = 'all'"
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href="fonts/Montserrat-VariableFont_wght.woff2"
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href="fonts/JetBrainsMono-VariableFont_wght.woff2"
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href="fonts/Montserrat-Regular.woff2"
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href="fonts/JetBrainsMono-Regular.woff2"
     />
 
-    <link rel="preload" as="style" href="css/adaptive.css" />
-    <link
-      rel="stylesheet"
-      href="css/adaptive.css"
-      media="print"
-      onload="this.media = 'all'"
-    />
+    <!-- Preconnect для внешних CDN -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
 
-    <link rel="preload" as="style" href="css/style.css" />
-    <link
-      rel="stylesheet"
-      href="css/style.css"
-      media="print"
-      onload="this.media = 'all'"
-    />
+    <!-- Modulepreload для критических JS -->
+    <link rel="modulepreload" href="js/common.js" />
+    <link rel="modulepreload" href="js/sync-center.js" />
+    <link rel="modulepreload" href="js/menu.js" />
+    <link rel="modulepreload" href="js/theme.js" />
+    <link rel="modulepreload" href="js/adaptive-store.js" />
 
-    <link rel="preload" as="style" href="css/performance.css" />
+    <!-- Components CSS — ленивая загрузка -->
+    <link rel="preload" as="style" href="css/components.css" />
     <link
       rel="stylesheet"
-      href="css/performance.css"
-      media="print"
-      onload="this.media = 'all'"
-    />
-
-    <link rel="preload" as="style" href="css/smooth-motion.css" />
-    <link
-      rel="stylesheet"
-      href="css/smooth-motion.css"
-      media="print"
-      onload="this.media = 'all'"
-    />
-
-    <link rel="preload" as="style" href="css/sync-center.css" />
-    <link
-      rel="stylesheet"
-      href="css/sync-center.css"
+      href="css/components.css"
       media="print"
       onload="this.media = 'all'"
     />
@@ -466,17 +470,13 @@
 
     <!-- Noscript fallback для отключённого JS -->
     <noscript>
-      <link rel="stylesheet" href="css/theme-system.css" />
-      <link rel="stylesheet" href="css/adaptive.css" />
-      <link rel="stylesheet" href="css/style.css" />
-      <link rel="stylesheet" href="css/performance.css" />
-      <link rel="stylesheet" href="css/smooth-motion.css" />
-      <link rel="stylesheet" href="css/sync-center.css" />
+      <link rel="stylesheet" href="css/critical.css" />
+      <link rel="stylesheet" href="css/components.css" />
       <style>
         /* Fallback для тёмной темы без JS */
         html {
-          background: var(--ws-bg);
-          color: var(--ws-text);
+          background: var(--color-bg-base);
+          color: var(--color-text-primary);
         }
         .theme-toggle {
           display: none !important;
@@ -485,6 +485,19 @@
     </noscript>
   </head>
   <body>
+    <!-- SVG Sprite — подключается первым для использования через <use> -->
+    <svg style="display: none">
+      <use href="images/icons.svg#icon-github"></use>
+      <use href="images/icons.svg#icon-telegram"></use>
+      <use href="images/icons.svg#icon-email"></use>
+      <use href="images/icons.svg#icon-menu"></use>
+      <use href="images/icons.svg#icon-close"></use>
+      <use href="images/icons.svg#icon-refresh"></use>
+      <use href="images/icons.svg#icon-trash"></use>
+      <use href="images/icons.svg#icon-file"></use>
+      <use href="images/icons.svg#icon-plus"></use>
+    </svg>
+
     <header class="header">
       <a class="logo" href="index.html"
         ><span lang="ja">雨</span> Amagai Rei <span lang="ja">雨</span></a
