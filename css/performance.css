@@ -1,25 +1,28 @@
-/* !Оптимизация отрисовки: сохраняет тему, но уменьшает дорогие эффекты. */
-:root {
-  --ws-motion-fast: 120ms;
+/* ==========================================================================
+   PERFORMANCE.CSS — Оптимизация отрисовки (работает поверх adaptive.css)
+   Использует токены из design-tokens.css
+   ========================================================================== */
+
+/* !Blur и несколько больших теней заставляют мобильные GPU перерисовывать большие области.
+   Эти правила применяются ТОЛЬКО когда adaptive.css не отключил эффекты через профили. */
+@media (prefers-reduced-motion: no-preference) {
+  .header,
+  .dashboard__glass,
+  .life-card,
+  .card,
+  .subject,
+  .tag-pill,
+  .theme-toggle,
+  .github-sync,
+  .ws-admin__backdrop,
+  .ws-admin__dialog,
+  .admin-panel-trigger {
+    /* backdrop-filter оставляем — adaptive.css управляет им через --blur-* токены */
+  }
 }
 
-/* !Blur и несколько больших теней заставляют мобильные GPU перерисовывать большие области. */
-.header,
-.dashboard__glass,
-.life-card,
-.card,
-.subject,
-.tag-pill,
-.theme-toggle,
-.github-sync,
-.ws-admin__backdrop,
-.ws-admin__dialog,
-.admin-panel-trigger {
-  -webkit-backdrop-filter: none !important;
-  backdrop-filter: none !important;
-}
-
-/* !Не анимируем свойства, которые вызывают полную перерисовку; оставляем только лёгкие переходы. */
+/* !Не анимируем свойства, которые вызывают полную перерисовку;
+   оставляем только лёгкие переходы (color, opacity, transform). */
 .card,
 .life-card,
 .tag-pill,
@@ -31,32 +34,39 @@ button,
 a {
   transition-property:
     color, background-color, border-color, opacity, transform !important;
-  transition-duration: 140ms !important;
+  transition-duration: var(--duration-smooth) !important;
+  transition-timing-function: var(--ease-out) !important;
 }
 
-/* !Отключаем постоянные декоративные свечения: они не несут функциональной нагрузки. */
-.dashboard__glass::before,
-.dashboard__glass::after,
-.life-card::before,
-.life-card::after,
-.github-sync::before,
-.neon-orbit,
-.neon-glow {
-  animation: none !important;
+/* !Отключаем постоянные декоративные свечения на слабых профилях —
+   adaptive.css уже делает это через .perf-low, .low-battery, .net-economy.
+   Здесь оставляем только fallback для случая когда профиль не определился. */
+@media (max-width: 760px), (hover: none) {
+  .dashboard__glass::before,
+  .dashboard__glass::after,
+  .life-card::before,
+  .life-card::after,
+  .github-sync::before,
+  .neon-orbit,
+  .neon-glow {
+    animation: none !important;
+  }
 }
 
 /* !Браузер может отложить раскладку карточек ниже видимой области до прокрутки. */
-.card {
+.card,
+.subject,
+.dashboard__kpi {
   content-visibility: auto;
-  contain-intrinsic-size: auto 150px;
+  contain-intrinsic-size: auto 200px;
 }
 
-/* !На компьютерах тоже уменьшаем работу композитора при наведении. */
+/* !На компьютерах уменьшаем работу композитора при наведении для слабых профилей. */
 @media (hover: hover) and (pointer: fine) {
-  .card:hover,
-  .life-card:hover,
-  .tag-pill:hover,
-  button:hover {
+  html.perf-low .card:hover,
+  html.perf-low .life-card:hover,
+  html.perf-low .tag-pill:hover,
+  html.perf-low button:hover {
     filter: none !important;
   }
 }
@@ -76,7 +86,7 @@ a {
   .header,
   .mobile-menu__nav,
   .ws-admin__dialog {
-    box-shadow: 0 4px 14px rgba(10, 4, 20, 0.12) !important;
+    box-shadow: var(--shadow-sm) !important;
   }
 
   .dashboard__glass::before,
@@ -87,7 +97,7 @@ a {
   }
 
   .dashboard__bar-fill {
-    transition-duration: 350ms !important;
+    transition-duration: var(--duration-slow) !important;
   }
 
   .card,
@@ -106,3 +116,19 @@ a {
     scroll-behavior: auto !important;
   }
 }
+
+/* !GPU-оптимизации: promote к слою только когда нужно */
+@media (prefers-reduced-motion: no-preference) {
+  .card:hover,
+  .subject:hover,
+  .life-card:hover,
+  .dashboard__kpi:hover,
+  .github-sync:hover,
+  .admin-panel-trigger:hover,
+  .btn:hover {
+    /* transform уже создаёт слой — дополнительный will-change в adaptive.css */
+  }
+}
+
+/* !Оптимизация шрифтов: font-display: swap уже в design-tokens.css @font-face */
+/* !Критические шрифты предзагружены в index.html */

@@ -1,25 +1,33 @@
+/* ==========================================================================
+   SMOOTH-MOTION.CSS — Анимации и переходы (на токенах design-tokens.css)
+   ========================================================================== */
+
+/* Алиасы для обратной совместимости (старые --ws-motion-* используются в адаптивной системе) */
 :root {
-  --motion-fast: 150ms;
-  --motion-normal: 240ms;
-  --motion-slow: 360ms;
-  --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
-  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --motion-fast: var(--duration-fast);
+  --motion-normal: var(--duration-smooth);
+  --motion-slow: var(--duration-slow);
+  --ease-smooth: var(--ease-out);
+  --ease-standard: var(--ease-in-out);
 
   /* Алиасы для адаптивной системы */
-  --ws-motion-fast: var(--motion-fast);
-  --ws-motion-normal: var(--motion-normal);
-  --ws-motion-slow: var(--motion-slow);
+  --ws-motion-fast: var(--duration-fast);
+  --ws-motion-normal: var(--duration-smooth);
+  --ws-motion-slow: var(--duration-slow);
 }
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 5.5rem;
+  scroll-padding-top: calc(var(--header-height) + var(--space-lg));
 }
 
-body {
-  animation: ws-page-enter 420ms var(--ease-smooth) both;
+@media (prefers-reduced-motion: no-preference) {
+  body {
+    animation: ws-page-enter var(--duration-slower) var(--ease-out) both;
+  }
 }
 
+/* Базовые переходы для интерактивных элементов */
 a,
 button,
 input,
@@ -48,15 +56,16 @@ summary,
 .mobile-menu__nav a,
 .socials a {
   transition:
-    color var(--motion-normal) var(--ease-standard),
-    background-color var(--motion-normal) var(--ease-standard),
-    border-color var(--motion-normal) var(--ease-standard),
-    box-shadow var(--motion-normal) var(--ease-standard),
-    opacity var(--motion-normal) var(--ease-standard),
-    transform var(--motion-normal) var(--ease-smooth),
-    filter var(--motion-normal) var(--ease-standard);
+    color var(--duration-smooth) var(--ease-in-out),
+    background-color var(--duration-smooth) var(--ease-in-out),
+    border-color var(--duration-smooth) var(--ease-in-out),
+    box-shadow var(--duration-smooth) var(--ease-in-out),
+    opacity var(--duration-smooth) var(--ease-in-out),
+    transform var(--duration-smooth) var(--ease-out),
+    filter var(--duration-smooth) var(--ease-in-out);
 }
 
+/* Убираем tap highlight на мобильных */
 button,
 .btn,
 .button,
@@ -67,11 +76,13 @@ button,
   -webkit-tap-highlight-color: transparent;
 }
 
+/* Press feedback */
 button:not(:disabled):active,
 .btn:active,
 .button:active,
 [role="button"]:active {
   transform: scale(0.98);
+  transition-duration: var(--duration-fast);
 }
 
 button:disabled,
@@ -81,11 +92,13 @@ button[aria-disabled="true"] {
   filter: saturate(0.65);
 }
 
+/* Focus visible */
 :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
-  outline: 2px solid var(--ws-purple, #a855f7);
+  outline: 2px solid var(--color-focus-ring);
   outline-offset: 3px;
 }
 
+/* Nav link underline animation */
 .nav a,
 .mobile-menu__nav a,
 .socials a {
@@ -99,45 +112,51 @@ button[aria-disabled="true"] {
   left: 0;
   height: 2px;
   content: "";
-  background: var(--ws-purple, #a855f7);
+  background: var(--color-brand-purple);
   border-radius: 99px;
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform var(--motion-normal) var(--ease-smooth);
+  transition: transform var(--duration-smooth) var(--ease-out);
 }
 
-.nav a:hover::after,
-.nav a:focus-visible::after {
-  transform: scaleX(1);
+@media (hover: hover) and (pointer: fine) {
+  .nav a:hover::after,
+  .nav a:focus-visible::after {
+    transform: scaleX(1);
+  }
 }
 
-.card:hover,
-.subject:hover,
-.shot:hover,
-.life-card:hover,
-.file:hover,
-.item:hover,
-.project-docs__link:hover,
-.dashboard__kpi:hover,
-.dashboard__activity:hover,
-.dashboard__stat:hover {
-  transform: translateY(-3px);
+/* Card hover lift */
+@media (hover: hover) and (pointer: fine) {
+  .card:hover,
+  .subject:hover,
+  .shot:hover,
+  .life-card:hover,
+  .file:hover,
+  .item:hover,
+  .project-docs__link:hover,
+  .dashboard__kpi:hover,
+  .dashboard__activity:hover,
+  .dashboard__stat:hover {
+    transform: translateY(-3px);
+  }
+
+  .card:active,
+  .subject:active,
+  .file:active,
+  .item:active {
+    transform: translateY(-1px);
+  }
 }
 
-.card:active,
-.subject:active,
-.file:active,
-.item:active {
-  transform: translateY(-1px);
-}
-
+/* Page entrance stagger */
 .hero__content,
 .page-head,
 #lab-body,
 #subjects,
 #dashboard,
 .footer {
-  animation: ws-content-enter 480ms var(--ease-smooth) both;
+  animation: ws-content-enter var(--duration-slower) var(--ease-out) both;
 }
 
 #dashboard {
@@ -148,6 +167,7 @@ button[aria-disabled="true"] {
   animation-delay: 110ms;
 }
 
+/* Details/summary reveal */
 .subjects > details,
 .subject,
 .card,
@@ -159,68 +179,74 @@ button[aria-disabled="true"] {
 }
 
 .subjects > details[open] > :not(summary) {
-  animation: ws-reveal 260ms var(--ease-smooth) both;
+  animation: ws-reveal var(--duration-smooth) var(--ease-out) both;
 }
 
+/* Mobile menu pop-in */
 .mobile-menu[open] .mobile-menu__nav,
 .mobile-menu[open] nav {
-  animation: ws-pop-in 200ms var(--ease-smooth) both;
+  animation: ws-pop-in var(--duration-smooth) var(--ease-out) both;
   transform-origin: top right;
 }
 
+/* Form focus transitions */
 .search,
 input,
 select,
 textarea {
   transition:
-    border-color var(--motion-normal) var(--ease-standard),
-    box-shadow var(--motion-normal) var(--ease-standard),
-    background-color var(--motion-normal) var(--ease-standard);
+    border-color var(--duration-smooth) var(--ease-in-out),
+    box-shadow var(--duration-smooth) var(--ease-in-out),
+    background-color var(--duration-smooth) var(--ease-in-out);
 }
 
 .search:focus,
 input:focus,
 select:focus,
 textarea:focus {
-  box-shadow: 0 0 0 3px
-    color-mix(in srgb, var(--ws-purple, #a855f7) 22%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-brand-purple) 22%, transparent);
 }
 
-.theme-toggle:hover,
-.github-sync:hover,
-.admin-panel-trigger:hover,
-.socials a:hover {
-  transform: translateY(-2px);
+/* Button hover lift */
+@media (hover: hover) and (pointer: fine) {
+  .theme-toggle:hover,
+  .github-sync:hover,
+  .admin-panel-trigger:hover,
+  .socials a:hover {
+    transform: translateY(-2px);
+  }
 }
 
+/* GitHub sync icon rotation */
 .github-sync:hover svg {
   transform: rotate(35deg);
 }
 
 .github-sync svg {
-  transition: transform 420ms var(--ease-smooth);
+  transition: transform var(--duration-slow) var(--ease-out);
 }
 
+/* Modal animations */
 .markdown-modal__dialog,
 .md-modal__dialog {
-  animation: ws-modal-in 240ms var(--ease-smooth) both;
+  animation: ws-modal-in var(--duration-smooth) var(--ease-out) both;
 }
 
 .md-modal__backdrop {
-  animation: ws-fade-in 180ms ease-out both;
+  animation: ws-fade-in var(--duration-fast) ease-out both;
 }
 
 [hidden] {
   animation: none !important;
 }
 
+/* ==========================================================================
+   KEYFRAMES
+   ========================================================================== */
+
 @keyframes ws-page-enter {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes ws-content-enter {
@@ -268,14 +294,11 @@ textarea:focus {
 }
 
 @keyframes ws-fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
+/* Touch devices: disable hover transforms */
 @media (hover: none) {
   .card:hover,
   .subject:hover,
@@ -295,6 +318,7 @@ textarea:focus {
   }
 }
 
+/* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -320,26 +344,29 @@ textarea:focus {
   }
 }
 
-/* Раскрывающиеся списки и вложенные элементы */
+/* ==========================================================================
+   DROPDOWN / ACCORDION ANIMATIONS
+   ========================================================================== */
+
 .subject {
   overflow: clip;
   transition:
-    border-color var(--motion-normal) var(--ease-standard),
-    background-color var(--motion-normal) var(--ease-standard),
-    box-shadow var(--motion-normal) var(--ease-standard),
-    transform var(--motion-normal) var(--ease-smooth);
+    border-color var(--duration-smooth) var(--ease-in-out),
+    background-color var(--duration-smooth) var(--ease-in-out),
+    box-shadow var(--duration-smooth) var(--ease-in-out),
+    transform var(--duration-smooth) var(--ease-out);
 }
 
 .subject__summary {
   transition:
-    color var(--motion-normal) var(--ease-standard),
-    background-color var(--motion-normal) var(--ease-standard);
+    color var(--duration-smooth) var(--ease-in-out),
+    background-color var(--duration-smooth) var(--ease-in-out);
 }
 
 .subject__summary::after {
   transition:
-    transform var(--motion-normal) var(--ease-smooth),
-    border-color var(--motion-normal) var(--ease-standard);
+    transform var(--duration-smooth) var(--ease-out),
+    border-color var(--duration-smooth) var(--ease-in-out);
 }
 
 .subject[open] > .subject__summary::after {
@@ -347,41 +374,31 @@ textarea:focus {
 }
 
 .subject__content {
-  animation: ws-dropdown-content 320ms var(--ease-smooth) both;
+  animation: ws-dropdown-content var(--duration-smooth) var(--ease-out) both;
   transform-origin: top center;
 }
 
 .subject[open] > .subject__content > * {
-  animation: ws-dropdown-item 360ms var(--ease-smooth) both;
+  animation: ws-dropdown-item var(--duration-slow) var(--ease-out) both;
 }
 
-.subject[open] > .subject__content > *:nth-child(1) {
-  animation-delay: 25ms;
-}
-.subject[open] > .subject__content > *:nth-child(2) {
-  animation-delay: 55ms;
-}
-.subject[open] > .subject__content > *:nth-child(3) {
-  animation-delay: 85ms;
-}
-.subject[open] > .subject__content > *:nth-child(4) {
-  animation-delay: 115ms;
-}
-.subject[open] > .subject__content > *:nth-child(5) {
-  animation-delay: 145ms;
-}
-.subject[open] > .subject__content > *:nth-child(n + 6) {
-  animation-delay: 165ms;
-}
+/* Stagger for dropdown items */
+.subject[open] > .subject__content > *:nth-child(1) { animation-delay: 25ms; }
+.subject[open] > .subject__content > *:nth-child(2) { animation-delay: 55ms; }
+.subject[open] > .subject__content > *:nth-child(3) { animation-delay: 85ms; }
+.subject[open] > .subject__content > *:nth-child(4) { animation-delay: 115ms; }
+.subject[open] > .subject__content > *:nth-child(5) { animation-delay: 145ms; }
+.subject[open] > .subject__content > *:nth-child(n+6) { animation-delay: 165ms; }
 
+/* Tree folder animations */
 .tree__folder > summary {
   transition:
-    color var(--motion-normal) var(--ease-standard),
-    background-color var(--motion-normal) var(--ease-standard);
+    color var(--duration-smooth) var(--ease-in-out),
+    background-color var(--duration-smooth) var(--ease-in-out);
 }
 
 .tree__folder > summary .icon--chevron {
-  transition: transform var(--motion-normal) var(--ease-smooth);
+  transition: transform var(--duration-smooth) var(--ease-out);
 }
 
 .tree__folder[open] > summary .icon--chevron {
@@ -389,12 +406,13 @@ textarea:focus {
 }
 
 .tree__folder[open] > :not(summary) {
-  animation: ws-dropdown-content 260ms var(--ease-smooth) both;
+  animation: ws-dropdown-content var(--duration-normal) var(--ease-out) both;
   transform-origin: top left;
 }
 
+/* Mobile menu chevron */
 .mobile-menu__summary::before {
-  transition: transform var(--motion-normal) var(--ease-smooth);
+  transition: transform var(--duration-smooth) var(--ease-out);
 }
 
 .mobile-menu[open] > .mobile-menu__summary::before {
@@ -405,7 +423,7 @@ textarea:focus {
   from {
     opacity: 0;
     transform: translateY(-8px);
-    clip-path: inset(0 0 100% 0 round 8px);
+    clip-path: inset(0 0 100% 0 round var(--radius-md));
   }
   to {
     opacity: 1;
@@ -425,135 +443,26 @@ textarea:focus {
   }
 }
 
-/* !Единый фон без резких горизонтальных переходов */
-html,
-body {
-  min-height: 100%;
-  background-color: #1c1028;
-}
+/* ==========================================================================
+   LIGHTBOX ANIMATIONS
+   ========================================================================== */
 
-body {
-  background-image:
-    radial-gradient(
-      ellipse at 12% 8%,
-      rgba(126, 48, 170, 0.2),
-      transparent 42%
-    ),
-    radial-gradient(
-      ellipse at 88% 22%,
-      rgba(205, 66, 179, 0.14),
-      transparent 44%
-    ),
-    radial-gradient(
-      ellipse at 52% 78%,
-      rgba(93, 45, 145, 0.12),
-      transparent 50%
-    ),
-    linear-gradient(145deg, #21142e 0%, #301b40 48%, #24152f 100%) !important;
-  background-attachment: fixed !important;
-}
-
-:root[data-theme="dark"] body {
-  background-image:
-    radial-gradient(
-      ellipse at 12% 8%,
-      rgba(126, 48, 170, 0.16),
-      transparent 42%
-    ),
-    radial-gradient(
-      ellipse at 88% 22%,
-      rgba(205, 66, 179, 0.1),
-      transparent 44%
-    ),
-    radial-gradient(
-      ellipse at 52% 78%,
-      rgba(93, 45, 145, 0.1),
-      transparent 50%
-    ),
-    linear-gradient(145deg, #100a19 0%, #1b1028 48%, #120b1d 100%) !important;
-}
-
-.hero,
-.section,
-.footer {
-  background: transparent !important;
-}
-
-.hero__waves {
-  display: none !important;
-}
-
-/* !Плавное раскрытие предметов и лабораторных */
-.subjects > details > summary,
-.subject > summary,
-.subjects summary {
-  transition:
-    color var(--motion-normal) var(--ease-standard),
-    background-color var(--motion-normal) var(--ease-standard);
-}
-
-.subjects > details[open] > :not(summary),
-.subject[open] > :not(summary) {
-  animation: ws-dropdown-open 380ms var(--ease-smooth) both;
-  transform-origin: top center;
-}
-
-.subjects > details[open] > :not(summary) > *,
-.subject[open] > :not(summary) > * {
-  animation: ws-dropdown-child 360ms var(--ease-smooth) both;
-}
-
-.subjects > details[open] > :not(summary) > *:nth-child(2) {
-  animation-delay: 35ms;
-}
-.subjects > details[open] > :not(summary) > *:nth-child(3) {
-  animation-delay: 70ms;
-}
-.subjects > details[open] > :not(summary) > *:nth-child(4) {
-  animation-delay: 105ms;
-}
-
-@keyframes ws-dropdown-open {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-    clip-path: inset(0 0 100% 0 round 12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-    clip-path: inset(0 0 0 0 round 0);
-  }
-}
-
-@keyframes ws-dropdown-child {
-  from {
-    opacity: 0;
-    transform: translateY(7px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* !Плавное открытие полноразмерных скриншотов */
 dialog.lightbox[open] {
-  animation: ws-lightbox-in 300ms var(--ease-smooth) both;
+  animation: ws-lightbox-in var(--duration-smooth) var(--ease-out) both;
   transform-origin: center;
 }
 
 dialog.lightbox[open]::backdrop {
-  animation: ws-lightbox-backdrop 240ms ease-out both;
+  animation: ws-lightbox-backdrop var(--duration-fast) ease-out both;
 }
 
 dialog.lightbox img {
-  animation: ws-lightbox-image 380ms var(--ease-smooth) both;
+  animation: ws-lightbox-image var(--duration-slow) var(--ease-out) both;
 }
 
 dialog.lightbox .file-button,
 dialog.lightbox .btn {
-  animation: ws-lightbox-image 400ms var(--ease-smooth) 45ms both;
+  animation: ws-lightbox-image var(--duration-slow) var(--ease-out) 45ms both;
 }
 
 @keyframes ws-lightbox-in {
@@ -570,12 +479,8 @@ dialog.lightbox .btn {
 }
 
 @keyframes ws-lightbox-backdrop {
-  from {
-    background-color: rgba(15, 5, 25, 0);
-  }
-  to {
-    background-color: rgba(15, 5, 25, 0.85);
-  }
+  from { background-color: rgba(10, 5, 22, 0); }
+  to { background-color: rgba(10, 5, 22, 0.85); }
 }
 
 @keyframes ws-lightbox-image {
@@ -596,5 +501,56 @@ dialog.lightbox .btn {
   .subjects > details[open] > :not(summary),
   .subject[open] > :not(summary) {
     animation: none !important;
+  }
+}
+
+/* ==========================================================================
+   SUBJECTS/ACCORDION ALTERNATIVE (details-based)
+   ========================================================================== */
+
+.subjects > details > summary,
+.subject > summary,
+.subjects summary {
+  transition:
+    color var(--duration-smooth) var(--ease-in-out),
+    background-color var(--duration-smooth) var(--ease-in-out);
+}
+
+.subjects > details[open] > :not(summary),
+.subject[open] > :not(summary) {
+  animation: ws-dropdown-open var(--duration-slow) var(--ease-out) both;
+  transform-origin: top center;
+}
+
+.subjects > details[open] > :not(summary) > *,
+.subject[open] > :not(summary) > * {
+  animation: ws-dropdown-child var(--duration-slow) var(--ease-out) both;
+}
+
+.subjects > details[open] > :not(summary) > *:nth-child(2) { animation-delay: 35ms; }
+.subjects > details[open] > :not(summary) > *:nth-child(3) { animation-delay: 70ms; }
+.subjects > details[open] > :not(summary) > *:nth-child(4) { animation-delay: 105ms; }
+
+@keyframes ws-dropdown-open {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+    clip-path: inset(0 0 100% 0 round var(--radius-lg));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    clip-path: inset(0 0 0 0 round 0);
+  }
+}
+
+@keyframes ws-dropdown-child {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

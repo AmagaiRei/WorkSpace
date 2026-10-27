@@ -9,58 +9,62 @@
      ======================================================================== */
 
   /* Base backgrounds — Dark Purple */
-  --color-bg-deep: #0a0516;        /* Почти черный фиолетовый — глубокий фон */
-  --color-bg-base: #0d081b;        /* Основной фон страницы */
-  --color-bg-surface: #130924;     /* Второстепенный фон (карточки, секции) */
-  --color-bg-elevated: #1a1030;    /* Поднятые поверхности (модалки, дропдауны) */
+  --color-bg-deep: #0a0516; /* Почти черный фиолетовый — глубокий фон */
+  --color-bg-base: #0d081b; /* Основной фон страницы */
+  --color-bg-surface: #130924; /* Второстепенный фон (карточки, секции) */
+  --color-bg-elevated: #1a1030; /* Поднятые поверхности (модалки, дропдауны) */
 
   /* Glass surfaces */
-  --glass-base: rgba(23, 13, 43, 0.6);      /* Цвет стеклянных плашек */
+  --glass-base: rgba(23, 13, 43, 0.6); /* Цвет стеклянных плашек */
   --glass-elevated: rgba(23, 13, 43, 0.75); /* Стекло для модалок */
-  --glass-strong: rgba(23, 13, 43, 0.9);    /* Сильное стекло */
+  --glass-strong: rgba(23, 13, 43, 0.9); /* Сильное стекло */
 
   /* Brand purple */
-  --color-brand-purple: #b624ff;   /* Пурпурный маркер — основной цвет бренда WorkSpace */
+  --color-brand-purple: #b624ff; /* Пурпурный маркер — основной цвет бренда WorkSpace */
 
   /* Borders */
-  --color-border-dim: rgba(182, 36, 255, 0.15);  /* Тонкая рамка */
+  --color-border-dim: rgba(182, 36, 255, 0.15); /* Тонкая рамка */
   --color-border-glass: rgba(182, 36, 255, 0.3); /* Рамка стекла */
   --color-border-glass-hover: rgba(182, 36, 255, 0.6); /* Ховер рамка стекла */
-  --color-border-neon: var(--color-brand-purple);  /* Неоновая рамка (фокус) */
+  --color-border-neon: var(--color-brand-purple); /* Неоновая рамка (фокус) */
 
   /* Neon accent colors — per user specification */
 
   /* 🧡 Оранжевый — Статус: «В процессе», фокус, дедлайны */
-  --color-neon-orange: #ff8c00;           /* Насыщенный темно-оранжевый */
-  --color-neon-orange-soft: #ffaa44;      /* Мягкий пастельный неон */
+  --color-neon-orange: #ff8c00; /* Насыщенный темно-оранжевый */
+  --color-neon-orange-soft: #ffaa44; /* Мягкий пастельный неон */
   --glow-orange: 0 0 15px rgba(255, 140, 0, 0.4);
 
   /* 🩵 Голубой / Циан — Статус: «Новое», ссылки, кнопки, hover-эффекты */
-  --color-neon-cyan: #00f0ff;             /* Чистый яркий циан */
-  --color-neon-cyan-soft: #66e5ff;        /* Слегка разбеленный */
+  --color-neon-cyan: #00f0ff; /* Чистый яркий циан */
+  --color-neon-cyan-soft: #66e5ff; /* Слегка разбеленный */
   --glow-cyan: 0 0 15px rgba(0, 240, 255, 0.4);
 
   /* 💙 Синий — Контуры стеклянных карточек, системные теги, инфо */
-  --color-neon-blue: #3b82f6;             /* Классический UI-синий */
-  --color-neon-blue-bright: #5599ff;      /* Подсвеченный для Dark Mode */
+  --color-neon-blue: #3b82f6; /* Классический UI-синий */
+  --color-neon-blue-bright: #5599ff; /* Подсвеченный для Dark Mode */
   --glow-blue: 0 0 15px rgba(59, 130, 246, 0.4);
 
   /* Дополнительные неоновые акценты */
-  --color-neon-purple: var(--color-brand-purple);  /* Пурпурный */
-  --color-neon-pink: #f000ff;                        /* Розовый (дополнительный) */
-  --color-neon-green: #00ff88;                       /* Зеленый (успех) */
+  --color-neon-purple: var(--color-brand-purple); /* Пурпурный */
+  --color-neon-pink: #f000ff; /* Розовый (дополнительный) */
+  --color-neon-green: #00ff88; /* Зеленый (успех) */
 
   /* Glow system — mapped to accent colors */
   --glow-sm: var(--glow-blue);
   --glow-md: 0 0 20px rgba(182, 36, 255, 0.3), 0 0 40px rgba(0, 240, 255, 0.2);
-  --glow-lg: 0 0 30px rgba(182, 36, 255, 0.4), 0 0 60px rgba(255, 140, 0, 0.2), 0 0 90px rgba(0, 240, 255, 0.15);
-  --glow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.05), inset 0 0 20px rgba(182, 36, 255, 0.03);
+  --glow-lg:
+    0 0 30px rgba(182, 36, 255, 0.4), 0 0 60px rgba(255, 140, 0, 0.2),
+    0 0 90px rgba(0, 240, 255, 0.15);
+  --glow-inset:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    inset 0 0 20px rgba(182, 36, 255, 0.03);
 
   /* Text */
-  --color-text-primary: #f5f0ff;   /* Основной текст — почти белый с фиолетовым оттенком */
-  --color-text-muted: #b8a8d0;     /* Вторичный текст */
-  --color-text-dim: #7a6a9a;       /* Третичный/отключенный текст */
-  --color-text-inverse: #0a0516;   /* Текст на неоновом фоне */
+  --color-text-primary: #f5f0ff; /* Основной текст — почти белый с фиолетовым оттенком */
+  --color-text-muted: #b8a8d0; /* Вторичный текст */
+  --color-text-dim: #7a6a9a; /* Третичный/отключенный текст */
+  --color-text-inverse: #0a0516; /* Текст на неоновом фоне */
 
   /* Semantic status colors (map to neons) */
   --color-success: var(--color-neon-green);
@@ -79,9 +83,9 @@
      ======================================================================== */
 
   /* Font families */
-  --font-display: 'Space Grotesk', system-ui, -apple-system, sans-serif;
-  --font-ui: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
-  --font-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+  --font-display: "Space Grotesk", system-ui, -apple-system, sans-serif;
+  --font-ui: "JetBrains Mono", "Fira Code", Consolas, monospace;
+  --font-mono: "JetBrains Mono", "Fira Code", Consolas, monospace;
 
   /* Type scale */
   --text-hero: clamp(2.5rem, 8vw, 5rem);
@@ -185,7 +189,9 @@
   --transition-colors: color, background-color, border-color, box-shadow;
   --transition-transform: transform;
   --transition-opacity: opacity;
-  --transition-all-ui: var(--transition-colors), var(--transition-transform), var(--transition-opacity);
+  --transition-all-ui:
+    var(--transition-colors), var(--transition-transform),
+    var(--transition-opacity);
 
   /* ========================================================================
      LAYOUT
@@ -375,10 +381,27 @@ html.no-animations *::after {
 
 body {
   background:
-    radial-gradient(ellipse at 85% 5%, color-mix(in srgb, var(--color-brand-purple) 18%, transparent), transparent 40%),
-    radial-gradient(ellipse at 10% 85%, color-mix(in srgb, var(--color-neon-cyan) 10%, transparent), transparent 35%),
-    radial-gradient(ellipse at 50% 100%, color-mix(in srgb, var(--color-neon-orange) 8%, transparent), transparent 45%),
-    linear-gradient(155deg, var(--color-bg-deep) 0%, var(--color-bg-base) 50%, var(--color-bg-surface) 100%);
+    radial-gradient(
+      ellipse at 85% 5%,
+      color-mix(in srgb, var(--color-brand-purple) 18%, transparent),
+      transparent 40%
+    ),
+    radial-gradient(
+      ellipse at 10% 85%,
+      color-mix(in srgb, var(--color-neon-cyan) 10%, transparent),
+      transparent 35%
+    ),
+    radial-gradient(
+      ellipse at 50% 100%,
+      color-mix(in srgb, var(--color-neon-orange) 8%, transparent),
+      transparent 45%
+    ),
+    linear-gradient(
+      155deg,
+      var(--color-bg-deep) 0%,
+      var(--color-bg-base) 50%,
+      var(--color-bg-surface) 100%
+    );
   background-attachment: fixed;
   min-height: 100vh;
 }
