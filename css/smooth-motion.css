@@ -204,7 +204,8 @@ textarea {
 input:focus,
 select:focus,
 textarea:focus {
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-brand-purple) 22%, transparent);
+  box-shadow: 0 0 0 3px
+    color-mix(in srgb, var(--color-brand-purple) 22%, transparent);
 }
 
 /* Button hover lift */
@@ -245,8 +246,12 @@ textarea:focus {
    ========================================================================== */
 
 @keyframes ws-page-enter {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes ws-content-enter {
@@ -294,8 +299,12 @@ textarea:focus {
 }
 
 @keyframes ws-fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 /* Touch devices: disable hover transforms */
@@ -383,12 +392,24 @@ textarea:focus {
 }
 
 /* Stagger for dropdown items */
-.subject[open] > .subject__content > *:nth-child(1) { animation-delay: 25ms; }
-.subject[open] > .subject__content > *:nth-child(2) { animation-delay: 55ms; }
-.subject[open] > .subject__content > *:nth-child(3) { animation-delay: 85ms; }
-.subject[open] > .subject__content > *:nth-child(4) { animation-delay: 115ms; }
-.subject[open] > .subject__content > *:nth-child(5) { animation-delay: 145ms; }
-.subject[open] > .subject__content > *:nth-child(n+6) { animation-delay: 165ms; }
+.subject[open] > .subject__content > *:nth-child(1) {
+  animation-delay: 25ms;
+}
+.subject[open] > .subject__content > *:nth-child(2) {
+  animation-delay: 55ms;
+}
+.subject[open] > .subject__content > *:nth-child(3) {
+  animation-delay: 85ms;
+}
+.subject[open] > .subject__content > *:nth-child(4) {
+  animation-delay: 115ms;
+}
+.subject[open] > .subject__content > *:nth-child(5) {
+  animation-delay: 145ms;
+}
+.subject[open] > .subject__content > *:nth-child(n + 6) {
+  animation-delay: 165ms;
+}
 
 /* Tree folder animations */
 .tree__folder > summary {
@@ -479,8 +500,12 @@ dialog.lightbox .btn {
 }
 
 @keyframes ws-lightbox-backdrop {
-  from { background-color: rgba(10, 5, 22, 0); }
-  to { background-color: rgba(10, 5, 22, 0.85); }
+  from {
+    background-color: rgba(10, 5, 22, 0);
+  }
+  to {
+    background-color: rgba(10, 5, 22, 0.85);
+  }
 }
 
 @keyframes ws-lightbox-image {
@@ -527,9 +552,15 @@ dialog.lightbox .btn {
   animation: ws-dropdown-child var(--duration-slow) var(--ease-out) both;
 }
 
-.subjects > details[open] > :not(summary) > *:nth-child(2) { animation-delay: 35ms; }
-.subjects > details[open] > :not(summary) > *:nth-child(3) { animation-delay: 70ms; }
-.subjects > details[open] > :not(summary) > *:nth-child(4) { animation-delay: 105ms; }
+.subjects > details[open] > :not(summary) > *:nth-child(2) {
+  animation-delay: 35ms;
+}
+.subjects > details[open] > :not(summary) > *:nth-child(3) {
+  animation-delay: 70ms;
+}
+.subjects > details[open] > :not(summary) > *:nth-child(4) {
+  animation-delay: 105ms;
+}
 
 @keyframes ws-dropdown-open {
   from {

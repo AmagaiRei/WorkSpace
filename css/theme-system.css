@@ -18,9 +18,21 @@ body {
   margin: 0;
   font-family: var(--font-ui);
   background:
-    radial-gradient(ellipse at 88% 4%, rgba(182, 36, 255, 0.18), transparent 38%),
-    radial-gradient(ellipse at 8% 72%, rgba(104, 28, 150, 0.18), transparent 42%),
-    radial-gradient(ellipse at 92% 92%, rgba(182, 36, 255, 0.12), transparent 36%),
+    radial-gradient(
+      ellipse at 88% 4%,
+      rgba(182, 36, 255, 0.18),
+      transparent 38%
+    ),
+    radial-gradient(
+      ellipse at 8% 72%,
+      rgba(104, 28, 150, 0.18),
+      transparent 42%
+    ),
+    radial-gradient(
+      ellipse at 92% 92%,
+      rgba(182, 36, 255, 0.12),
+      transparent 36%
+    ),
     linear-gradient(160deg, #0a0516 0%, #100821 48%, #190a2a 100%);
   background-color: var(--color-bg-base);
   background-repeat: no-repeat;
@@ -254,8 +266,18 @@ body {
   height: clamp(150px, 24vh, 280px);
   opacity: 0.12;
   filter: none;
-  -webkit-mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.55) 42%, transparent 88%);
-  mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.55) 42%, transparent 88%);
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    rgba(0, 0, 0, 0.55) 42%,
+    transparent 88%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    rgba(0, 0, 0, 0.55) 42%,
+    transparent 88%
+  );
 }
 
 .hero::after {
@@ -265,7 +287,12 @@ body {
   inset: auto 0 -1px;
   height: clamp(100px, 16vh, 190px);
   pointer-events: none;
-  background: linear-gradient(to bottom, transparent 0%, rgba(13, 8, 27, 0.18) 55%, transparent 100%);
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(13, 8, 27, 0.18) 55%,
+    transparent 100%
+  );
 }
 
 .hero__content {

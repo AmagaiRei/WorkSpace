@@ -35,9 +35,21 @@ body {
   line-height: 1.6;
   color: var(--white);
   background:
-    radial-gradient(ellipse at 88% 4%, rgba(182, 36, 255, 0.18), transparent 38%),
-    radial-gradient(ellipse at 8% 72%, rgba(104, 28, 150, 0.18), transparent 42%),
-    radial-gradient(ellipse at 92% 92%, rgba(182, 36, 255, 0.12), transparent 36%),
+    radial-gradient(
+      ellipse at 88% 4%,
+      rgba(182, 36, 255, 0.18),
+      transparent 38%
+    ),
+    radial-gradient(
+      ellipse at 8% 72%,
+      rgba(104, 28, 150, 0.18),
+      transparent 42%
+    ),
+    radial-gradient(
+      ellipse at 92% 92%,
+      rgba(182, 36, 255, 0.12),
+      transparent 36%
+    ),
     linear-gradient(160deg, #0a0516 0%, #100821 48%, #190a2a 100%);
   background-color: var(--purple-900);
   background-repeat: no-repeat;
@@ -2138,7 +2150,6 @@ summary.tree__row::-webkit-details-marker {
   }
 }
 
-
 .subjects {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -2151,7 +2162,11 @@ summary.tree__row::-webkit-details-marker {
   min-width: 0;
   overflow: clip;
   border-radius: 18px;
-  background: linear-gradient(110deg, rgba(42, 22, 62, 0.92), rgba(67, 20, 88, 0.76));
+  background: linear-gradient(
+    110deg,
+    rgba(42, 22, 62, 0.92),
+    rgba(67, 20, 88, 0.76)
+  );
   border-color: rgba(208, 92, 255, 0.34);
   box-shadow: 0 5px 22px rgba(10, 2, 22, 0.12);
 }
@@ -2159,7 +2174,9 @@ summary.tree__row::-webkit-details-marker {
 .subject:hover,
 .subject[open] {
   border-color: rgba(226, 151, 255, 0.9);
-  box-shadow: 0 0 0 1px rgba(205, 83, 255, 0.12), 0 0 24px rgba(185, 36, 255, 0.12);
+  box-shadow:
+    0 0 0 1px rgba(205, 83, 255, 0.12),
+    0 0 24px rgba(185, 36, 255, 0.12);
 }
 
 .subject__summary {
@@ -2209,7 +2226,11 @@ summary.tree__row::-webkit-details-marker {
   padding: 20px;
   border-color: rgba(226, 151, 255, 0.22);
   border-radius: 16px;
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(191, 47, 224, 0.12));
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.075),
+    rgba(191, 47, 224, 0.12)
+  );
 }
 
 .subject .card:hover {
