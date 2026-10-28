@@ -71,18 +71,35 @@ export const FILE_TYPES = {
   txt: data("TXT", "Обычный текстовый файл."),
   ini: data("INI", "Файл настроек."),
   log: data("LOG", "Журнал выполнения."),
-  docx: binary("doc", "doc", "DOCX", "Word", "Документ Microsoft Word."),
+  docx: {
+    ...binary("doc", "doc", "DOCX", "Word", "Документ Microsoft Word."),
+    preview: "docx",
+  },
   pdf: {
     ...binary("doc", "doc", "PDF", "Документ", "Документ PDF."),
     preview: "pdf",
   },
-  zip: binary("archive", "archive", "ZIP", "Архив", "Архив с файлами проекта."),
+  zip: {
+    ...binary("archive", "archive", "ZIP", "Архив", "Архив с файлами проекта."),
+    preview: "zip",
+  },
   png: image("PNG", "Снимок экрана."),
   jpg: image("JPG", "Изображение."),
   jpeg: image("JPG", "Изображение."),
   gif: image("GIF", "Изображение."),
   webp: image("WebP", "Изображение."),
   svg: image("SVG", "Векторное изображение."),
+  xlsx: data("XLSX", "Таблица Excel."),
+  xls: data("XLS", "Таблица Excel."),
+  pptx: data("PPTX", "Презентация PowerPoint."),
+  doc: binary(
+    "doc",
+    "doc",
+    "DOC",
+    "Word",
+    "Документ Microsoft Word (старый формат).",
+  ),
+  rtf: data("RTF", "Форматированный текст."),
 };
 
 const DEFAULT_TYPE = binary("file", "file", "Файл", "Файл", "Файл проекта.");

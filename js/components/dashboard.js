@@ -1,4 +1,4 @@
-// !Дашборд прогресса: расчёт статистики, анимация чисел и прогресс-бара.
+// !Дашборд прогресса: расчёт статистики, анимация чисел и красивый градиентный прогресс-бар.
 import { el } from "../utils/common.js";
 
 const STATUS_ITEMS = [
@@ -85,11 +85,11 @@ function animateNumber(element, target, duration = 1100) {
 }
 
 function createProgress(stats) {
-  const fill = el("span", { className: "dashboard__bar-fill" });
+  // !Создаём красивый прогресс-бар с градиентом и блоком процента
   const track = el(
     "div",
     {
-      className: "dashboard__bar-track",
+      className: "dashboard__progress-track",
       attrs: {
         role: "progressbar",
         "aria-label": "Общий прогресс лабораторных",
@@ -98,20 +98,30 @@ function createProgress(stats) {
         "aria-valuenow": String(stats.percent),
       },
     },
-    fill,
+    el(
+      "div",
+      { className: "dashboard__progress-fill" },
+      el("div", { className: "dashboard__progress-shimmer" }),
+    ),
+    el("div", { className: "dashboard__progress-glow" }),
   );
+
   const percent = el("strong", {
     className: "dashboard__percent",
     text: prefersReducedMotion.matches ? `${stats.percent}%` : "0%",
     attrs: { "data-dashboard-percent": "" },
   });
 
-  return { track, fill, percent };
+  return {
+    track,
+    fill: track.querySelector(".dashboard__progress-fill"),
+    percent,
+  };
 }
 
 function getHint(stats) {
   if (stats.total === 0) return "Пока нет лабораторных";
-  if (stats.remaining === 0) return "Всё сдано";
+  if (stats.remaining === 0) return "Всё сдано ✨";
 
   const hint = `Осталось доработать ${stats.remaining} ${pluralizeWork(stats.remaining)}`;
   if (stats.progress > 0) {
@@ -178,15 +188,20 @@ export function renderDashboard(
     animateNumber(valueElement, stats[item.key], 850);
   }
 
+  // !Анимация красивого прогресс-бара с градиентом
   if (prefersReducedMotion.matches) {
     fill.style.width = `${stats.percent}%`;
+    fill.querySelector(".dashboard__progress-shimmer").style.opacity = "1";
     return;
   }
 
   fill.style.width = "0%";
+  fill.querySelector(".dashboard__progress-shimmer").style.opacity = "0";
+
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
       fill.style.width = `${stats.percent}%`;
+      fill.querySelector(".dashboard__progress-shimmer").style.opacity = "1";
       percent.textContent = `${stats.percent}%`;
       const startedAt = performance.now();
       const duration = 1200;

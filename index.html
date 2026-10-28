@@ -436,6 +436,19 @@
         <a href="sync.html">Синхронизация</a>
       </nav>
 
+      <!--! Якоря навигации по центру заголовка -->
+      <div
+        class="header__anchors"
+        id="header-anchors"
+        aria-label="Быстрая навигация"
+      >
+        <a class="anchor" href="#dashboard" data-target="dashboard"
+          >📊 Прогресс</a
+        >
+        <a class="anchor" href="#tasks" data-target="tasks">📚 Предметы</a>
+        <a class="anchor" href="#project" data-target="project">🚀 Проект</a>
+      </div>
+
       <button
         class="github-sync"
         id="github-sync"
@@ -448,6 +461,7 @@
             <use href="images/icons.svg#icon-github-sync"></use>
           </svg>
         </span>
+        <span class="github-sync__text">Синхронизация</span>
       </button>
 
       <div class="header__actions">
@@ -514,13 +528,13 @@
 
         <div class="toolbar">
           <label class="visually-hidden" for="search">
-            Поиск по предметам и лабораторным
+            Поиск по предметам и работам
           </label>
           <input
             class="search"
             id="search"
             type="search"
-            placeholder="Поиск по предметам, работам и тегам"
+            placeholder="Поиск по предметам и работам"
             autocomplete="off"
           />
           <button class="filters-reset" id="filters-reset" type="button" hidden>

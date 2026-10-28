@@ -15,9 +15,37 @@ const MAX_CODE_CHARS = 200_000;
 const MAX_HIGHLIGHT_CHARS = 100_000;
 const TOAST_MS = 2800;
 
+// !Промисы загрузки библиотек (ленивая загрузка при первом использовании)
+let mammothPromise = null;
+let jszipPromise = null;
+
+function loadMammoth() {
+  if (!mammothPromise) {
+    mammothPromise = import("https://cdn.jsdelivr.net/npm/mammoth@1.8.0/+esm")
+      .then((mod) => mod.default)
+      .catch((err) => {
+        console.warn("Mammoth.js не загрузился:", err);
+        return null;
+      });
+  }
+  return mammothPromise;
+}
+
+function loadJSZip() {
+  if (!jszipPromise) {
+    jszipPromise = import("https://cdn.jsdelivr.net/npm/jszip@3.10.1/+esm")
+      .then((mod) => mod.default)
+      .catch((err) => {
+        console.warn("JSZip не загрузился:", err);
+        return null;
+      });
+  }
+  return jszipPromise;
+}
+
 function isTextFile(path) {
   return (
-    /\.(?:sql|txt|md|markdown|rst|adoc|js|mjs|cjs|ts|mts|cts|tsx|jsx|html?|xhtml|css|scss|sass|less|json|jsonc|json5|ipynb|xml|xsd|xsl|xslt|ya?ml|toml|ini|cfg|conf|properties|env|gitignore|gitattributes|editorconfig|py|pyw|pyi|java|kt|kts|c|cc|cpp|cxx|h|hh|hpp|hxx|cs|csx|csproj|sln|props|targets|resx|vb|fs|fsx|go|rs|php|phtml|rb|swift|dart|scala|groovy|gradle|sh|bash|zsh|bat|cmd|ps1|psm1|log|csv|tsv|vue|svelte|graphql|gql|dockerignore|makefile|cmake|gradle|lock)$/i.test(
+    /\.(?:sql|txt|md|markdown|rst|adoc|js|mjs|cjs|ts|mts|cts|tsx|jsx|html?|xhtml|css|scss|sass|less|json|jsonc|json5|ipynb|xml|xsd|xsl|xslt|ya?ml|toml|ini|cfg|conf|properties|env|gitignore|gitattributes|editorconfig|py|pyw|pyi|java|kt|kts|c|cc|cpp|cxx|h|hh|hpp|hxx|cs|csx|csproj|sln|props|targets|resx|vb|fs|fsx|go|rs|php|phtml|rb|swift|dart|scala|groovy|gradle|sh|bash|zsh|bat|cmd|ps1|psm1|log|csv|tsv|vue|svelte|graphql|gql|dockerignore|makefile|cmake|gradle|lock|rtf)$/i.test(
       path,
     ) ||
     /(?:^|\/)(?:dockerfile|makefile|cmakelists\.txt|\.gitignore|\.gitattributes|\.editorconfig|\.dockerignore|\.env(?:\.[^/]*)?)$/i.test(
@@ -486,6 +514,235 @@ export function createFileViewer({ icon, onActivate, onMissing }) {
     );
   }
 
+  async function fillDocx(file, ui) {
+    const type = typeOf(file.path);
+    ui.meta.textContent = "DOCX";
+    ui.actions.append(...actionLinks(file));
+    ui.body.append(note("Загрузка документа Word…"));
+
+    const { status, size } = await probe(file.path);
+    if (status === 404) {
+      markMissing(file, ui.body, describeFailure({ status }, file.path));
+      return;
+    }
+    ui.meta.textContent = ["DOCX", formatSize(size)]
+      .filter(Boolean)
+      .join(" · ");
+
+    try {
+      const mammoth = await loadMammoth();
+      if (!mammoth) throw new Error("Библиотека Mammoth.js недоступна");
+
+      const response = await fetch(file.path);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const arrayBuffer = await response.arrayBuffer();
+
+      const result = await mammoth.convertToHtml({ arrayBuffer });
+      const html = result.value;
+      const messages = result.messages;
+
+      const container = el("div", { className: "fv-docx" });
+      container.innerHTML = DOMPurify.sanitize(html, {
+        ALLOWED_TAGS: [
+          "p",
+          "br",
+          "strong",
+          "em",
+          "u",
+          "s",
+          "h1",
+          "h2",
+          "h3",
+          "h4",
+          "h5",
+          "h6",
+          "ul",
+          "ol",
+          "li",
+          "table",
+          "thead",
+          "tbody",
+          "tr",
+          "th",
+          "td",
+          "img",
+          "a",
+          "span",
+          "div",
+          "blockquote",
+          "pre",
+          "code",
+          "hr",
+        ],
+        ALLOWED_ATTR: [
+          "href",
+          "src",
+          "alt",
+          "style",
+          "class",
+          "colspan",
+          "rowspan",
+        ],
+      });
+
+      // !Обрабатываем изображения: превращаем data: URL в проксируемые или оставляем как есть
+      container.querySelectorAll("img").forEach((img) => {
+        img.decoding = "async";
+        img.loading = "lazy";
+        img.style.maxWidth = "100%";
+        img.style.height = "auto";
+      });
+
+      ui.body.replaceChildren(container);
+
+      if (messages.length > 0) {
+        const warnContainer = el("div", { className: "fv-docx-warnings" });
+        messages.forEach((msg) => {
+          warnContainer.append(note(`DOCX: ${msg.message}`, "warn"));
+        });
+        ui.body.append(warnContainer);
+      }
+    } catch (error) {
+      console.warn("Ошибка конвертации DOCX:", error);
+      ui.body.replaceChildren(
+        note(
+          `Не удалось открыть DOCX: ${error.message}. Попробуйте скачать файл.`,
+          "warn",
+        ),
+      );
+    }
+  }
+
+  async function fillZip(file, ui) {
+    const type = typeOf(file.path);
+    ui.meta.textContent = "ZIP";
+    ui.actions.append(...actionLinks(file));
+    ui.body.append(note("Чтение архива…"));
+
+    const { status, size } = await probe(file.path);
+    if (status === 404) {
+      markMissing(file, ui.body, describeFailure({ status }, file.path));
+      return;
+    }
+    ui.meta.textContent = ["ZIP", formatSize(size)].filter(Boolean).join(" · ");
+
+    try {
+      const JSZip = await loadJSZip();
+      if (!JSZip) throw new Error("Библиотека JSZip недоступна");
+
+      const response = await fetch(file.path);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const blob = await response.blob();
+
+      const zip = await JSZip.loadAsync(blob);
+      const entries = Object.values(zip.files).filter((f) => !f.dir);
+
+      if (entries.length === 0) {
+        ui.body.replaceChildren(note("Архив пуст."));
+        return;
+      }
+
+      // !Показываем структуру архива как дерево
+      const treeContainer = el("div", { className: "fv-zip-tree" });
+      const treeList = el("ul", { className: "zip-tree__list" });
+
+      // !Группируем по папкам
+      const byFolder = new Map();
+      for (const entry of entries) {
+        const parts = entry.name.split("/");
+        const fileName = parts.pop();
+        const folderPath = parts.join("/") || "📁 Корень";
+        if (!byFolder.has(folderPath)) byFolder.set(folderPath, []);
+        byFolder
+          .get(folderPath)
+          .push({ name: fileName, fullPath: entry.name, entry });
+      }
+
+      for (const [folder, files] of byFolder) {
+        const folderLi = el("li", { className: "zip-tree__folder" });
+        const folderSummary = el("summary", { className: "zip-tree__summary" });
+        folderSummary.append(
+          el("span", { className: "zip-tree__icon", text: "📁" }),
+          el("span", { className: "zip-tree__name", text: folder }),
+          el("span", {
+            className: "zip-tree__count",
+            text: `${files.length} файлов`,
+          }),
+        );
+        const folderUl = el("ul", { className: "zip-tree__files" });
+
+        for (const { name, fullPath, entry } of files.sort((a, b) =>
+          a.name.localeCompare(b.name),
+        )) {
+          const ext = extensionOf(name);
+          const fileType = typeOf(name);
+          const fileLi = el("li", { className: "zip-tree__file" });
+          const fileBtn = el("button", {
+            className: "zip-tree__file-btn",
+            attrs: { type: "button" },
+          });
+          fileBtn.append(
+            icon(fileType.icon, fileType.tone),
+            el("span", { className: "zip-tree__file-name", text: name }),
+          );
+
+          fileBtn.addEventListener("click", async () => {
+            try {
+              const content = await entry.async("uint8array");
+              const blob = new Blob([content]);
+              const objectUrl = URL.createObjectURL(blob);
+
+              // !Открываем во вьювере если поддерживается
+              const previewType = typeOf(name).preview;
+              if (
+                previewType === "image" ||
+                previewType === "pdf" ||
+                previewType === "docx" ||
+                typeOf(name).text
+              ) {
+                viewer.open({
+                  path: objectUrl,
+                  name: name,
+                  shown: fullPath,
+                  _zipObjectUrl: objectUrl, // !Флаг для очистки
+                });
+              } else {
+                // !Скачиваем неподдерживаемые форматы
+                const a = el("a", {
+                  attrs: { href: objectUrl, download: name },
+                });
+                document.body.append(a);
+                a.click();
+                a.remove();
+                URL.revokeObjectURL(objectUrl);
+                notify(`Скачивание ${name} начато`);
+              }
+            } catch (err) {
+              notify(`Ошибка извлечения ${name}: ${err.message}`, "warn");
+            }
+          });
+
+          fileLi.append(fileBtn);
+          folderUl.append(fileLi);
+        }
+
+        folderLi.append(folderSummary, folderUl);
+        treeList.append(folderLi);
+      }
+
+      treeContainer.append(treeList);
+      ui.body.replaceChildren(treeContainer);
+    } catch (error) {
+      console.warn("Ошибка чтения ZIP:", error);
+      ui.body.replaceChildren(
+        note(
+          `Не удалось открыть ZIP: ${error.message}. Попробуйте скачать архив.`,
+          "warn",
+        ),
+      );
+    }
+  }
+
   function fillInfo(file, ui) {
     const type = typeOf(file.path);
     ui.meta.textContent = type.label;
@@ -558,6 +815,8 @@ export function createFileViewer({ icon, onActivate, onMissing }) {
     const ui = { meta, actions, body };
     if (type.preview === "image") fillImage(file, ui);
     else if (type.preview === "pdf") fillPdf(file, ui);
+    else if (type.preview === "docx") fillDocx(file, ui);
+    else if (type.preview === "zip") fillZip(file, ui);
     else if (type.text) fillText(file, ui);
     else fillInfo(file, ui);
     return panel;

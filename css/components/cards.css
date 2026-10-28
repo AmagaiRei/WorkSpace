@@ -124,83 +124,271 @@
 }
 
 /*! ==========================================================================
-   SUBJECTS / ACCORDIONS
+   SUBJECTS — HORIZONTAL CARDS WITH DROPDOWN
    ========================================================================== */
 
 .subjects {
-  display: grid;
-  gap: 16px;
-}
-
-.subject {
-  background: var(--glass-base);
-  border: 1px solid var(--color-border-dim);
-  border-radius: 20px;
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  transition: border-color var(--duration-smooth) var(--ease-out);
-}
-
-.subject:hover,
-.subject[open] {
-  border-color: var(--color-text-primary);
-}
-
-.subject__summary {
-  position: relative;
   display: flex;
   flex-wrap: wrap;
+  gap: var(--space-lg);
+  align-items: stretch;
+}
+
+.subject-card {
+  position: relative;
+  flex: 1 1 300px;
+  max-width: 380px;
+  min-width: 280px;
+  background: var(--glass-base);
+  border: 1px solid var(--color-border-dim);
+  border-radius: var(--radius-xl);
+  backdrop-filter: blur(var(--blur-sm));
+  -webkit-backdrop-filter: blur(var(--blur-sm));
+  transition:
+    border-color var(--duration-smooth) var(--ease-out),
+    box-shadow var(--duration-smooth) var(--ease-out),
+    transform var(--duration-smooth) var(--ease-out);
+  overflow: visible;
+}
+
+.subject-card:hover {
+  border-color: var(--color-border-glass-hover);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.subject-card__main {
+  display: flex;
   align-items: center;
-  gap: 4px 20px;
-  padding: 22px 64px 22px 28px;
+  gap: var(--space-md);
+  padding: var(--space-lg);
+}
+
+.subject-card__icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.subject-card__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.subject-card__title {
+  display: block;
+  font-weight: 700;
+  font-size: 1.05rem;
+  line-height: 1.3;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.subject-card__stats {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  margin-top: 2px;
+}
+
+.subject-card__toggle {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  background: var(--color-accent-purple-dim);
+  border: 1px solid var(--color-border-dim);
+  border-radius: var(--radius-md);
+  color: var(--color-accent-purple-soft);
   cursor: pointer;
-  list-style: none;
+  transition: all var(--duration-fast) var(--ease-out);
+  flex-shrink: 0;
 }
 
-.subject__summary::-webkit-details-marker {
-  display: none;
+.subject-card__toggle:hover {
+  background: var(--color-accent-purple);
+  border-color: var(--color-accent-purple);
+  color: #fff;
 }
 
-.subject__summary::after {
-  content: "";
-  position: absolute;
-  right: 28px;
-  top: 50%;
-  width: 10px;
-  height: 10px;
-  border-right: 3px solid var(--color-text-primary);
-  border-bottom: 3px solid var(--color-text-primary);
-  transform: translateY(-70%) rotate(45deg);
+.subject-card__toggle--open {
+  background: var(--color-accent-purple);
+  border-color: var(--color-accent-purple);
+  color: #fff;
+}
+
+.subject-card__toggle--open .icon {
+  transform: rotate(180deg);
+}
+
+.subject-card__toggle .icon {
+  width: 20px;
+  height: 20px;
   transition: transform var(--duration-smooth) var(--ease-out);
 }
 
-.subject[open] > .subject__summary::after {
-  transform: translateY(-30%) rotate(-135deg);
+/*! Выпадающий список лабораторных работ */
+.subject-card__dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: var(--glass-elevated);
+  border: 1px solid var(--color-border-glass);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(var(--blur-md));
+  -webkit-backdrop-filter: blur(var(--blur-md));
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition:
+    opacity var(--duration-smooth) var(--ease-out),
+    visibility var(--duration-smooth) var(--ease-out),
+    transform var(--duration-smooth) var(--ease-out);
+  overflow: hidden;
 }
 
-.subject__title {
-  flex: 1 1 280px;
+.subject-card__dropdown--open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-md) var(--space-lg);
+  border-bottom: 1px solid var(--color-border-dim);
+}
+
+.dropdown__title {
   font-weight: 700;
-  font-size: 1.1rem;
-  line-height: 1.3;
+  font-size: 0.95rem;
+  color: var(--color-text-primary);
 }
 
-.subject__count {
-  font-weight: 500;
-  font-size: 0.85rem;
+.dropdown__count {
+  font-size: 0.75rem;
   color: var(--color-text-muted);
+  background: var(--color-accent-purple-dim);
+  padding: 2px 10px;
+  border-radius: var(--radius-pill);
 }
 
-.subject__content {
-  padding: 0 28px 28px;
+.dropdown__grid {
+  display: grid;
+  gap: var(--space-sm);
+  padding: var(--space-md);
 }
 
-.subject .card {
-  background: rgba(255, 255, 255, 0.08);
+.dropdown-card {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-dim);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  color: inherit;
+  transition: all var(--duration-fast) var(--ease-out);
 }
 
-.subject .card:hover {
-  background: rgba(255, 255, 255, 0.14);
+.dropdown-card:hover {
+  border-color: var(--color-accent-purple);
+  background: var(--glass-base);
+  transform: translateX(4px);
+}
+
+.dropdown-card--loading {
+  opacity: 0.7;
+}
+
+.dropdown-card__icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.dropdown-card__content {
+  flex: 1;
+  min-width: 0;
+}
+
+.dropdown-card__title {
+  display: block;
+  font-weight: 600;
+  font-size: 0.85rem;
+  line-height: 1.3;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dropdown-card__text {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dropdown-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.dropdown-card__tag {
+  padding: 1px 8px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  background: var(--color-border-dim);
+  border-radius: var(--radius-pill);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.dropdown-card__meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  flex-shrink: 0;
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.dropdown__empty {
+  padding: var(--space-lg);
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+}
+
+/*! Low performance: упрощаем анимации */
+html.perf-low .subject-card__dropdown,
+html.net-economy .subject-card__dropdown,
+html.low-battery .subject-card__dropdown,
+html.reduce-motion .subject-card__dropdown {
+  transition: none;
+}
+
+html.perf-low .subject-card__toggle .icon,
+html.net-economy .subject-card__toggle .icon,
+html.low-battery .subject-card__toggle .icon,
+html.reduce-motion .subject-card__toggle .icon {
+  transition: none;
 }
 
 .card__meta {
@@ -263,61 +451,177 @@
 }
 
 /*! ==========================================================================
-   LIFE CARD (main project highlight)
+   LIFE CARD (main project highlight) — УЛУЧШЕННЫЙ ДИЗАЙН
    ========================================================================== */
 
 .life-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
   isolation: isolate;
-  border: 1px solid rgba(139, 92, 246, 0.6) !important;
+  padding: var(--space-xl);
+  border: 1px solid rgba(139, 92, 246, 0.5);
+  border-radius: var(--radius-xl);
   background:
     radial-gradient(
-      ellipse at 92% 8%,
-      rgba(139, 92, 246, 0.22),
-      transparent 42%
+      ellipse at 95% 5%,
+      rgba(139, 92, 246, 0.18),
+      transparent 45%
     ),
     radial-gradient(
-      ellipse at 8% 100%,
-      rgba(34, 211, 238, 0.1),
-      transparent 48%
+      ellipse at 5% 95%,
+      rgba(34, 211, 238, 0.12),
+      transparent 40%
     ),
-    linear-gradient(125deg, rgba(30, 15, 45, 0.96), rgba(75, 25, 103, 0.94)) !important;
+    radial-gradient(
+      ellipse at 50% 50%,
+      rgba(244, 114, 182, 0.08),
+      transparent 60%
+    ),
+    linear-gradient(135deg, rgba(26, 16, 48, 0.98), rgba(45, 20, 75, 0.95)) !important;
   box-shadow:
-    0 0 0 1px rgba(139, 92, 246, 0.2),
-    0 0 22px rgba(139, 92, 246, 0.17),
-    0 0 44px rgba(139, 92, 246, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.11) !important;
+    0 0 0 1px rgba(139, 92, 246, 0.15),
+    0 8px 32px rgba(10, 4, 20, 0.4),
+    0 0 60px rgba(139, 92, 246, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
   transition:
     border-color var(--duration-smooth) var(--ease-out),
     box-shadow var(--duration-smooth) var(--ease-out),
     transform var(--duration-smooth) var(--ease-out);
+  overflow: hidden;
+}
+
+.life-card::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  border-radius: inherit;
+  background: linear-gradient(
+    115deg,
+    transparent 20%,
+    rgba(139, 92, 246, 0.15) 50%,
+    transparent 80%
+  );
+  opacity: 0;
+  transition: opacity var(--duration-smooth) var(--ease-out);
 }
 
 .life-card::after {
   content: "";
   position: absolute;
-  z-index: -1;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
   background: linear-gradient(
-    115deg,
-    transparent 25%,
-    rgba(139, 92, 246, 0.07),
-    transparent 72%
+    90deg,
+    var(--color-accent-purple),
+    var(--color-accent-pink),
+    var(--color-accent-cyan),
+    var(--color-accent-blue)
   );
+  background-size: 200% 100%;
+  animation: life-card-gradient-flow 4s ease-in-out infinite;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .life-card:hover,
   a.life-card:hover {
-    border-color: var(--color-brand-purple) !important;
+    border-color: rgba(139, 92, 246, 0.8);
     box-shadow:
-      0 0 0 1px rgba(139, 92, 246, 0.36),
-      0 0 28px rgba(139, 92, 246, 0.28),
-      0 0 58px rgba(139, 92, 246, 0.22),
-      inset 0 0 28px rgba(139, 92, 246, 0.09) !important;
-    transform: translateY(-2px);
+      0 0 0 1px rgba(139, 92, 246, 0.3),
+      0 12px 40px rgba(10, 4, 20, 0.5),
+      0 0 80px rgba(139, 92, 246, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    transform: translateY(-4px);
   }
+
+  .life-card:hover::before {
+    opacity: 1;
+  }
+}
+
+/*! Внутренняя структура life-card */
+.life-card__status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  margin-bottom: var(--space-sm);
+}
+
+.life-card__title {
+  margin: 0 0 var(--space-sm);
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.25;
+  background: linear-gradient(
+    135deg,
+    var(--color-text-primary) 0%,
+    var(--color-accent-purple-soft) 50%,
+    var(--color-accent-cyan-soft) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 200% 200%;
+  animation: life-card-title-gradient 3s ease-in-out infinite;
+}
+
+.life-card__text {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--color-text-muted);
+  max-width: 100%;
+}
+
+/*! Анимации для life-card */
+@keyframes life-card-gradient-flow {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes life-card-title-gradient {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/*! Low performance: упрощаем */
+html.perf-low .life-card,
+html.net-economy .life-card,
+html.low-battery .life-card,
+html.reduce-motion .life-card {
+  background: linear-gradient(
+    135deg,
+    rgba(26, 16, 48, 0.98),
+    rgba(45, 20, 75, 0.95)
+  ) !important;
+  box-shadow:
+    0 8px 32px rgba(10, 4, 20, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+html.perf-low .life-card::after,
+html.net-economy .life-card::after,
+html.low-battery .life-card::after,
+html.reduce-motion .life-card::after,
+html.perf-low .life-card__title,
+html.net-economy .life-card__title,
+html.low-battery .life-card__title,
+html.reduce-motion .life-card__title {
+  animation: none;
 }
 
 /*! ==========================================================================
@@ -395,7 +699,7 @@
 }
 
 /*! ==========================================================================
-   PROGRESS BAR
+   PROGRESS BAR — ОБЩИЕ СТИЛИ
    ========================================================================== */
 
 .progress {
@@ -427,4 +731,163 @@
   font-size: 0.8rem;
   color: var(--color-text-muted);
   text-align: right;
+}
+
+/*! ==========================================================================
+   DASHBOARD PROGRESS — КРАСИВЫЙ ГРАДИЕНТНЫЙ ПРОГРЕСС-БАР
+   ========================================================================== */
+
+.dashboard__progress-section {
+  margin-top: var(--space-lg);
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--color-border-dim);
+}
+
+.dashboard__progress-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-sm);
+}
+
+.dashboard__progress-heading span {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.dashboard__percent {
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-brand-purple);
+  min-width: 3.5ch;
+  text-align: right;
+}
+
+/*! Трек прогресс-бара */
+.dashboard__progress-track {
+  position: relative;
+  height: 14px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.3),
+    0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/*! Заполнение с красивым градиентом */
+.dashboard__progress-fill {
+  position: relative;
+  height: 100%;
+  width: 0%;
+  border-radius: inherit;
+  background: linear-gradient(
+    90deg,
+    var(--color-accent-purple) 0%,
+    var(--color-accent-pink) 35%,
+    var(--color-accent-cyan) 65%,
+    var(--color-accent-blue) 100%
+  );
+  background-size: 200% 100%;
+  transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+  overflow: hidden;
+}
+
+/*! Переливающийся блик (shimmer) */
+.dashboard__progress-shimmer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.3) 25%,
+    rgba(255, 255, 255, 0.5) 50%,
+    rgba(255, 255, 255, 0.3) 75%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  opacity: 0;
+  transition: opacity var(--duration-smooth) var(--ease-out);
+  animation: progress-shimmer 2s ease-in-out infinite;
+}
+
+/*! Свечение вокруг заполненной части */
+.dashboard__progress-glow {
+  position: absolute;
+  top: -4px;
+  left: 0;
+  right: 0;
+  bottom: -4px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--color-accent-purple-dim) 20%,
+    var(--color-accent-pink-dim) 50%,
+    var(--color-accent-cyan-dim) 80%,
+    transparent 100%
+  );
+  filter: blur(8px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--duration-smooth) var(--ease-out);
+}
+
+.dashboard__progress-track:has(.dashboard__progress-fill[style*="width: 100%"])
+  .dashboard__progress-glow,
+.dashboard__progress-fill[style*="width: 100%"] ~ .dashboard__progress-glow {
+  opacity: 0.6;
+}
+
+/*! Анимация переливания градиента */
+@keyframes progress-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/*! Анимация сдвига градиента фона */
+.dashboard__progress-fill {
+  animation: progress-gradient-shift 3s ease-in-out infinite;
+}
+
+@keyframes progress-gradient-shift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/*! Low performance: отключаем анимации */
+html.perf-low .dashboard__progress-fill,
+html.net-economy .dashboard__progress-fill,
+html.low-battery .dashboard__progress-fill,
+html.reduce-motion .dashboard__progress-fill {
+  animation: none;
+  background: linear-gradient(
+    90deg,
+    var(--color-accent-purple),
+    var(--color-accent-pink)
+  );
+}
+
+html.perf-low .dashboard__progress-shimmer,
+html.net-economy .dashboard__progress-shimmer,
+html.low-battery .dashboard__progress-shimmer,
+html.reduce-motion .dashboard__progress-shimmer {
+  animation: none;
+}
+
+html.perf-low .dashboard__progress-glow,
+html.net-economy .dashboard__progress-glow,
+html.low-battery .dashboard__progress-glow,
+html.reduce-motion .dashboard__progress-glow {
+  display: none;
 }

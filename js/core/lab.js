@@ -188,7 +188,8 @@ async function listFolder(repo, folder) {
 }
 
 // !Путь с «/» на конце - папка (список берём с GitHub), иначе - один файл.
-async function collectCodeFiles(entries, repo) {
+// !Собираем ВСЕ файлы лабораторной: код, отчёты, скриншоты, архивы и т.д.
+async function collectAllLabFiles(entries, repo) {
   const files = new Set();
   const problems = [];
   for (const entry of entries) {
@@ -203,6 +204,11 @@ async function collectCodeFiles(entries, repo) {
     }
   }
   return { files: [...files].sort(), problems };
+}
+
+// !Обратная совместимость
+async function collectCodeFiles(entries, repo) {
+  return collectAllLabFiles(entries, repo);
 }
 
 /* !---------- Проводник: дерево слева, карточки справа ---------- */
@@ -721,7 +727,15 @@ function renderHeader(head, subject, lab) {
 }
 
 async function renderBody(lab, repo, body) {
-  const { files, problems } = await collectCodeFiles(lab.code ?? [], repo);
+  // !Определяем папку лабораторной в репозитории
+  const subjectId = new URLSearchParams(location.search).get("subject");
+  const labFolder = subjectId
+    ? `data/labs/${subjectId}/lab-${String(lab.id).padStart(2, "0")}/`
+    : null;
+
+  // !Собираем все файлы из папки лабораторной
+  const entries = labFolder ? [labFolder] : (lab.code ?? []);
+  const { files, problems } = await collectAllLabFiles(entries, repo);
   const code = renderCode(files, problems);
 
   const main = el(

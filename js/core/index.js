@@ -18,7 +18,7 @@ import { renderDashboard } from "../components/dashboard.js";
 // !Состояние страницы: данные + то, что выбрал пользователь.
 // !Экран всегда рисуется заново из этого состояния (функция render).
 const state = { subjects: [], query: "", tag: null };
-const openIds = new Set(); // !предметы, которые пользователь раскрыл сам
+const openDropdowns = new Set(); // !предметы с открытым выпадающим списком
 
 // !Синхронизация описаний с README.md на GitHub (progressive enhancement).
 // !render() пересоздаёт весь DOM, поэтому данные README живут здесь, а не в узлах:
@@ -185,51 +185,178 @@ async function syncReadmes() {
   }
 }
 
-function createSubject({ subject, labs, progress }, filtersActive) {
-  const summaryText = progress.total
-    ? `${progress.done} из ${progress.total} сдано`
-    : "Пока пусто";
+// !Карточка лабораторной для выпадающего списка: блочная, с иконкой типа
+function createLabDropdownCard(subjectId, lab) {
+  const key = getLabKey(subjectId, lab);
+  const { title, description } = resolveLabTexts(key, lab);
 
-  const content = labs.length
+  const tags = lab.tags?.length
     ? el(
-        "div",
-        { className: "grid" },
-        ...labs.map((lab) => createLabCard(subject.id, lab)),
+        "span",
+        { className: "dropdown-card__tags" },
+        ...lab.tags.map((tag) =>
+          el("span", { className: "dropdown-card__tag", text: tag }),
+        ),
       )
-    : el("p", {
-        className: "empty",
-        text: "Лабораторных пока нет",
-      });
+    : null;
 
-  const details = el(
-    "details",
-    { className: "subject", attrs: { id: subject.id } },
+  return el(
+    "a",
+    {
+      className: readmePending.has(key)
+        ? "dropdown-card dropdown-card--loading"
+        : "dropdown-card",
+      attrs: {
+        href: `lab.html?subject=${encodeURIComponent(subjectId)}&lab=${lab.id}`,
+        "data-lab-key": key,
+      },
+    },
+    el("span", { className: "dropdown-card__icon", text: "📄" }),
     el(
-      "summary",
-      { className: "subject__summary" },
-      el("span", { className: "subject__title", text: subject.title }),
-      el("span", { className: "subject__count", text: summaryText }),
-      progress.total ? createProgress(progress) : null,
+      "div",
+      { className: "dropdown-card__content" },
+      el("span", { className: "dropdown-card__title", text: title }),
+      el("span", { className: "dropdown-card__text", text: description }),
+      tags,
     ),
-    el("div", { className: "subject__content" }, content),
+    el(
+      "span",
+      { className: "dropdown-card__meta" },
+      statusBadge(lab.status),
+      el("span", { text: formatDate(lab.date) }),
+    ),
+  );
+}
+
+// !Горизонтальная карточка предмета с кнопкой выпадающего списка
+function createSubjectCard({ subject, labs, progress }) {
+  const isOpen = openDropdowns.has(subject.id);
+  const totalLabs = labs.length;
+  const doneLabs = labs.filter((lab) => lab.status === "done").length;
+
+  const subjectCard = el(
+    "div",
+    { className: "subject-card", attrs: { id: subject.id } },
+    // !Основная часть карточки
+    el(
+      "div",
+      { className: "subject-card__main" },
+      el("span", { className: "subject-card__icon", text: "📚" }),
+      el(
+        "div",
+        { className: "subject-card__info" },
+        el("span", { className: "subject-card__title", text: subject.title }),
+        el(
+          "span",
+          { className: "subject-card__stats" },
+          totalLabs > 0
+            ? `${doneLabs} из ${totalLabs} сдано`
+            : "Лабораторных пока нет",
+        ),
+      ),
+      progress.total
+        ? createProgress({
+            percent: Math.round((doneLabs / totalLabs) * 100) || 0,
+          })
+        : null,
+    ),
+    // !Кнопка открытия выпадающего списка
+    el(
+      "button",
+      {
+        className: `subject-card__toggle ${isOpen ? "subject-card__toggle--open" : ""}`,
+        attrs: {
+          type: "button",
+          "aria-expanded": String(isOpen),
+          "aria-controls": `dropdown-${subject.id}`,
+          "data-subject-id": subject.id,
+        },
+      },
+      el("span", {
+        className: "icon",
+        innerHTML: '<svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>',
+      }),
+    ),
+    // !Выпадающий список лабораторных работ
+    el(
+      "div",
+      {
+        className: `subject-card__dropdown ${isOpen ? "subject-card__dropdown--open" : ""}`,
+        attrs: {
+          id: `dropdown-${subject.id}`,
+          role: "menu",
+          hidden: !isOpen,
+        },
+      },
+      el(
+        "div",
+        { className: "dropdown__header" },
+        el("span", { className: "dropdown__title", text: subject.title }),
+        el("span", {
+          className: "dropdown__count",
+          text: `${totalLabs} лабораторных работ`,
+        }),
+      ),
+      totalLabs > 0
+        ? el(
+            "div",
+            { className: "dropdown__grid" },
+            ...labs.map((lab) => createLabDropdownCard(subject.id, lab)),
+          )
+        : el("p", {
+            className: "dropdown__empty",
+            text: "В этом предмете пока нет лабораторных работ.",
+          }),
+    ),
   );
 
-  // !При поиске раскрывается всё найденное, иначе — то, что раскрыл пользователь
-  details.open = filtersActive || openIds.has(subject.id);
-  details.addEventListener("toggle", () => {
-    if (filtersActive) return;
-    if (details.open) openIds.add(subject.id);
-    else openIds.delete(subject.id);
+  // !Обработчик клика по кнопке переключения
+  const toggleBtn = subjectCard.querySelector(".subject-card__toggle");
+  toggleBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    toggleDropdown(subject.id);
   });
-  return details;
+
+  // !Закрытие при клике вне
+  subjectCard.addEventListener("click", (e) => {
+    if (!e.target.closest(".subject-card__dropdown")) {
+      closeDropdown(subject.id);
+    }
+  });
+
+  return subjectCard;
+}
+
+function toggleDropdown(subjectId) {
+  if (openDropdowns.has(subjectId)) {
+    closeDropdown(subjectId);
+  } else {
+    openDropdowns.add(subjectId);
+    render();
+  }
+}
+
+function closeDropdown(subjectId) {
+  openDropdowns.delete(subjectId);
+  render();
+}
+
+function closeAllDropdowns() {
+  openDropdowns.clear();
+  render();
 }
 
 function render() {
   const filtersActive = normalize(state.query) !== "" || state.tag !== null;
   const results = filterSubjects(state.subjects, state);
 
+  // !При поиске закрываем все выпадающие списки
+  if (filtersActive) {
+    closeAllDropdowns();
+  }
+
   ui.subjects.replaceChildren(
-    ...results.map((entry) => createSubject(entry, filtersActive)),
+    ...results.map((entry) => createSubjectCard(entry)),
   );
   if (results.length === 0) {
     ui.subjects.append(
@@ -269,6 +396,20 @@ function bindEvents() {
     ui.search.value = "";
     render();
   });
+
+  // !Закрытие выпадающих списков по Escape
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && openDropdowns.size > 0) {
+      closeAllDropdowns();
+    }
+  });
+
+  // !Закрытие выпадающих списков при клике вне области предметов
+  document.addEventListener("click", (e) => {
+    if (openDropdowns.size > 0 && !e.target.closest(".subject-card")) {
+      closeAllDropdowns();
+    }
+  });
 }
 
 function renderLifeProject(project, container) {
@@ -278,10 +419,12 @@ function renderLifeProject(project, container) {
       hasLink ? "a" : "div",
       {
         className: "life-card",
-        attrs: hasLink ? { href: project.link } : {},
+        attrs: hasLink
+          ? { href: project.link, target: "_blank", rel: "noopener noreferrer" }
+          : {},
       },
       el(
-        "span",
+        "div",
         { className: "life-card__status" },
         statusBadge(project.status),
       ),
@@ -305,16 +448,10 @@ async function init() {
       }
     }
 
-    // !Если в адресе есть #databases, этот предмет сразу раскрыт
-    const hash = decodeURIComponent(location.hash.slice(1));
-    if (state.subjects.some((subject) => subject.id === hash))
-      openIds.add(hash);
-
     ui.tags.replaceChildren(...collectTags(state.subjects).map(createTagPill));
     bindEvents();
     bindGitHubSync();
     render();
-    document.getElementById(hash)?.scrollIntoView();
 
     renderLifeProject(
       data.lifeProject,

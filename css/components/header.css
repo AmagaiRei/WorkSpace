@@ -124,6 +124,123 @@
   border-bottom: 0;
 }
 
+/*! Якоря навигации по центру заголовка */
+.header__anchors {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: var(--space-md);
+  padding: var(--space-xs) var(--space-md);
+  background: var(--glass-base);
+  border: 1px solid var(--color-border-dim);
+  border-radius: var(--radius-pill);
+  backdrop-filter: blur(var(--blur-sm));
+  -webkit-backdrop-filter: blur(var(--blur-sm));
+}
+
+.anchor {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  padding: var(--space-2xs) var(--space-sm);
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+  font-weight: var(--weight-medium);
+  color: var(--color-text-muted);
+  text-decoration: none;
+  border-radius: var(--radius-pill);
+  transition: all var(--duration-fast) var(--ease-out);
+  white-space: nowrap;
+}
+
+.anchor:hover {
+  color: var(--color-text-primary);
+  background: var(--color-accent-purple-dim);
+}
+
+.anchor:focus-visible {
+  outline: 2px solid var(--color-brand-purple);
+  outline-offset: 2px;
+}
+
+/*! Улучшенная кнопка синхронизации */
+.github-sync {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-lg);
+  font-family: var(--font-ui);
+  font-weight: var(--weight-semibold);
+  font-size: 0.85rem;
+  color: #fff;
+  text-decoration: none;
+  background: linear-gradient(
+    135deg,
+    var(--color-accent-purple),
+    #7b1fa2,
+    var(--color-accent-pink)
+  );
+  background-size: 200% 200%;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  box-shadow:
+    0 4px 16px rgba(139, 92, 246, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  animation: sync-gradient-shift 3s ease-in-out infinite;
+  transition: all var(--duration-smooth) var(--ease-out);
+}
+
+.github-sync:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 8px 24px rgba(139, 92, 246, 0.4),
+    0 0 20px rgba(244, 114, 182, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.github-sync:active {
+  transform: translateY(0);
+}
+
+.github-sync__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  animation: sync-spin 4s linear infinite;
+}
+
+.github-sync:hover .github-sync__icon {
+  animation-duration: 1s;
+}
+
+.github-sync__text {
+  letter-spacing: var(--tracking-micro);
+}
+
+@keyframes sync-gradient-shift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes sync-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/*! Mobile: скрываем якоря на узких экранах */
 @media (max-width: 760px) {
   .mobile-menu {
     display: block;
@@ -131,4 +248,23 @@
   .nav {
     display: none;
   }
+  .header__anchors {
+    display: none;
+  }
+}
+
+/*! Low performance: упрощаем анимации */
+html.perf-low .github-sync,
+html.net-economy .github-sync,
+html.low-battery .github-sync,
+html.reduce-motion .github-sync {
+  animation: none;
+  background: linear-gradient(135deg, var(--color-accent-purple), #7b1fa2);
+}
+
+html.perf-low .github-sync__icon,
+html.net-economy .github-sync__icon,
+html.low-battery .github-sync__icon,
+html.reduce-motion .github-sync__icon {
+  animation: none;
 }
