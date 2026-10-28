@@ -20,7 +20,7 @@ export async function loadData() {
 }
 
 // !Создаёт элемент. Текст всегда идёт через textContent — это защита от XSS.
-export function el(tag, { className, text, attrs } = {}, ...children) {
+export function el(tag, { className, text, attrs, style } = {}, ...children) {
   const node = document.createElement(tag);
   if (className) node.className = className;
   if (text !== undefined) node.textContent = text;
@@ -28,6 +28,9 @@ export function el(tag, { className, text, attrs } = {}, ...children) {
     for (const [name, value] of Object.entries(attrs)) {
       node.setAttribute(name, value);
     }
+  }
+  if (style) {
+    node.style.cssText = style;
   }
   node.append(...children.filter(Boolean));
   return node;

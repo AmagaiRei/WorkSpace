@@ -505,16 +505,26 @@
       <use href="images/icons.svg#icon-plus"></use>
     </svg>
 
-    <header class="header">
-      <a class="logo" href="index.html"
-        ><span lang="ja">雨</span> Amagai Rei <span lang="ja">雨</span></a
-      >
+    <header class="header header--sync">
+      <a class="logo" href="index.html"><span class="logo__mark" aria-hidden="true">✦</span><span lang="ja">雨</span> Amagai Rei</a>
+
       <nav class="nav" aria-label="Основная навигация">
-        <a href="index.html">Главная</a><a href="index.html#tasks">Предметы</a
-        ><a href="sync.html" aria-current="page">Синхронизация</a>
+        <a href="index.html">Главная</a>
+        <a href="index.html#tasks">Предметы</a>
+        <a href="sync.html" aria-current="page">Синхронизация</a>
+        <a href="#contacts">Контакты</a>
       </nav>
+
       <div class="header__actions">
-        <!--! theme-toggle скрыт через theme.js (тёмная тема) -->
+        <details class="mobile-menu">
+          <summary class="mobile-menu__summary" aria-label="Меню"></summary>
+          <nav class="mobile-menu__nav" aria-label="Мобильная навигация">
+            <a href="index.html">Главная</a>
+            <a href="index.html#tasks">Предметы</a>
+            <a href="sync.html">Синхронизация</a>
+            <a href="#contacts">Контакты</a>
+          </nav>
+        </details>
       </div>
     </header>
     <main class="sync-page">

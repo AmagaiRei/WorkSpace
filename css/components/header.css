@@ -1,5 +1,5 @@
 /*! ==========================================================================
-   HEADER / NAVIGATION
+   HEADER / NAVIGATION — Unified Glassmorphism Header
    ========================================================================== */
 
 .header {
@@ -11,24 +11,62 @@
   justify-content: space-between;
   gap: var(--space-md);
   padding: var(--space-md) var(--space-xl);
-  background: color-mix(in srgb, var(--color-bg-deep) 85%, transparent);
-  backdrop-filter: blur(var(--blur-md));
-  -webkit-backdrop-filter: blur(var(--blur-md));
-  border-bottom: 1px solid var(--color-border-dim);
+  background: color-mix(in srgb, var(--color-bg-deep) 90%, transparent);
+  backdrop-filter: blur(var(--blur-lg));
+  -webkit-backdrop-filter: blur(var(--blur-lg));
+  border-bottom: 1px solid var(--color-border-glass);
+  box-shadow: var(--shadow-glass);
+}
+
+.header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    var(--color-accent-purple-dim) 20%,
+    var(--color-accent-cyan-dim) 50%,
+    var(--color-accent-pink-dim) 80%,
+    transparent 100%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--duration-smooth) var(--ease-out);
+}
+
+.header:hover::before {
+  opacity: 0.4;
 }
 
 .logo {
   font-family: var(--font-display);
   font-weight: var(--weight-bold);
-  font-size: 1.25rem;
+  font-size: 1.35rem;
   color: var(--color-text-primary);
   text-decoration: none;
-  letter-spacing: var(--tracking-micro);
+  letter-spacing: var(--tracking-tight);
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.logo:hover {
+  transform: scale(1.02);
+}
+
+.logo__mark {
+  background: linear-gradient(135deg, var(--color-accent-purple), var(--color-accent-pink), var(--color-accent-cyan));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 1.5rem;
+  line-height: 1;
 }
 
 .nav {
   display: flex;
   gap: var(--space-lg);
+  margin-left: auto;
 }
 
 .nav a {
@@ -36,12 +74,34 @@
   text-decoration: none;
   font-weight: var(--weight-medium);
   font-size: 0.9rem;
-  transition: color var(--duration-fast) var(--ease-out);
+  letter-spacing: var(--tracking-normal);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  transition: all var(--duration-fast) var(--ease-out);
+  position: relative;
+}
+
+.nav a::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-accent-purple), var(--color-accent-cyan));
+  border-radius: 1px;
+  transform: translateX(-50%);
+  transition: width var(--duration-normal) var(--ease-out);
 }
 
 .nav a:hover,
 .nav a[aria-current="page"] {
-  color: var(--color-neon-cyan);
+  color: var(--color-text-primary);
+}
+
+.nav a:hover::after,
+.nav a[aria-current="page"]::after {
+  width: 80%;
 }
 
 .header__actions {
@@ -58,46 +118,54 @@
 .mobile-menu__summary {
   display: grid;
   place-items: center;
-  width: 44px;
-  height: 44px;
-  font-size: 1.4rem;
+  width: 48px;
+  height: 48px;
+  font-size: 1.5rem;
   line-height: 1;
   list-style: none;
   cursor: pointer;
   background: var(--glass-base);
-  border: 1px solid var(--color-border-dim);
-  border-radius: 50%;
+  border: 1px solid var(--color-border-glass);
+  border-radius: var(--radius-full);
+  color: var(--color-text-primary);
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.mobile-menu__summary:hover {
+  background: var(--glass-elevated);
+  border-color: var(--color-border-glass-hover);
+  transform: scale(1.05);
 }
 
 .mobile-menu__summary::-webkit-details-marker {
   display: none;
 }
+
 .mobile-menu__summary::before {
   content: "☰";
 }
+
 .mobile-menu[open] > .mobile-menu__summary::before {
   content: "✕";
 }
 
-/*! Панель позиционируется относительно .header (details сам не positioned) */
+/*! Панель позиционируется относительно .header */
 .mobile-menu__nav {
   position: absolute;
-  top: var(--header-height);
-  left: 16px;
-  right: 16px;
+  top: calc(100% + var(--space-xs));
+  left: var(--space-md);
+  right: var(--space-md);
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  padding: 12px 24px;
-  background: rgba(30, 15, 46, 0.96);
-  border: 1px solid var(--color-border-dim);
-  border-radius: 20px;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-}
-
-.mobile-menu[open] .mobile-menu__nav {
-  animation: slide-down 0.2s ease-out;
+  gap: var(--space-xs);
+  padding: var(--space-md);
+  background: var(--glass-strong);
+  border: 1px solid var(--color-border-glass);
+  border-radius: var(--radius-xl);
+  backdrop-filter: blur(var(--blur-lg));
+  -webkit-backdrop-filter: blur(var(--blur-lg));
+  box-shadow: var(--shadow-lg);
+  animation: slide-down var(--duration-normal) var(--ease-out);
 }
 
 @keyframes slide-down {
@@ -112,16 +180,19 @@
 }
 
 .mobile-menu__nav a {
-  padding: 12px 0;
-  font-weight: 700;
-  font-size: 0.95rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  border-bottom: 1px solid var(--color-border-dim);
+  padding: var(--space-sm) var(--space-md);
+  font-weight: var(--weight-semibold);
+  font-size: 1rem;
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-text-primary);
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  transition: all var(--duration-fast) var(--ease-out);
 }
 
-.mobile-menu__nav a:last-child {
-  border-bottom: 0;
+.mobile-menu__nav a:hover {
+  background: var(--color-accent-purple-dim);
+  color: var(--color-accent-purple-soft);
 }
 
 /*! Якоря навигации по центру заголовка */
@@ -130,7 +201,7 @@
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: var(--space-md);
+  gap: var(--space-sm);
   padding: var(--space-xs) var(--space-md);
   background: var(--glass-base);
   border: 1px solid var(--color-border-dim);
@@ -267,4 +338,26 @@ html.net-economy .github-sync__icon,
 html.low-battery .github-sync__icon,
 html.reduce-motion .github-sync__icon {
   animation: none;
+}
+
+/*! Header variant for lab pages - slightly more compact */
+.header--lab {
+  padding: var(--space-sm) var(--space-xl);
+}
+
+.header--lab .logo {
+  font-size: 1.2rem;
+}
+
+.header--lab .logo__mark {
+  font-size: 1.35rem;
+}
+
+/*! Header variant for sync page */
+.header--sync {
+  padding: var(--space-md) var(--space-xl);
+}
+
+.header--sync .logo {
+  font-size: 1.25rem;
 }

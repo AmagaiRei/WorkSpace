@@ -423,54 +423,47 @@
       <use href="images/icons.svg#icon-close"></use>
     </svg>
 
-    <header class="header" id="home">
-      <a class="logo" href="#home"
-        ><span lang="ja">雨</span> Amagai Rei <span lang="ja">雨</span></a
-      >
+    <header class="header">
+      <a class="logo" href="index.html"><span class="logo__mark" aria-hidden="true">✦</span><span lang="ja">雨</span> Amagai Rei</a>
 
       <nav class="nav" aria-label="Основная навигация">
-        <a href="#home">Главная</a>
-        <a href="#tasks">Предметы</a>
-        <a href="#project">Проект</a>
-        <a href="#contacts">Контакты</a>
+        <a href="index.html" aria-current="page">Главная</a>
+        <a href="index.html#tasks">Предметы</a>
         <a href="sync.html">Синхронизация</a>
+        <a href="#contacts">Контакты</a>
       </nav>
 
-      <!--! Якоря навигации по центру заголовка -->
-      <div
-        class="header__anchors"
-        id="header-anchors"
-        aria-label="Быстрая навигация"
-      >
-        <a class="anchor" href="#dashboard" data-target="dashboard"
-          >📊 Прогресс</a
-        >
-        <a class="anchor" href="#tasks" data-target="tasks">📚 Предметы</a>
-        <a class="anchor" href="#project" data-target="project">🚀 Проект</a>
-      </div>
-
-      <button
-        class="github-sync"
-        id="github-sync"
-        type="button"
-        aria-label="Синхронизировать с GitHub"
-        title="Обновить данные с GitHub"
-      >
-        <span class="github-sync__icon" aria-hidden="true">
-          <svg class="icon" viewBox="0 0 24 24">
-            <use href="images/icons.svg#icon-github-sync"></use>
-          </svg>
-        </span>
-        <span class="github-sync__text">Синхронизация</span>
-      </button>
-
       <div class="header__actions">
+        <button
+          id="github-sync"
+          class="github-sync"
+          type="button"
+          aria-label="Синхронизировать с GitHub"
+          title="Обновить данные с GitHub"
+        >
+          <span class="github-sync__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+            </svg>
+          </span>
+          <span class="github-sync__text">Sync</span>
+        </button>
+
+        <a class="github-sync" href="sync.html" aria-label="Открыть центр синхронизации" style="margin-left: var(--space-sm);">
+          <span class="github-sync__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+            </svg>
+          </span>
+          <span class="github-sync__text">Center</span>
+        </a>
+
         <details class="mobile-menu">
           <summary class="mobile-menu__summary" aria-label="Меню"></summary>
           <nav class="mobile-menu__nav" aria-label="Мобильная навигация">
-            <a href="#home">Главная</a>
-            <a href="#tasks">Предметы</a>
-            <a href="#project">Проект</a>
+            <a href="index.html">Главная</a>
+            <a href="index.html#tasks">Предметы</a>
+            <a href="sync.html">Синхронизация</a>
             <a href="#contacts">Контакты</a>
           </nav>
         </details>
