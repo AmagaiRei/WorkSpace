@@ -3,7 +3,7 @@
  * Регистрируется в index.js / lab.js / sync-center.js
  */
 
-const CACHE_NAME = "workspace-v1";
+const CACHE_NAME = "workspace-v2";
 const STATIC_ASSETS = [
   "/",
   "/index.html",
@@ -11,16 +11,21 @@ const STATIC_ASSETS = [
   "/sync.html",
   "/css/critical.css",
   "/css/theme.css",
-  "/js/theme.js",
-  "/js/menu.js",
-  "/js/index.js",
-  "/js/lab.js",
-  "/js/sync-center.js",
-  "/js/adaptive-loader.js",
-  "/js/adaptive-store.js",
+  "/js/adaptive/adaptive-loader.js",
+  "/js/adaptive/adaptive-store.js",
+  "/js/components/theme.js",
+  "/js/components/menu.js",
+  "/js/components/dashboard.js",
+  "/js/components/markdown-modal.js",
+  "/js/core/index.js",
+  "/js/core/lab.js",
+  "/js/github/github.js",
+  "/js/github/github-sync.js",
+  "/js/github/sync-center.js",
+  "/js/utils/common.js",
+  "/js/utils/filters.js",
   "/js/admin/admin-loader.js",
-  "/js/markdown-modal.js",
-  "/fonts/README.md",
+  "/data/subjects.json",
 ];
 
 // !Ресурсы, которые кэшируем с network-first стратегией

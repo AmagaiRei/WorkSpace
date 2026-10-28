@@ -50,7 +50,7 @@ function createKpiCard({ key, label, icon, className, color }, value) {
     purple: { accent: "var(--color-accent-purple)", glow: "var(--glow-purple)", dim: "var(--color-accent-purple-dim)" },
     green: { accent: "var(--color-accent-green)", glow: "var(--glow-green)", dim: "var(--color-accent-green-dim)" },
     orange: { accent: "var(--color-accent-orange)", glow: "var(--glow-orange)", dim: "var(--color-accent-orange-dim)" },
-    cyan: { accent: "var(--color-accent-cyan)", glow: "var(--glow-cyan"), dim: "var(--color-accent-cyan-dim)" },
+    cyan: { accent: "var(--color-accent-cyan)", glow: "var(--glow-cyan)", dim: "var(--color-accent-cyan-dim)" },
   };
   const c = colorMap[color] || colorMap.purple;
 
