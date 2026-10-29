@@ -211,3 +211,154 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .lab-layout--single .lab-panel--code { grid-column: 1; grid-row: 1; }
 .lab-layout--single .downloads { grid-row: 2; }
 .lab-layout--single .lab-panel--screenshots { grid-row: 3; }
+
+/* ================================================================
+   ПРАВАЯ ПАНЕЛЬ ЛАБОРАТОРНОЙ (lab-right-panel)
+   Монтируется в .lab-section--code рядом с .lab-layout
+   ================================================================ */
+
+.lab-section--code {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 272px;
+  gap: 16px;
+  align-items: start;
+}
+
+/* lab-layout занимает всю ширину своей ячейки */
+.lab-section--code > .lab-layout,
+.lab-section--code > .lab-layout--single {
+  min-width: 0;
+}
+
+.lab-right-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: sticky;
+  top: 82px;
+}
+
+.lab-right-panel .panel {
+  background: linear-gradient(145deg, rgba(14,19,45,.97), rgba(9,13,33,.98));
+  border: 1px solid var(--color-border);
+  border-radius: 13px;
+  box-shadow: 0 12px 28px rgba(0,0,0,.17);
+  overflow: hidden;
+}
+
+.rp-section-title {
+  font-size: .82rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  padding: 12px 14px 10px;
+  border-bottom: 1px solid var(--color-border);
+  margin: 0;
+}
+
+.rp-about__desc {
+  padding: 12px 14px;
+  font-size: .85rem;
+  line-height: 1.65;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.rp-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 8px 14px 12px;
+  border-top: 1px solid var(--color-border);
+}
+
+/* Статистика */
+.rp-stats__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 12px 14px;
+}
+
+.rp-stat {
+  background: rgba(18,23,52,.8);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.rp-stat__val {
+  display: block;
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: -.03em;
+  line-height: 1;
+  margin-bottom: 3px;
+}
+
+.rp-stat__label {
+  font-size: .72rem;
+  color: var(--color-text-muted);
+}
+
+.rp-stat--purple .rp-stat__val { color: var(--color-accent-purple); }
+.rp-stat--green  .rp-stat__val { color: var(--color-accent-green); }
+.rp-stat--cyan   .rp-stat__val { color: var(--color-accent-cyan); }
+
+/* Навигация между работами */
+.rp-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.rp-nav-btn {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 10px 12px;
+  background: linear-gradient(145deg, rgba(14,19,45,.97), rgba(9,13,33,.98));
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  text-decoration: none;
+  color: var(--color-text-primary);
+  transition: border-color .15s, box-shadow .15s;
+  min-width: 0;
+}
+
+.rp-nav-btn:hover {
+  border-color: rgba(139,92,246,.6);
+  box-shadow: 0 0 0 1px rgba(139,92,246,.1);
+}
+
+.rp-nav-btn--next { text-align: right; align-items: flex-end; }
+
+.rp-nav-btn__arrow {
+  font-size: .8rem;
+  color: var(--color-accent-purple);
+}
+
+.rp-nav-btn__label {
+  font-size: .7rem;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+
+.rp-nav-btn__title {
+  font-size: .78rem;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+/* Адаптив: скрываем правую панель на узких экранах */
+@media (max-width: 1100px) {
+  .lab-section--code {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .lab-right-panel { display: none; }
+}
