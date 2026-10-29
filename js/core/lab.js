@@ -18,7 +18,7 @@ import {
   typeOf,
 } from "../utils/tree.js";
 
-const API_TIMEOUT_MS = 8000;
+const API_TIMEOUT_MS = 20000;
 const CACHE_TTL_MS = 60_000;
 
 // !Иконки - статичные SVG из этого файла. Данные из JSON сюда не попадают, поэтому innerHTML безопасен.
