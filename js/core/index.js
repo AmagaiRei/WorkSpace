@@ -228,116 +228,116 @@ function createLabDropdownCard(subjectId, lab) {
   );
 }
 
-// !Горизонтальная карточка предмета с кнопкой выпадающего списка
 function createSubjectCard({ subject, labs, progress }) {
   const isOpen = openDropdowns.has(subject.id);
   const totalLabs = labs.length;
-  const doneLabs = labs.filter((lab) => lab.status === "done").length;
 
-  const subjectCard = el(
+  const summary = el(
     "div",
-    { className: "subject-card", attrs: { id: subject.id } },
-    // !Основная часть карточки
+    { className: "subject-card__summary" },
+    el("span", {
+      className: "subject-card__stats",
+      text: progress.total > 0
+        ? `${progress.done} из ${progress.total} сдано`
+        : "Пока пусто",
+    }),
+    progress.total ? createProgress({ percent: progress.percent }) : null,
+  );
+
+  const toggleBtn = el(
+    "button",
+    {
+      className: `subject-card__toggle ${isOpen ? "subject-card__toggle--open" : ""}`,
+      attrs: {
+        type: "button",
+        "aria-expanded": String(isOpen),
+        "aria-controls": `dropdown-${subject.id}`,
+        "data-subject-id": subject.id,
+      },
+    },
     el(
-      "div",
+      "span",
       { className: "subject-card__main" },
-      el("span", { className: "subject-card__icon", text: "📚" }),
-      el(
-        "div",
-        { className: "subject-card__info" },
-        el("span", { className: "subject-card__title", text: subject.title }),
-        el(
-          "span",
-          { className: "subject-card__stats" },
-          totalLabs > 0
-            ? `${doneLabs} из ${totalLabs} сдано`
-            : "Лабораторных пока нет",
-        ),
-      ),
-      progress.total
-        ? createProgress({
-            percent: Math.round((doneLabs / totalLabs) * 100) || 0,
-          })
-        : null,
+      el("span", { className: "subject-card__title", text: subject.title }),
     ),
-    // !Кнопка открытия выпадающего списка
+    summary,
     el(
-      "button",
+      "span",
       {
-        className: `subject-card__toggle ${isOpen ? "subject-card__toggle--open" : ""}`,
-        attrs: {
-          type: "button",
-          "aria-expanded": String(isOpen),
-          "aria-controls": `dropdown-${subject.id}`,
-          "data-subject-id": subject.id,
-        },
-      },
-      el("span", {
-        className: "icon",
-        innerHTML: '<svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>',
-      }),
-    ),
-    // !Выпадающий список лабораторных работ
-    el(
-      "div",
-      {
-        className: `subject-card__dropdown ${isOpen ? "subject-card__dropdown--open" : ""}`,
-        attrs: {
-          id: `dropdown-${subject.id}`,
-          role: "menu",
-          hidden: !isOpen,
-        },
+        className: "subject-card__chevron",
+        attrs: { "aria-hidden": "true" },
       },
       el(
-        "div",
-        { className: "dropdown__header" },
-        el("span", { className: "dropdown__title", text: subject.title }),
-        el("span", {
-          className: "dropdown__count",
-          text: `${totalLabs} лабораторных работ`,
-        }),
+        "svg",
+        {
+          attrs: {
+            viewBox: "0 0 24 24",
+            focusable: "false",
+          },
+        },
+        el("path", { attrs: { d: "m6 9 6 6 6-6" } }),
       ),
-      totalLabs > 0
-        ? el(
-            "div",
-            { className: "dropdown__grid" },
-            ...labs.map((lab) => createLabDropdownCard(subject.id, lab)),
-          )
-        : el("p", {
-            className: "dropdown__empty",
-            text: "В этом предмете пока нет лабораторных работ.",
-          }),
     ),
   );
 
-  // !Обработчик клика по кнопке переключения
-  const toggleBtn = subjectCard.querySelector(".subject-card__toggle");
-  toggleBtn.addEventListener("click", (e) => {
-    e.stopPropagation();
-    toggleDropdown(subject.id);
-  });
+  const dropdown = el(
+    "div",
+    {
+      className: `subject-card__dropdown ${isOpen ? "subject-card__dropdown--open" : ""}`,
+      attrs: {
+        id: `dropdown-${subject.id}`,
+        "aria-label": `Лабораторные работы: ${subject.title}`,
+      },
+    },
+    el(
+      "div",
+      { className: "dropdown__header" },
+      el("span", { className: "dropdown__title", text: subject.title }),
+      el("span", {
+        className: "dropdown__count",
+        text: `${totalLabs} ${pluralizeLabs(totalLabs)}`,
+      }),
+    ),
+    totalLabs > 0
+      ? el(
+          "div",
+          { className: "dropdown__grid" },
+          ...labs.map((lab) => createLabDropdownCard(subject.id, lab)),
+        )
+      : el("p", {
+          className: "dropdown__empty",
+          text: "В этом предмете пока нет лабораторных работ.",
+        }),
+  );
 
-  // !Закрытие при клике вне
-  subjectCard.addEventListener("click", (e) => {
-    if (!e.target.closest(".subject-card__dropdown")) {
-      closeDropdown(subject.id);
-    }
-  });
+  const subjectCard = el(
+    "section",
+    { className: "subject-card", attrs: { id: subject.id } },
+    toggleBtn,
+    dropdown,
+  );
+
+  toggleBtn.addEventListener("click", () => toggleDropdown(subject.id));
 
   return subjectCard;
 }
 
-function toggleDropdown(subjectId) {
-  if (openDropdowns.has(subjectId)) {
-    closeDropdown(subjectId);
-  } else {
-    openDropdowns.add(subjectId);
-    render();
-  }
+function pluralizeLabs(count) {
+  const remainder100 = count % 100;
+  const remainder10 = count % 10;
+  if (remainder100 >= 11 && remainder100 <= 14) return "лабораторных работ";
+  if (remainder10 === 1) return "лабораторная работа";
+  if (remainder10 >= 2 && remainder10 <= 4) return "лабораторные работы";
+  return "лабораторных работ";
 }
 
-function closeDropdown(subjectId) {
-  openDropdowns.delete(subjectId);
+function toggleDropdown(subjectId) {
+  if (openDropdowns.has(subjectId)) {
+    openDropdowns.delete(subjectId);
+  } else {
+    openDropdowns.clear();
+    openDropdowns.add(subjectId);
+  }
   render();
 }
 
@@ -349,11 +349,6 @@ function closeAllDropdowns() {
 function render() {
   const filtersActive = normalize(state.query) !== "" || state.tag !== null;
   const results = filterSubjects(state.subjects, state);
-
-  // !При поиске закрываем все выпадающие списки
-  if (filtersActive) {
-    closeAllDropdowns();
-  }
 
   ui.subjects.replaceChildren(
     ...results.map((entry) => createSubjectCard(entry)),
@@ -379,6 +374,7 @@ function render() {
 function bindEvents() {
   ui.search.addEventListener("input", () => {
     state.query = ui.search.value;
+    openDropdowns.clear();
     render();
   });
 
@@ -387,12 +383,14 @@ function bindEvents() {
     const pill = event.target.closest(".tag-pill");
     if (!pill) return;
     state.tag = state.tag === pill.dataset.tag ? null : pill.dataset.tag; // !повторный клик снимает тег
+    openDropdowns.clear();
     render();
   });
 
   ui.reset.addEventListener("click", () => {
     state.query = "";
     state.tag = null;
+    openDropdowns.clear();
     ui.search.value = "";
     render();
   });
