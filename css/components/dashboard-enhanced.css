@@ -11,8 +11,16 @@
   padding: var(--space-xl);
   border-radius: var(--radius-xl);
   background:
-    radial-gradient(ellipse at 10% 10%, var(--color-accent-purple-dim) 0%, transparent 50%),
-    radial-gradient(ellipse at 90% 90%, var(--color-accent-cyan-dim) 0%, transparent 50%),
+    radial-gradient(
+      ellipse at 10% 10%,
+      var(--color-accent-purple-dim) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      ellipse at 90% 90%,
+      var(--color-accent-cyan-dim) 0%,
+      transparent 50%
+    ),
     var(--glass-base);
   backdrop-filter: blur(var(--blur-lg));
   -webkit-backdrop-filter: blur(var(--blur-lg));
@@ -30,7 +38,7 @@
 }
 
 .dashboard__glass::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: -1px;
   z-index: -1;
@@ -80,7 +88,11 @@
   letter-spacing: var(--tracking-wide);
   text-transform: uppercase;
   color: var(--color-accent-purple-soft);
-  background: linear-gradient(90deg, var(--color-accent-purple), var(--color-accent-cyan));
+  background: linear-gradient(
+    90deg,
+    var(--color-accent-purple),
+    var(--color-accent-cyan)
+  );
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -92,7 +104,11 @@
   font-size: 1.5rem;
   font-weight: var(--weight-bold);
   line-height: 1.2;
-  background: linear-gradient(135deg, var(--color-text-primary), var(--color-accent-purple-soft));
+  background: linear-gradient(
+    135deg,
+    var(--color-text-primary),
+    var(--color-accent-purple-soft)
+  );
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -143,7 +159,7 @@
 }
 
 .dashboard__kpi::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
   background: linear-gradient(180deg, var(--kpi-dim) 0%, transparent 50%);
@@ -172,7 +188,11 @@
 .dashboard__kpi-glow {
   position: absolute;
   inset: -50%;
-  background: radial-gradient(ellipse at center, var(--kpi-glow) 0%, transparent 70%);
+  background: radial-gradient(
+    ellipse at center,
+    var(--kpi-glow) 0%,
+    transparent 70%
+  );
   opacity: 0;
   pointer-events: none;
   transition: opacity var(--duration-smooth) var(--ease-out);
@@ -189,7 +209,8 @@
   inset: -2px;
   border: 2px solid transparent;
   border-radius: inherit;
-  background: linear-gradient(135deg, var(--kpi-accent), var(--kpi-glow)) border-box;
+  background: linear-gradient(135deg, var(--kpi-accent), var(--kpi-glow))
+    border-box;
   -webkit-mask:
     linear-gradient(#fff 0 0) padding-box,
     linear-gradient(#fff 0 0);
@@ -206,8 +227,12 @@
 }
 
 @keyframes kpi-ring-rotate {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .dashboard__kpi-content {
@@ -243,7 +268,11 @@
   font-size: 2.5rem;
   font-weight: var(--weight-bold);
   line-height: 1;
-  background: linear-gradient(135deg, var(--color-text-primary), var(--kpi-accent));
+  background: linear-gradient(
+    135deg,
+    var(--color-text-primary),
+    var(--kpi-accent)
+  );
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -251,10 +280,18 @@
 }
 
 /*! Color-specific KPI variants */
-.dashboard__kpi--total .dashboard__kpi-icon { color: var(--color-accent-purple); }
-.dashboard__kpi--done .dashboard__kpi-icon { color: var(--color-accent-green); }
-.dashboard__kpi--progress .dashboard__kpi-icon { color: var(--color-accent-orange); }
-.dashboard__kpi--todo .dashboard__kpi-icon { color: var(--color-accent-cyan); }
+.dashboard__kpi--total .dashboard__kpi-icon {
+  color: var(--color-accent-purple);
+}
+.dashboard__kpi--done .dashboard__kpi-icon {
+  color: var(--color-accent-green);
+}
+.dashboard__kpi--progress .dashboard__kpi-icon {
+  color: var(--color-accent-orange);
+}
+.dashboard__kpi--todo .dashboard__kpi-icon {
+  color: var(--color-accent-cyan);
+}
 /*! Dashboard Progress Section */
 .dashboard__progress-section {
   padding-top: var(--space-lg);
@@ -263,18 +300,20 @@
 }
 
 .dashboard__progress-section::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg,
+  background: linear-gradient(
+    90deg,
     transparent 0%,
     var(--color-accent-purple) 25%,
     var(--color-accent-pink) 50%,
     var(--color-accent-cyan) 75%,
-    transparent 100%);
+    transparent 100%
+  );
   opacity: 0.5;
 }
 
@@ -301,7 +340,11 @@
   color: var(--color-accent-purple);
   min-width: 4ch;
   text-align: right;
-  background: linear-gradient(90deg, var(--color-accent-purple), var(--color-accent-pink));
+  background: linear-gradient(
+    90deg,
+    var(--color-accent-purple),
+    var(--color-accent-pink)
+  );
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -312,7 +355,11 @@
   position: relative;
   height: 16px;
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%),
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.06) 0%,
+      rgba(255, 255, 255, 0.02) 100%
+    ),
     rgba(255, 255, 255, 0.05);
   border-radius: var(--radius-pill);
   overflow: hidden;
@@ -384,20 +431,30 @@
   transition: opacity var(--duration-smooth) var(--ease-out);
 }
 
-.dashboard__progress-track:has(.dashboard__progress-fill[style*="width: 100%"]) .dashboard__progress-glow,
+.dashboard__progress-track:has(.dashboard__progress-fill[style*="width: 100%"])
+  .dashboard__progress-glow,
 .dashboard__progress-fill[style*="width: 100%"] ~ .dashboard__progress-glow {
   opacity: 0.8;
 }
 
 /*! Animations */
 @keyframes progress-shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 @keyframes progress-gradient-flow {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
 }
 
 /*! Hint Text */
@@ -413,7 +470,7 @@
 }
 
 .dashboard__hint::before {
-  content: '💡';
+  content: "💡";
   font-size: 1rem;
   opacity: 0.8;
 }
@@ -424,7 +481,11 @@ html.net-economy .dashboard__progress-fill,
 html.low-battery .dashboard__progress-fill,
 html.reduce-motion .dashboard__progress-fill {
   animation: none;
-  background: linear-gradient(90deg, var(--color-accent-purple), var(--color-accent-pink));
+  background: linear-gradient(
+    90deg,
+    var(--color-accent-purple),
+    var(--color-accent-pink)
+  );
 }
 
 html.perf-low .dashboard__progress-shimmer,

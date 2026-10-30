@@ -237,9 +237,10 @@ function createSubjectCard({ subject, labs, progress }) {
     { className: "subject-card__summary" },
     el("span", {
       className: "subject-card__stats",
-      text: progress.total > 0
-        ? `${progress.done} из ${progress.total} сдано`
-        : "Пока пусто",
+      text:
+        progress.total > 0
+          ? `${progress.done} из ${progress.total} сдано`
+          : "Пока пусто",
     }),
     progress.total ? createProgress({ percent: progress.percent }) : null,
   );

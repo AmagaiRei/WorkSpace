@@ -2,10 +2,28 @@
 import { el } from "../utils/common.js";
 
 const STATUS_ITEMS = [
-  { key: "total", label: "Всего работ", icon: "▦", className: "total", color: "purple" },
+  {
+    key: "total",
+    label: "Всего работ",
+    icon: "▦",
+    className: "total",
+    color: "purple",
+  },
   { key: "done", label: "Сдано", icon: "✓", className: "done", color: "green" },
-  { key: "progress", label: "В работе", icon: "↗", className: "progress", color: "orange" },
-  { key: "todo", label: "Не начато", icon: "○", className: "todo", color: "cyan" },
+  {
+    key: "progress",
+    label: "В работе",
+    icon: "↗",
+    className: "progress",
+    color: "orange",
+  },
+  {
+    key: "todo",
+    label: "Не начато",
+    icon: "○",
+    className: "todo",
+    color: "cyan",
+  },
 ];
 
 const prefersReducedMotion = window.matchMedia(
@@ -47,10 +65,26 @@ export function calculateStatistics(subjects) {
 
 function createKpiCard({ key, label, icon, className, color }, value) {
   const colorMap = {
-    purple: { accent: "var(--color-accent-purple)", glow: "var(--glow-purple)", dim: "var(--color-accent-purple-dim)" },
-    green: { accent: "var(--color-accent-green)", glow: "var(--glow-green)", dim: "var(--color-accent-green-dim)" },
-    orange: { accent: "var(--color-accent-orange)", glow: "var(--glow-orange)", dim: "var(--color-accent-orange-dim)" },
-    cyan: { accent: "var(--color-accent-cyan)", glow: "var(--glow-cyan)", dim: "var(--color-accent-cyan-dim)" },
+    purple: {
+      accent: "var(--color-accent-purple)",
+      glow: "var(--glow-purple)",
+      dim: "var(--color-accent-purple-dim)",
+    },
+    green: {
+      accent: "var(--color-accent-green)",
+      glow: "var(--glow-green)",
+      dim: "var(--color-accent-green-dim)",
+    },
+    orange: {
+      accent: "var(--color-accent-orange)",
+      glow: "var(--glow-orange)",
+      dim: "var(--color-accent-orange-dim)",
+    },
+    cyan: {
+      accent: "var(--color-accent-cyan)",
+      glow: "var(--glow-cyan)",
+      dim: "var(--color-accent-cyan-dim)",
+    },
   };
   const c = colorMap[color] || colorMap.purple;
 
@@ -61,12 +95,22 @@ function createKpiCard({ key, label, icon, className, color }, value) {
       attrs: { "aria-label": `${label}: ${value}` },
       style: `--kpi-accent: ${c.accent}; --kpi-glow: ${c.glow}; --kpi-dim: ${c.dim};`,
     },
-    el("div", { className: "dashboard__kpi-glow", attrs: { "aria-hidden": "true" } }),
-    el("div", { className: "dashboard__kpi-ring", attrs: { "aria-hidden": "true" } }),
+    el("div", {
+      className: "dashboard__kpi-glow",
+      attrs: { "aria-hidden": "true" },
+    }),
+    el("div", {
+      className: "dashboard__kpi-ring",
+      attrs: { "aria-hidden": "true" },
+    }),
     el(
       "div",
       { className: "dashboard__kpi-content" },
-      el("span", { className: "dashboard__kpi-icon", text: icon, attrs: { "aria-hidden": "true" } }),
+      el("span", {
+        className: "dashboard__kpi-icon",
+        text: icon,
+        attrs: { "aria-hidden": "true" },
+      }),
       el("span", { className: "dashboard__kpi-label", text: label }),
       el("strong", {
         className: "dashboard__kpi-value",

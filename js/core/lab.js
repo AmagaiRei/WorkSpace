@@ -27,13 +27,17 @@ const FILE_PATH =
 
 const ICONS = {
   chevron: '<path d="m9 6 6 6-6 6"/>',
-  folder: '<path d="M3 7a2 2 0 0 1 2-2h4l2 2.5h8a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
+  folder:
+    '<path d="M3 7a2 2 0 0 1 2-2h4l2 2.5h8a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
   file: FILE_PATH,
   code: `${FILE_PATH}<path d="m10 13-2 2 2 2M14 13l2 2-2 2"/>`,
   doc: `${FILE_PATH}<path d="M9 13h6M9 17h6"/>`,
-  database: '<ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6"/><path d="M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6"/>',
-  archive: '<path d="M4 7h16v4H4z"/><path d="M5 11v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-8"/><path d="M10 15h4"/>',
-  image: '<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="m4 18 5-5 4 4 3-3 4 4"/>',
+  database:
+    '<ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6"/><path d="M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6"/>',
+  archive:
+    '<path d="M4 7h16v4H4z"/><path d="M5 11v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-8"/><path d="M10 15h4"/>',
+  image:
+    '<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="m4 18 5-5 4 4 3-3 4 4"/>',
 };
 
 function icon(name, tone) {
@@ -41,7 +45,13 @@ function icon(name, tone) {
     className: tone ? `icon icon--${name} tone--${tone}` : `icon icon--${name}`,
     attrs: { "aria-hidden": "true" },
   });
-  node.innerHTML = `<svg viewBox="0 0 24 24" focusable="false">${ICONS[name]}</svg>`;
+  // Add width/height and ensure paths inherit color via fill="currentColor"
+  const svgContent = ICONS[name]
+    .replace(/<path /g, '<path fill="currentColor" ')
+    .replace(/<ellipse /g, '<ellipse fill="currentColor" ')
+    .replace(/<rect /g, '<rect fill="currentColor" ')
+    .replace(/<circle /g, '<circle fill="currentColor" ');
+  node.innerHTML = `<svg viewBox="0 0 24 24" width="24" height="24" focusable="false">${svgContent}</svg>`;
   return node;
 }
 
@@ -116,11 +126,15 @@ function renderRightPanel(lab, subject, allLabs) {
       !isNext
         ? el("span", { className: "rp-nav-btn__arrow", text: "←" })
         : null,
-      el("span", { className: "rp-nav-btn__label", text: isNext ? "Следующая" : "Предыдущая" }),
-      el("span", { className: "rp-nav-btn__title", text: `${lab.id}) ${lab.title}` }),
-      isNext
-        ? el("span", { className: "rp-nav-btn__arrow", text: "→" })
-        : null,
+      el("span", {
+        className: "rp-nav-btn__label",
+        text: isNext ? "Следующая" : "Предыдущая",
+      }),
+      el("span", {
+        className: "rp-nav-btn__title",
+        text: `${lab.id}) ${lab.title}`,
+      }),
+      isNext ? el("span", { className: "rp-nav-btn__arrow", text: "→" }) : null,
     );
     return btn;
   };
@@ -143,25 +157,56 @@ function renderRightPanel(lab, subject, allLabs) {
 /* ------------------------------------------------------------------ */
 
 const REPORT_TYPES = {
-  docx: { badge: "W",   tone: "word", desc: "Документ Microsoft Word с материалами отчёта.", meta: "DOCX · Word",    download: true  },
-  pdf:  { badge: "PDF", tone: "pdf",  desc: "PDF-версия отчёта, откроется в браузере.",       meta: "PDF · Документ", download: false },
-  xlsx: { badge: "XL",  tone: "xlsx", desc: "Таблица Excel с данными работы.",                meta: "XLSX · Excel",   download: true  },
+  docx: {
+    badge: "W",
+    tone: "word",
+    desc: "Документ Microsoft Word с материалами отчёта.",
+    meta: "DOCX · Word",
+    download: true,
+  },
+  pdf: {
+    badge: "PDF",
+    tone: "pdf",
+    desc: "PDF-версия отчёта, откроется в браузере.",
+    meta: "PDF · Документ",
+    download: false,
+  },
+  xlsx: {
+    badge: "XL",
+    tone: "xlsx",
+    desc: "Таблица Excel с данными работы.",
+    meta: "XLSX · Excel",
+    download: true,
+  },
 };
 
-const DEFAULT_REPORT = { badge: "FILE", tone: "file", desc: "Файл с материалами отчёта.", meta: "Отчёт", download: true };
+const DEFAULT_REPORT = {
+  badge: "FILE",
+  tone: "file",
+  desc: "Файл с материалами отчёта.",
+  meta: "Отчёт",
+  download: true,
+};
 
 const ARCHIVE = {
-  badge: "ZIP", tone: "zip",
+  badge: "ZIP",
+  tone: "zip",
   desc: "Архив с исходниками и инструкцией для запуска на компьютере.",
-  meta: "ZIP · Проект для VS Code", download: true,
+  meta: "ZIP · Проект для VS Code",
+  download: true,
 };
 
 function createDownloadCard(href, title, kind) {
-  const attrs = kind.download ? { href, download: "" } : { href, target: "_blank", rel: "noopener" };
+  const attrs = kind.download
+    ? { href, download: "" }
+    : { href, target: "_blank", rel: "noopener" };
   return el(
     "a",
     { className: "file", attrs },
-    el("span", { className: `file__badge file__badge--${kind.tone}`, text: kind.badge }),
+    el("span", {
+      className: `file__badge file__badge--${kind.tone}`,
+      text: kind.badge,
+    }),
     el(
       "span",
       {},
@@ -169,7 +214,10 @@ function createDownloadCard(href, title, kind) {
       el("span", { className: "file__desc", text: kind.desc }),
       el("span", { className: "file__meta", text: kind.meta }),
     ),
-    el("span", { className: "file__action", text: kind.download ? "Скачать ↓" : "Открыть ↗" }),
+    el("span", {
+      className: "file__action",
+      text: kind.download ? "Скачать ↓" : "Открыть ↗",
+    }),
   );
 }
 
@@ -179,7 +227,9 @@ function renderDownloads(lab) {
     const kind = REPORT_TYPES[extensionOf(lab.report)] ?? DEFAULT_REPORT;
     cards.push(createDownloadCard(lab.report, "Отчёт лабораторной", kind));
   } else {
-    cards.push(el("p", { className: "empty", text: "Отчёт пока не добавлен." }));
+    cards.push(
+      el("p", { className: "empty", text: "Отчёт пока не добавлен." }),
+    );
   }
   if (lab.archive) {
     cards.push(createDownloadCard(lab.archive, "Скачать весь проект", ARCHIVE));
@@ -194,7 +244,9 @@ function renderDownloads(lab) {
 function readCachedPaths(key) {
   try {
     const cached = JSON.parse(sessionStorage.getItem(key));
-    return cached && Date.now() - cached.time < CACHE_TTL_MS ? cached.paths : null;
+    return cached && Date.now() - cached.time < CACHE_TTL_MS
+      ? cached.paths
+      : null;
   } catch {
     return null;
   }
@@ -219,7 +271,9 @@ function fetchRepoPaths(repo) {
 
   if (!repoPathsPromise) {
     const url = `https://api.github.com/repos/${owner}/${name}/git/trees/${branch}?recursive=1`;
-    repoPathsPromise = fetch(url, { signal: AbortSignal.timeout(API_TIMEOUT_MS) })
+    repoPathsPromise = fetch(url, {
+      signal: AbortSignal.timeout(API_TIMEOUT_MS),
+    })
       .then((r) => {
         if (!r.ok) throw new Error(`GitHub API ответил HTTP ${r.status}`);
         return r.json();
@@ -267,8 +321,15 @@ async function collectAllLabFiles(entries, repo) {
 function createItem({ iconName, tone, name, meta, desc }, tag, attrs = {}) {
   return el(
     tag,
-    { className: "item", attrs: tag === "button" ? { type: "button", ...attrs } : attrs },
-    el("span", { className: `item__badge item__badge--${tone}` }, icon(iconName)),
+    {
+      className: "item",
+      attrs: tag === "button" ? { type: "button", ...attrs } : attrs,
+    },
+    el(
+      "span",
+      { className: `item__badge item__badge--${tone}` },
+      icon(iconName),
+    ),
     el(
       "span",
       {},
@@ -280,19 +341,29 @@ function createItem({ iconName, tone, name, meta, desc }, tag, attrs = {}) {
 }
 
 function createExplorer(root) {
-  const crumbs = el("nav", { className: "explorer__path", attrs: { "aria-label": "Путь к папке" } });
+  const crumbs = el("nav", {
+    className: "explorer__path",
+    attrs: { "aria-label": "Путь к папке" },
+  });
   const grid = el("div", { className: "file-grid" });
   const start = el(
     "div",
     { className: "fv-start" },
-    el("p", { className: "hint", text: "Выбери файл в дереве: он откроется во вкладке." }),
+    el("p", {
+      className: "hint",
+      text: "Выбери файл в дереве: он откроется во вкладке.",
+    }),
     crumbs,
     grid,
   );
 
   const filesByPath = new Map();
   const folders = [];
-  const viewer = createFileViewer({ icon, onActivate: handleActivate, onMissing: handleMissing });
+  const viewer = createFileViewer({
+    icon,
+    onActivate: handleActivate,
+    onMissing: handleMissing,
+  });
   let currentFolder = root;
   let currentRow = null;
   let selectedPath = null;
@@ -310,10 +381,22 @@ function createExplorer(root) {
     crumbs.replaceChildren(
       ...chain.map((node, index) => {
         if (index === chain.length - 1) {
-          return el("span", { className: "crumb" }, el("span", { text: node.name, attrs: { "aria-current": "location" } }));
+          return el(
+            "span",
+            { className: "crumb" },
+            el("span", {
+              text: node.name,
+              attrs: { "aria-current": "location" },
+            }),
+          );
         }
-        const button = el("button", { text: node.name, attrs: { type: "button" } });
-        button.addEventListener("click", () => showFolder(node, { reveal: true }));
+        const button = el("button", {
+          text: node.name,
+          attrs: { type: "button" },
+        });
+        button.addEventListener("click", () =>
+          showFolder(node, { reveal: true }),
+        );
         return el("span", { className: "crumb" }, button);
       }),
     );
@@ -322,7 +405,12 @@ function createExplorer(root) {
   function createFolderCard(folder) {
     const count = folder.dirs.size + folder.files.length;
     const card = createItem(
-      { iconName: "folder", tone: "folder", name: folder.name, meta: `Папка · ${count} ${plural(count, ["элемент", "элемента", "элементов"])}` },
+      {
+        iconName: "folder",
+        tone: "folder",
+        name: folder.name,
+        meta: `Папка · ${count} ${plural(count, ["элемент", "элемента", "элементов"])}`,
+      },
       "button",
     );
     card.addEventListener("click", () => showFolder(folder, { reveal: true }));
@@ -332,7 +420,13 @@ function createExplorer(root) {
   function createFileCard(file) {
     const type = typeOf(file.path);
     const card = createItem(
-      { iconName: type.icon, tone: type.tone, name: file.name, meta: `${type.label} · ${type.kind}`, desc: type.desc },
+      {
+        iconName: type.icon,
+        tone: type.tone,
+        name: file.name,
+        meta: `${type.label} · ${type.kind}`,
+        desc: type.desc,
+      },
       "button",
     );
     card.addEventListener("click", () => openFile(file));
@@ -340,13 +434,21 @@ function createExplorer(root) {
   }
 
   function renderCards(folder) {
-    const cards = [...sortedDirs(folder).map(createFolderCard), ...sortedFiles(folder).map(createFileCard)];
-    grid.replaceChildren(...(cards.length ? cards : [el("p", { className: "empty", text: "Папка пуста." })]));
+    const cards = [
+      ...sortedDirs(folder).map(createFolderCard),
+      ...sortedFiles(folder).map(createFileCard),
+    ];
+    grid.replaceChildren(
+      ...(cards.length
+        ? cards
+        : [el("p", { className: "empty", text: "Папка пуста." })]),
+    );
   }
 
   function showFolder(folder, { reveal = false } = {}) {
     if (reveal) {
-      for (let node = folder; node; node = node.parent) node.details.open = true;
+      for (let node = folder; node; node = node.parent)
+        node.details.open = true;
     }
     currentFolder = folder;
     if (selectedPath === null) markCurrent(folder.row);
@@ -355,7 +457,11 @@ function createExplorer(root) {
   }
 
   function openFile(file) {
-    viewer.open({ path: file.path, name: file.name, shown: file.path.slice(root.path.length) });
+    viewer.open({
+      path: file.path,
+      name: file.name,
+      shown: file.path.slice(root.path.length),
+    });
     closeDrawer();
   }
 
@@ -383,7 +489,12 @@ function createExplorer(root) {
 
   function createTreeFile(file) {
     const type = typeOf(file.path);
-    file.row = el("button", { className: "tree__row", attrs: { type: "button" } }, icon(type.icon, type.tone), el("span", { text: file.name }));
+    file.row = el(
+      "button",
+      { className: "tree__row", attrs: { type: "button" } },
+      icon(type.icon, type.tone),
+      el("span", { text: file.name }),
+    );
     file.row.addEventListener("click", () => openFile(file));
     filesByPath.set(file.path, file);
     return file.row;
@@ -391,16 +502,28 @@ function createExplorer(root) {
 
   function createTreeFolder(folder, depth) {
     const list = el("ul", { className: "tree__list" });
-    for (const child of sortedDirs(folder)) list.append(createTreeFolder(child, depth + 1));
+    for (const child of sortedDirs(folder))
+      list.append(createTreeFolder(child, depth + 1));
     for (const file of sortedFiles(folder)) {
       file.item = el("li", {}, createTreeFile(file));
       list.append(file.item);
     }
 
-    folder.row = el("summary", { className: "tree__row" }, icon("chevron"), icon("folder", "folder"), el("span", { text: folder.name }));
+    folder.row = el(
+      "summary",
+      { className: "tree__row" },
+      icon("chevron"),
+      icon("folder", "folder"),
+      el("span", { text: folder.name }),
+    );
     folder.row.addEventListener("click", () => showFolder(folder));
 
-    folder.details = el("details", { className: "tree__folder" }, folder.row, list);
+    folder.details = el(
+      "details",
+      { className: "tree__folder" },
+      folder.row,
+      list,
+    );
     folder.details.open = depth === 0;
     folder.item = el("li", {}, folder.details);
     folders.push(folder);
@@ -410,14 +533,23 @@ function createExplorer(root) {
   /* Поиск по дереву */
   const searchInput = el("input", {
     className: "tree-search__input",
-    attrs: { type: "search", placeholder: "Имя или .расширение", "aria-label": "Поиск по файлам", autocomplete: "off", spellcheck: "false" },
+    attrs: {
+      type: "search",
+      placeholder: "Имя или .расширение",
+      "aria-label": "Поиск по файлам",
+      autocomplete: "off",
+      spellcheck: "false",
+    },
   });
   const clearButton = el("button", {
     className: "tree-search__clear",
     text: "×",
     attrs: { type: "button", "aria-label": "Очистить поиск", hidden: "" },
   });
-  const noMatch = el("p", { className: "tree__nomatch", attrs: { "aria-live": "polite" } });
+  const noMatch = el("p", {
+    className: "tree__nomatch",
+    attrs: { "aria-live": "polite" },
+  });
 
   function applyFilter() {
     const visible = matchPaths([...filesByPath.keys()], searchInput.value);
@@ -438,7 +570,9 @@ function createExplorer(root) {
       savedOpen = null;
     }
     noMatch.textContent =
-      visible && visible.size === 0 ? "Ничего не найдено. Попробуй другое имя или .расширение" : "";
+      visible && visible.size === 0
+        ? "Ничего не найдено. Попробуй другое имя или .расширение"
+        : "";
   }
 
   function clearSearch() {
@@ -453,14 +587,21 @@ function createExplorer(root) {
       clearSearch();
     }
   });
-  clearButton.addEventListener("click", () => { clearSearch(); searchInput.focus(); });
+  clearButton.addEventListener("click", () => {
+    clearSearch();
+    searchInput.focus();
+  });
 
   /* Мобильный drawer */
   const backdrop = el("div", { className: "fv-backdrop" });
   const filesButton = el("button", {
     className: "fv-files-btn",
     text: "📁 Файлы",
-    attrs: { type: "button", "aria-controls": "lab-sidebar", "aria-expanded": "false" },
+    attrs: {
+      type: "button",
+      "aria-controls": "lab-sidebar",
+      "aria-expanded": "false",
+    },
   });
   const closeButton = el("button", {
     className: "lab-sidebar__close",
@@ -469,10 +610,22 @@ function createExplorer(root) {
   });
   const sidebar = el(
     "aside",
-    { className: "lab-sidebar", attrs: { id: "lab-sidebar", "aria-label": "Файлы проекта" } },
-    el("div", { className: "lab-sidebar__head" }, el("h2", { className: "lab-sidebar__title", text: "Файлы проекта" }), closeButton),
+    {
+      className: "lab-sidebar",
+      attrs: { id: "lab-sidebar", "aria-label": "Файлы проекта" },
+    },
+    el(
+      "div",
+      { className: "lab-sidebar__head" },
+      el("h2", { className: "lab-sidebar__title", text: "Файлы проекта" }),
+      closeButton,
+    ),
     el("div", { className: "tree-search" }, searchInput, clearButton),
-    el("div", { className: "tree" }, el("ul", { className: "tree__list" }, createTreeFolder(root, 0))),
+    el(
+      "div",
+      { className: "tree" },
+      el("ul", { className: "tree__list" }, createTreeFolder(root, 0)),
+    ),
     noMatch,
   );
 
@@ -493,25 +646,43 @@ function createExplorer(root) {
   filesButton.addEventListener("click", () => setDrawer(true));
   closeButton.addEventListener("click", () => closeDrawer(true));
   backdrop.addEventListener("click", () => closeDrawer(true));
-  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeDrawer(true); });
-  window.matchMedia("(max-width: 800px)").addEventListener("change", (e) => { if (!e.matches) closeDrawer(); });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeDrawer(true);
+  });
+  window.matchMedia("(max-width: 800px)").addEventListener("change", (e) => {
+    if (!e.matches) closeDrawer();
+  });
 
   showFolder(root);
   return { sidebar, backdrop, filesButton, start, viewer: viewer.root };
 }
 
 function renderCode(files, problems) {
-  const title = el("h2", { className: "lab-panel__title", text: "Исходный код" });
+  const title = el("h2", {
+    className: "lab-panel__title",
+    text: "Исходный код",
+  });
   const notices = problems.map((p) =>
-    el("p", { className: "notice notice--error", text: `Не удалось получить список файлов (${p}). Перечисли файлы в subjects.json вручную.` }),
+    el("p", {
+      className: "notice notice--error",
+      text: `Не удалось получить список файлов (${p}). Перечисли файлы в subjects.json вручную.`,
+    }),
   );
 
   if (!files.length) {
-    const empty = problems.length ? null : el("p", { className: "empty", text: "Файлов с кодом пока нет." });
+    const empty = problems.length
+      ? null
+      : el("p", { className: "empty", text: "Файлов с кодом пока нет." });
     return {
       sidebar: null,
       backdrop: null,
-      panel: el("section", { className: "lab-panel lab-panel--code" }, title, empty, ...notices),
+      panel: el(
+        "section",
+        { className: "lab-panel lab-panel--code" },
+        title,
+        empty,
+        ...notices,
+      ),
     };
   }
 
@@ -536,8 +707,20 @@ function renderCode(files, problems) {
 /* ------------------------------------------------------------------ */
 
 function createScreenshot(path, index, dialog) {
-  const img = el("img", { attrs: { src: path, alt: `Скриншот ${index + 1}`, loading: "lazy" } });
-  const button = el("button", { className: "shot", attrs: { type: "button", "aria-label": `Увеличить скриншот ${index + 1}` } }, img);
+  const img = el("img", {
+    attrs: { src: path, alt: `Скриншот ${index + 1}`, loading: "lazy" },
+  });
+  const button = el(
+    "button",
+    {
+      className: "shot",
+      attrs: {
+        type: "button",
+        "aria-label": `Увеличить скриншот ${index + 1}`,
+      },
+    },
+    img,
+  );
 
   button.addEventListener("click", () => {
     const big = dialog.querySelector("img");
@@ -546,7 +729,9 @@ function createScreenshot(path, index, dialog) {
     dialog.showModal();
   });
   img.addEventListener("error", () => {
-    button.replaceWith(el("p", { className: "empty", text: `Нет файла: ${fileName(path)}` }));
+    button.replaceWith(
+      el("p", { className: "empty", text: `Нет файла: ${fileName(path)}` }),
+    );
   });
   return button;
 }
@@ -555,19 +740,39 @@ function renderScreenshots(lab) {
   const shots = lab.screenshots ?? [];
   const title = el("h2", { className: "lab-panel__title", text: "Скриншоты" });
   const panel = (...children) =>
-    el("section", { className: "lab-panel lab-panel--screenshots" }, title, ...children);
+    el(
+      "section",
+      { className: "lab-panel lab-panel--screenshots" },
+      title,
+      ...children,
+    );
 
   if (!shots.length) {
     return panel(el("p", { className: "empty", text: "Скриншотов пока нет." }));
   }
 
-  const closeButton = el("button", { className: "file-button", text: "Закрыть", attrs: { type: "button" } });
-  const dialog = el("dialog", { className: "lightbox" }, el("img", { attrs: { alt: "" } }), closeButton);
+  const closeButton = el("button", {
+    className: "file-button",
+    text: "Закрыть",
+    attrs: { type: "button" },
+  });
+  const dialog = el(
+    "dialog",
+    { className: "lightbox" },
+    el("img", { attrs: { alt: "" } }),
+    closeButton,
+  );
   closeButton.addEventListener("click", () => dialog.close());
-  dialog.addEventListener("click", (e) => { if (e.target === dialog) dialog.close(); });
+  dialog.addEventListener("click", (e) => {
+    if (e.target === dialog) dialog.close();
+  });
 
   return panel(
-    el("div", { className: "gallery" }, ...shots.map((path, i) => createScreenshot(path, i, dialog))),
+    el(
+      "div",
+      { className: "gallery" },
+      ...shots.map((path, i) => createScreenshot(path, i, dialog)),
+    ),
     dialog,
   );
 }
@@ -577,8 +782,10 @@ function renderScreenshots(lab) {
 /* ------------------------------------------------------------------ */
 
 function renderBreadcrumbs(nav, subject, lab) {
-  const item = (content) => el("li", { className: "breadcrumbs__item" }, content);
-  const link = (text, href) => el("a", { className: "breadcrumbs__link", text, attrs: { href } });
+  const item = (content) =>
+    el("li", { className: "breadcrumbs__item" }, content);
+  const link = (text, href) =>
+    el("a", { className: "breadcrumbs__link", text, attrs: { href } });
 
   nav.replaceChildren(
     el(
@@ -586,7 +793,12 @@ function renderBreadcrumbs(nav, subject, lab) {
       { className: "breadcrumbs__list" },
       item(link("Главная", "index.html")),
       item(link(subject.title, `index.html#${encodeURIComponent(subject.id)}`)),
-      item(el("span", { text: `${lab.id}) ${lab.title}`, attrs: { "aria-current": "page" } })),
+      item(
+        el("span", {
+          text: `${lab.id}) ${lab.title}`,
+          attrs: { "aria-current": "page" },
+        }),
+      ),
     ),
   );
 }
@@ -594,10 +806,19 @@ function renderBreadcrumbs(nav, subject, lab) {
 function renderHeader(head, subject, lab) {
   head.append(
     ...[
-      el("p",  { className: "page-head__subject", text: subject.title }),
-      el("h1", { className: "page-head__title",   text: `${lab.id}) ${lab.title}` }),
-      lab.description && el("p", { className: "page-head__text", text: lab.description }),
-      el("p", { className: "lab-card__meta" }, statusBadge(lab.status), el("span", { text: formatDate(lab.date) })),
+      el("p", { className: "page-head__subject", text: subject.title }),
+      el("h1", {
+        className: "page-head__title",
+        text: `${lab.id}) ${lab.title}`,
+      }),
+      lab.description &&
+        el("p", { className: "page-head__text", text: lab.description }),
+      el(
+        "p",
+        { className: "lab-card__meta" },
+        statusBadge(lab.status),
+        el("span", { text: formatDate(lab.date) }),
+      ),
     ].filter(Boolean),
   );
 }
@@ -620,7 +841,9 @@ async function renderBody(lab, repo, body, subject, allLabs) {
     renderScreenshots(lab),
   );
 
-  const layoutClass = code.sidebar ? "lab-layout" : "lab-layout lab-layout--single";
+  const layoutClass = code.sidebar
+    ? "lab-layout"
+    : "lab-layout lab-layout--single";
 
   // !Правая панель монтируется рядом с основным layout внутри lab-section--code
   const rightPanel = renderRightPanel(lab, subject, allLabs);
@@ -647,7 +870,9 @@ async function init() {
     const subject = data.subjects.find((s) => s.id === params.get("subject"));
     const lab = subject?.labs.find((l) => String(l.id) === params.get("lab"));
     if (!lab) {
-      throw new Error("Такой лабораторной нет. Вернись на главную и выбери её из списка.");
+      throw new Error(
+        "Такой лабораторной нет. Вернись на главную и выбери её из списка.",
+      );
     }
 
     document.title = `${lab.id}) ${lab.title} — ${subject.title}`;

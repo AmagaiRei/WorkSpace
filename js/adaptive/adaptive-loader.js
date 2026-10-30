@@ -1,6 +1,6 @@
-/*! *
- * Adaptive Loader — детект устройства/сети + установка классов на <html>
- * Запускается как можно раньше (module script в <head>)
+/*!
+ *! Adaptive Loader — детект устройства/сети + установка классов на <html>
+ *! Запускается как можно раньше (module script в <head>)
  */
 import { adaptiveStore } from "./adaptive-store.js";
 
@@ -16,7 +16,7 @@ function removeHtmlClass(...classes) {
 }
 
 function setHtmlClasses(prefix, value) {
-  // Удаляем старые классы с этим префиксом
+  // ! Удаляем старые классы с этим префиксом
   const existing = [...document.documentElement.classList].filter((c) =>
     c.startsWith(prefix),
   );
@@ -87,7 +87,7 @@ function detectGPU() {
     ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL)
     : "unknown";
 
-  // Грубая эвристика: интегрированная vs дискретная
+  //! Грубая эвристика: интегрированная vs дискретная
   const isIntegrated =
     /intel|amd\s+radeon\s+(vega|rx\s+5[0-9]{2})|apple\s+gpu|mali|adreno/i.test(
       renderer,

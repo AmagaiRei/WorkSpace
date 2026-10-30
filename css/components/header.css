@@ -19,15 +19,17 @@
 }
 
 .header::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg,
+  background: linear-gradient(
+    90deg,
     transparent 0%,
     var(--color-accent-purple-dim) 20%,
     var(--color-accent-cyan-dim) 50%,
     var(--color-accent-pink-dim) 80%,
-    transparent 100%);
+    transparent 100%
+  );
   opacity: 0;
   pointer-events: none;
   transition: opacity var(--duration-smooth) var(--ease-out);
@@ -55,7 +57,12 @@
 }
 
 .logo__mark {
-  background: linear-gradient(135deg, var(--color-accent-purple), var(--color-accent-pink), var(--color-accent-cyan));
+  background: linear-gradient(
+    135deg,
+    var(--color-accent-purple),
+    var(--color-accent-pink),
+    var(--color-accent-cyan)
+  );
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -82,13 +89,17 @@
 }
 
 .nav a::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 2px;
   left: 50%;
   width: 0;
   height: 2px;
-  background: linear-gradient(90deg, var(--color-accent-purple), var(--color-accent-cyan));
+  background: linear-gradient(
+    90deg,
+    var(--color-accent-purple),
+    var(--color-accent-cyan)
+  );
   border-radius: 1px;
   transform: translateX(-50%);
   transition: width var(--duration-normal) var(--ease-out);
