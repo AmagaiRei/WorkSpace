@@ -45,13 +45,12 @@ function icon(name, tone) {
     className: tone ? `icon icon--${name} tone--${tone}` : `icon icon--${name}`,
     attrs: { "aria-hidden": "true" },
   });
-  // Add width/height and ensure paths inherit color via fill="currentColor"
-  const svgContent = ICONS[name]
-    .replace(/<path /g, '<path fill="currentColor" ')
-    .replace(/<ellipse /g, '<ellipse fill="currentColor" ')
-    .replace(/<rect /g, '<rect fill="currentColor" ')
-    .replace(/<circle /g, '<circle fill="currentColor" ');
-  node.innerHTML = `<svg viewBox="0 0 24 24" width="24" height="24" focusable="false">${svgContent}</svg>`;
+  // Папка остаётся залитой, остальные значки рисуются контуром.
+  const svgStyle =
+    name === "folder"
+      ? 'fill="currentColor" stroke="none"'
+      : 'fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"';
+  node.innerHTML = `<svg viewBox="0 0 24 24" width="24" height="24" ${svgStyle} focusable="false">${ICONS[name]}</svg>`;
   return node;
 }
 
@@ -332,7 +331,7 @@ function createItem({ iconName, tone, name, meta, desc }, tag, attrs = {}) {
     ),
     el(
       "span",
-      {},
+      { className: "item__content" },
       el("span", { className: "item__name", text: name }),
       el("span", { className: "item__meta", text: meta }),
       el("span", { className: "item__desc", text: desc }),
