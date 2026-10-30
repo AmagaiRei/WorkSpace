@@ -3,7 +3,7 @@
  * Регистрируется в index.js / lab.js / sync-center.js
  */
 
-const CACHE_NAME = "workspace-v3";
+const CACHE_NAME = "workspace-v4";
 const STATIC_ASSETS = [
   "/",
   "/index.html",

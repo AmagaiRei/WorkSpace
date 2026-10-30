@@ -108,47 +108,50 @@ function renderRightPanel(lab, subject, allLabs) {
     ),
   );
 
-  // Навигация между работами
+  return el("aside", { className: "lab-right-panel" }, about, stats);
+}
+
+/* ------------------------------------------------------------------ */
+/* Навигация «предыдущая / следующая» — под контентом работы           */
+/* ------------------------------------------------------------------ */
+
+function renderPager(lab, subject, allLabs) {
   const idx = allLabs.findIndex((l) => l.id === lab.id);
   const prev = allLabs[idx - 1] ?? null;
   const next = allLabs[idx + 1] ?? null;
+  if (!prev && !next) return null;
   const base = `lab.html?subject=${encodeURIComponent(subject.id)}&lab=`;
 
-  const navBtn = (lab, dir) => {
+  const navBtn = (target, dir) => {
     const isNext = dir === "next";
-    const btn = el(
+    return el(
       "a",
       {
         className: `rp-nav-btn rp-nav-btn--${dir}`,
-        attrs: { href: base + lab.id },
+        attrs: { href: base + target.id },
       },
-      !isNext
-        ? el("span", { className: "rp-nav-btn__arrow", text: "←" })
-        : null,
+      !isNext ? el("span", { className: "rp-nav-btn__arrow", text: "←" }) : null,
       el("span", {
         className: "rp-nav-btn__label",
         text: isNext ? "Следующая" : "Предыдущая",
       }),
       el("span", {
         className: "rp-nav-btn__title",
-        text: `${lab.id}) ${lab.title}`,
+        text: `${target.id}) ${target.title}`,
       }),
       isNext ? el("span", { className: "rp-nav-btn__arrow", text: "→" }) : null,
     );
-    return btn;
   };
 
-  const nav =
-    prev || next
-      ? el(
-          "div",
-          { className: "rp-nav" },
-          prev ? navBtn(prev, "prev") : el("span", {}),
-          next ? navBtn(next, "next") : el("span", {}),
-        )
-      : null;
-
-  return el("aside", { className: "lab-right-panel" }, about, stats, nav);
+  return el(
+    "nav",
+    {
+      className: "lab-pager",
+      attrs: { "aria-label": "Навигация между лабораторными" },
+    },
+    prev ? navBtn(prev, "prev") : null,
+    next ? navBtn(next, "next") : null,
+  );
 }
 
 /* ------------------------------------------------------------------ */
@@ -208,7 +211,7 @@ function createDownloadCard(href, title, kind) {
     }),
     el(
       "span",
-      {},
+      { className: "file__content" },
       el("span", { className: "file__name", text: title }),
       el("span", { className: "file__desc", text: kind.desc }),
       el("span", { className: "file__meta", text: kind.meta }),
@@ -838,6 +841,7 @@ async function renderBody(lab, repo, body, subject, allLabs) {
     renderDownloads(lab),
     code.panel,
     renderScreenshots(lab),
+    renderPager(lab, subject, allLabs),
   );
 
   const layoutClass = code.sidebar

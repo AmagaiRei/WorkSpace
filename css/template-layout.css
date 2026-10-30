@@ -178,7 +178,8 @@ a {
 }
 .lab-sidebar {
   grid-column: 1;
-  grid-row: 1 / span 2;
+  /*! Занимает всю левую колонку: sticky не наезжает на контент соседней колонки */
+  grid-row: 1 / -1;
   position: sticky;
   top: 82px;
   min-width: 0;
@@ -196,16 +197,16 @@ a {
   overflow: hidden;
 }
 .downloads {
-  grid-column: 1 / -1;
-  grid-row: 3;
+  grid-column: 2;
+  grid-row: 2;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
   gap: 10px;
   padding: 14px;
 }
 .lab-panel--screenshots {
-  grid-column: 1 / -1;
-  grid-row: 4;
+  grid-column: 2;
+  grid-row: 3;
   padding: 16px;
   min-width: 0;
 }
@@ -319,6 +320,9 @@ a {
   object-fit: cover;
 }
 .lightbox {
+  position: fixed;
+  inset: 0;
+  margin: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -330,6 +334,12 @@ a {
   color: white;
   max-width: 90vw;
   max-height: 90vh;
+}
+
+/*! Без [open] диалог обязан вести себя как display:none,
+    иначе он остаётся в потоке страницы и перекрывается футером */
+.lightbox:not([open]) {
+  display: none;
 }
 
 .lightbox img {
@@ -346,12 +356,6 @@ a {
 .notice--error {
   border-color: rgba(248, 113, 113, 0.5);
   background: rgba(127, 29, 29, 0.15);
-}
-@media (min-width: 1100px) {
-  .lab-panel--screenshots {
-    grid-column: 1 / 2;
-    grid-row: 4;
-  }
 }
 @media (max-width: 900px) {
   .lab-section--code {
@@ -371,7 +375,8 @@ a {
     grid-row: auto;
   }
   .downloads,
-  .lab-panel--screenshots {
+  .lab-panel--screenshots,
+  .lab-pager {
     grid-column: 1;
     grid-row: auto;
   }
@@ -434,8 +439,53 @@ a {
 .lab-layout--single .downloads {
   grid-row: 2;
 }
+.lab-layout--single .lab-panel--code {
+  grid-column: 1;
+  grid-row: 1;
+}
+.lab-layout--single .downloads {
+  grid-column: 1;
+  grid-row: 2;
+}
 .lab-layout--single .lab-panel--screenshots {
+  grid-column: 1;
   grid-row: 3;
+}
+.lab-layout--single .lab-pager {
+  grid-column: 1;
+  grid-row: 4;
+}
+
+/*! Навигация «предыдущая / следующая» под контентом:
+    предыдущая прижимается влево, следующая — вправо */
+.lab-pager {
+  grid-column: 2;
+  grid-row: 4;
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: 12px;
+}
+
+.lab-pager .rp-nav-btn {
+  flex: 0 1 auto;
+  max-width: calc(50% - 6px);
+}
+
+.lab-pager .rp-nav-btn--next {
+  margin-left: auto;
+}
+
+/*! Имена файлов в дереве не должны распирать панель */
+.tree__row > span:last-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tree__row .icon {
+  flex-shrink: 0;
 }
 
 /* ================================================================
