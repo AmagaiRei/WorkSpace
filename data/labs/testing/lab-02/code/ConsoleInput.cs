@@ -61,7 +61,7 @@ namespace ConsoleApp05
             }
         }
 
-        // Пустой ввод (Enter) означает - оставить текущее значение.
+        // ! Пустой ввод (Enter) означает - оставить текущее значение.
         public static string ReadStringOrKeep(string prompt, string current)
         {
             Console.Write($"{prompt}[{current}]: ");
@@ -130,7 +130,7 @@ namespace ConsoleApp05
                 ) && double.IsFinite(value);
         }
 
-        // null означает закрытый поток ввода (Ctrl+Z / Ctrl+D) - выходим из программы.
+        // ! null означает закрытый поток ввода (Ctrl+Z / Ctrl+D) - выходим из программы.
         private static string ReadLine() => Console.ReadLine() ?? throw new EndOfStreamException();
     }
 }

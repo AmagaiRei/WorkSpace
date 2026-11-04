@@ -488,7 +488,7 @@ a {
   flex-shrink: 0;
 }
 
-/* ================================================================
+/*! ================================================================
    ПРАВАЯ ПАНЕЛЬ ЛАБОРАТОРНОЙ (lab-right-panel)
    Монтируется в .lab-section--code рядом с .lab-layout
    ================================================================ */
@@ -500,7 +500,7 @@ a {
   align-items: start;
 }
 
-/* lab-layout занимает всю ширину своей ячейки */
+/*! lab-layout занимает всю ширину своей ячейки */
 .lab-section--code > .lab-layout,
 .lab-section--code > .lab-layout--single {
   min-width: 0;
@@ -531,7 +531,7 @@ a {
   -webkit-backdrop-filter: blur(20px);
 }
 
-/* Enhanced glassmorphism hover effect */
+/*! Enhanced glassmorphism hover effect */
 .lab-right-panel .panel:hover {
   border-color: rgba(139, 92, 246, 0.35);
   box-shadow:
@@ -589,7 +589,7 @@ a {
   color: var(--color-accent-purple-soft);
 }
 
-/* Статистика */
+/*! Статистика */
 .rp-stats__grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -650,7 +650,7 @@ a {
   text-shadow: 0 0 16px rgba(34, 211, 238, 0.4);
 }
 
-/* Навигация между работами */
+/*! Навигация между работами */
 .rp-nav {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -742,7 +742,7 @@ a {
   color: var(--color-accent-purple-soft);
 }
 
-/* Адаптив: скрываем правую панель на узких экранах */
+/*! Адаптив: скрываем правую панель на узких экранах */
 @media (max-width: 1100px) {
   .lab-section--code {
     grid-template-columns: minmax(0, 1fr);

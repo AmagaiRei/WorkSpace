@@ -109,7 +109,7 @@ function measureFPS(durationMs = 2500) {
         requestAnimationFrame(tick);
         return;
       }
-      // Считаем FPS
+      // ! Считаем FPS
       const elapsed = frames[frames.length - 1] - frames[0];
       const fps = frames.length / (elapsed / 1000);
       resolve(Math.round(fps));
@@ -126,7 +126,7 @@ async function detectBattery() {
   try {
     const battery = await navigator.getBattery();
     const lowBattery = !battery.charging && battery.level < 0.2;
-    // Слушаем изменения
+    // ! Слушаем изменения
     battery.addEventListener("levelchange", () => {
       if (!battery.charging && battery.level < 0.2) {
         addHtmlClass("low-battery");
@@ -153,8 +153,8 @@ async function detectBattery() {
 
 // !---- 6. SAVE-DATA (HTTP заголовок + JS) ----
 function detectSaveData() {
-  // navigator.connection.saveData уже проверяли в detectNetwork
-  // Дополнительно: проверим через fetch заголовок (если нужно)
+  // ! navigator.connection.saveData уже проверяли в detectNetwork
+  // ! Дополнительно: проверим через fetch заголовок (если нужно)
   return false; // пока полагаемся на connection.saveData
 }
 
@@ -166,7 +166,7 @@ function detectReducedMotion() {
   mq.addEventListener("change", (e) => {
     if (e.matches) addHtmlClass("reduce-motion");
     else removeHtmlClass("reduce-motion");
-    // Обновляем профиль
+    // ! Обновляем профиль
     const p = adaptiveStore.getProfile();
     if (p) adaptiveStore.setProfile({ ...p, reducedMotion: e.matches });
   });
@@ -193,13 +193,13 @@ function computePerfProfile({
   lowBattery,
   reducedMotion,
 }) {
-  // Веса: baseline 40%, GPU 30%, FPS 20%, батарея -20% если слабая, reduced motion -> low
+  // ! Веса: baseline 40%, GPU 30%, FPS 20%, батарея -20% если слабая, reduced motion -> low
   if (reducedMotion) return "low";
 
   let score = baselineScore * 0.4 + gpuScore * 0.3;
 
   if (fps > 0) {
-    // Нормализуем FPS: 60 -> 100, 30 -> 50, 15 -> 25
+    // ! Нормализуем FPS: 60 -> 100, 30 -> 50, 15 -> 25
     const fpsScore = clamp((fps / 60) * 100, 0, 100);
     score += fpsScore * 0.2;
   }
@@ -219,11 +219,11 @@ export const NETWORK_PROFILE = (() => {
   const reducedMotion = detectReducedMotion();
   detectPrefersContrast();
 
-  // Асинхронные части
+  // ! Асинхронные части
   let fpsPromise = measureFPS(2000);
   let batteryPromise = detectBattery();
 
-  // Сначала ставим базовый профиль (без FPS/батареи)
+  // ! Сначала ставим базовый профиль (без FPS/батареи)
   let perfProfile = computePerfProfile({
     baselineScore: device.baselineScore,
     gpuScore: gpu.gpuScore,
@@ -234,7 +234,7 @@ export const NETWORK_PROFILE = (() => {
 
   setHtmlClasses("perf-", perfProfile);
 
-  // Итоговый объект профиля
+  // ! Итоговый объект профиля
   const profile = {
     netProfile: net.netProfile,
     saveData: net.saveData,
@@ -252,7 +252,7 @@ export const NETWORK_PROFILE = (() => {
 
   adaptiveStore.setProfile(profile);
 
-  // Обновляем когда придут FPS и батарея
+  // ! Обновляем когда придут FPS и батарея
   Promise.all([fpsPromise, batteryPromise]).then(([fps, battery]) => {
     perfProfile = computePerfProfile({
       baselineScore: device.baselineScore,

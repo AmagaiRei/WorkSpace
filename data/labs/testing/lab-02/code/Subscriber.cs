@@ -16,7 +16,7 @@ namespace ConsoleApp05
         {
             decimal total = BaseFee;
 
-            // Штраф начисляется один раз, даже если выполнены оба условия.
+            // ! Штраф начисляется один раз, даже если выполнены оба условия.
             if (Gigabytes > GigabyteLimit || DaysLate > 0)
             {
                 total += PenaltyFee;

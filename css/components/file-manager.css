@@ -30,7 +30,7 @@
   --tok-regex: var(--color-accent-pink);
   --tok-meta: var(--color-text-muted);
 
-  /* Glassmorphism enhancements */
+  /*! Glassmorphism enhancements */
   --fm-glass-bg: linear-gradient(
     145deg,
     rgba(14, 19, 45, 0.95),
@@ -343,7 +343,7 @@
   transform: scale(1.1);
 }
 
-/* Tone variants for item badge */
+/*! Tone variants for item badge */
 .item__badge--folder {
   background: rgba(139, 92, 246, 0.12);
   border-color: rgba(139, 92, 246, 0.25);

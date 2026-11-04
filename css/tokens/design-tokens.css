@@ -9,15 +9,15 @@
      ======================================================================== */
 
   /*! Base backgrounds — Dark Purple */
-  --color-bg-deep: #0a0516; /* Почти черный фиолетовый — глубокий фон */
-  --color-bg-base: #0d081b; /* Основной фон страницы */
-  --color-bg-surface: #130924; /* Второстепенный фон (карточки, секции) */
-  --color-bg-elevated: #1a1030; /* Поднятые поверхности (модалки, дропдауны) */
+  --color-bg-deep: #0a0516; /*! Почти черный фиолетовый — глубокий фон */
+  --color-bg-base: #0d081b; /*! Основной фон страницы */
+  --color-bg-surface: #130924; /*! Второстепенный фон (карточки, секции) */
+  --color-bg-elevated: #1a1030; /*! Поднятые поверхности (модалки, дропдауны) */
 
   /*! Glass surfaces */
-  --glass-base: rgba(23, 13, 43, 0.6); /* Цвет стеклянных плашек */
-  --glass-elevated: rgba(23, 13, 43, 0.75); /* Стекло для модалок */
-  --glass-strong: rgba(23, 13, 43, 0.9); /* Сильное стекло */
+  --glass-base: rgba(23, 13, 43, 0.6); /*! Цвет стеклянных плашек */
+  --glass-elevated: rgba(23, 13, 43, 0.75); /*! Стекло для модалок */
+  --glass-strong: rgba(23, 13, 43, 0.9); /*! Сильное стекло */
 
   /*! ========================================================================
      6 ACCENT COLORS — Per specification
@@ -86,10 +86,10 @@
     inset 0 0 20px rgba(139, 92, 246, 0.03);
 
   /*! Text */
-  --color-text-primary: #f5f0ff; /* Основной текст — почти белый с фиолетовым оттенком */
-  --color-text-muted: #b8a8d0; /* Вторичный текст */
-  --color-text-dim: #7a6a9a; /* Третичный/отключенный текст */
-  --color-text-inverse: #0a0516; /* Текст на неоновом фоне */
+  --color-text-primary: #f5f0ff; /*! Основной текст — почти белый с фиолетовым оттенком */
+  --color-text-muted: #b8a8d0; /*! Вторичный текст */
+  --color-text-dim: #7a6a9a; /*! Третичный/отключенный текст */
+  --color-text-inverse: #0a0516; /*! Текст на неоновом фоне */
 
   /*! Semantic status colors — mapped to 6 accent colors */
   --color-success: var(--color-accent-green);
@@ -458,7 +458,7 @@ html.no-animations *::after {
   font-weight: 300 800;
   font-display: swap;
   font-style: normal;
-  unicode-range: U+0020-007F, U+0400-04FF; /* Latin + Cyrillic */
+  unicode-range: U+0020-007F, U+0400-04FF; /*! Latin + Cyrillic */
 }
 
 @font-face {

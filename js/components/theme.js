@@ -3,7 +3,7 @@ const THEME_KEY = "workspace-theme";
 
 function applyDarkTheme() {
   document.documentElement.setAttribute("data-theme", "dark");
-  // Скрываем кнопку переключения темы, если она есть в DOM
+  // ! Скрываем кнопку переключения темы, если она есть в DOM
   const button = document.getElementById("theme-toggle");
   if (button) button.hidden = true;
 }

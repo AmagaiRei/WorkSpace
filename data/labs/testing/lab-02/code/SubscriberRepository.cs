@@ -59,7 +59,7 @@ namespace ConsoleApp05
             command.Parameters.AddWithValue("@daysLate", subscriber.DaysLate);
             command.Parameters.AddWithValue("@id", subscriber.Id);
 
-            // ExecuteNonQuery возвращает число затронутых строк: 0 - такого Id нет.
+            // ! ExecuteNonQuery возвращает число затронутых строк: 0 - такого Id нет.
             return command.ExecuteNonQuery() > 0;
         }
 

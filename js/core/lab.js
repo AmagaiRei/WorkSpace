@@ -45,7 +45,7 @@ function icon(name, tone) {
     className: tone ? `icon icon--${name} tone--${tone}` : `icon icon--${name}`,
     attrs: { "aria-hidden": "true" },
   });
-  // Папка остаётся залитой, остальные значки рисуются контуром.
+  // ! Папка остаётся залитой, остальные значки рисуются контуром.
   const svgStyle =
     name === "folder"
       ? 'fill="currentColor" stroke="none"'
@@ -54,9 +54,9 @@ function icon(name, tone) {
   return node;
 }
 
-/* ------------------------------------------------------------------ */
-/* Правая панель: «О работе» + статистика + навигация между работами   */
-/* ------------------------------------------------------------------ */
+/*! ------------------------------------------------------------------ */
+/*! Правая панель: «О работе» + статистика + навигация между работами   */
+/*! ------------------------------------------------------------------ */
 
 function renderRightPanel(lab, subject, allLabs) {
   const tags = lab.tags?.length
@@ -67,7 +67,7 @@ function renderRightPanel(lab, subject, allLabs) {
       )
     : null;
 
-  // «О лабораторной»
+  // ! «О лабораторной»
   const about = el(
     "aside",
     { className: "rp-about panel" },
@@ -82,7 +82,7 @@ function renderRightPanel(lab, subject, allLabs) {
     tags,
   );
 
-  // Статистика
+  // ! Статистика
   const codeFiles = lab.code?.length ?? 0;
   const shots = lab.screenshots?.length ?? 0;
   const downloads = (lab.report ? 1 : 0) + (lab.archive ? 1 : 0);
@@ -111,9 +111,9 @@ function renderRightPanel(lab, subject, allLabs) {
   return el("aside", { className: "lab-right-panel" }, about, stats);
 }
 
-/* ------------------------------------------------------------------ */
-/* Навигация «предыдущая / следующая» — под контентом работы           */
-/* ------------------------------------------------------------------ */
+/*! ------------------------------------------------------------------ */
+/*! Навигация «предыдущая / следующая» — под контентом работы           */
+/*! ------------------------------------------------------------------ */
 
 function renderPager(lab, subject, allLabs) {
   const idx = allLabs.findIndex((l) => l.id === lab.id);
@@ -130,7 +130,9 @@ function renderPager(lab, subject, allLabs) {
         className: `rp-nav-btn rp-nav-btn--${dir}`,
         attrs: { href: base + target.id },
       },
-      !isNext ? el("span", { className: "rp-nav-btn__arrow", text: "←" }) : null,
+      !isNext
+        ? el("span", { className: "rp-nav-btn__arrow", text: "←" })
+        : null,
       el("span", {
         className: "rp-nav-btn__label",
         text: isNext ? "Следующая" : "Предыдущая",
@@ -154,9 +156,9 @@ function renderPager(lab, subject, allLabs) {
   );
 }
 
-/* ------------------------------------------------------------------ */
-/* Карточки скачивания                                                  */
-/* ------------------------------------------------------------------ */
+/*! ------------------------------------------------------------------ */
+/*! Карточки скачивания                                                  */
+/*! ------------------------------------------------------------------ */
 
 const REPORT_TYPES = {
   docx: {
@@ -239,9 +241,9 @@ function renderDownloads(lab) {
   return el("div", { className: "downloads" }, ...cards);
 }
 
-/* ------------------------------------------------------------------ */
-/* GitHub API: список файлов репозитория                                */
-/* ------------------------------------------------------------------ */
+/*! ------------------------------------------------------------------ */
+/*! GitHub API: список файлов репозитория                                */
+/*! ------------------------------------------------------------------ */
 
 function readCachedPaths(key) {
   try {
@@ -258,7 +260,7 @@ function writeCachedPaths(key, paths) {
   try {
     sessionStorage.setItem(key, JSON.stringify({ time: Date.now(), paths }));
   } catch {
-    // не критично
+    // ! не критично
   }
 }
 
@@ -316,9 +318,9 @@ async function collectAllLabFiles(entries, repo) {
   return { files: [...files].sort(), problems };
 }
 
-/* ------------------------------------------------------------------ */
-/* Проводник: дерево слева, просмотрщик справа                          */
-/* ------------------------------------------------------------------ */
+/*! ------------------------------------------------------------------ */
+/*! Проводник: дерево слева, просмотрщик справа                          */
+/*! ------------------------------------------------------------------ */
 
 function createItem({ iconName, tone, name, meta, desc }, tag, attrs = {}) {
   return el(
@@ -532,7 +534,7 @@ function createExplorer(root) {
     return folder.item;
   }
 
-  /* Поиск по дереву */
+  /*! Поиск по дереву */
   const searchInput = el("input", {
     className: "tree-search__input",
     attrs: {
@@ -594,7 +596,7 @@ function createExplorer(root) {
     searchInput.focus();
   });
 
-  /* Мобильный drawer */
+  /*! Мобильный drawer */
   const backdrop = el("div", { className: "fv-backdrop" });
   const filesButton = el("button", {
     className: "fv-files-btn",
@@ -704,9 +706,9 @@ function renderCode(files, problems) {
   };
 }
 
-/* ------------------------------------------------------------------ */
-/* Скриншоты                                                            */
-/* ------------------------------------------------------------------ */
+/*! ------------------------------------------------------------------ */
+/*! Скриншоты                                                            */
+/*! ------------------------------------------------------------------ */
 
 function createScreenshot(path, index, dialog) {
   const img = el("img", {
@@ -779,9 +781,9 @@ function renderScreenshots(lab) {
   );
 }
 
-/* ------------------------------------------------------------------ */
-/* Сборка страницы                                                       */
-/* ------------------------------------------------------------------ */
+/*! ------------------------------------------------------------------ */
+/*! Сборка страницы                                                       */
+/*! ------------------------------------------------------------------ */
 
 function renderBreadcrumbs(nav, subject, lab) {
   const item = (content) =>

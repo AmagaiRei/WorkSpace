@@ -45,7 +45,7 @@ export function isLowBattery() {
 }
 
 export function isHighContrast() {
-  // Проверяем и класс на html, и профиль
+  // ! Проверяем и класс на html, и профиль
   return (
     document.documentElement.classList.contains("high-contrast") ||
     profile?.highContrast === true

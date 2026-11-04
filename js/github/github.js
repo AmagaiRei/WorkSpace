@@ -17,7 +17,7 @@ function getFromCache(key) {
 
     const { data, timestamp } = JSON.parse(cached);
 
-    // Проверяем, не истёк ли срок кэша
+    // ! Проверяем, не истёк ли срок кэша
     if (Date.now() - timestamp > CACHE_DURATION) {
       localStorage.removeItem(CACHE_PREFIX + key);
       return null;

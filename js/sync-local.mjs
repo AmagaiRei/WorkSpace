@@ -94,8 +94,8 @@ async function fetchRetry(url, options = {}) {
 }
 
 async function listRemoteFiles(config) {
-  // Репозиторий публичный: для чтения не используем GITHUB_TOKEN,
-  // чтобы случайный недействительный токен из окружения не вызывал HTTP 401.
+  // ! Репозиторий публичный: для чтения не используем GITHUB_TOKEN,
+  // ! чтобы случайный недействительный токен из окружения не вызывал HTTP 401.
   const headers = { Accept: "application/vnd.github+json" };
   const repoApi = `${config.apiBase}/repos/${config.owner}/${config.repo}`;
   const ref = await (

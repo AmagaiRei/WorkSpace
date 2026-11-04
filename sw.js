@@ -1,4 +1,4 @@
-/**
+/*!
  * Service Worker для WorkSpace — офлайн поддержка и кэширование
  * Регистрируется в index.js / lab.js / sync-center.js
  */
@@ -57,7 +57,7 @@ self.addEventListener("install", (event) => {
         });
     }),
   );
-  // Активируем SW сразу
+  // ! Активируем SW сразу
   self.skipWaiting();
 });
 
@@ -75,7 +75,7 @@ self.addEventListener("activate", (event) => {
       );
     }),
   );
-  // Принимаем контроль над всеми клиентами
+  // ! Принимаем контроль над всеми клиентами
   self.clients.claim();
 });
 
@@ -84,7 +84,7 @@ async function staleWhileRevalidate(request) {
   const cache = await caches.open(CACHE_NAME);
   const cachedResponse = await cache.match(request);
 
-  // Запускаем фоновое обновление
+  // ! Запускаем фоновое обновление
   const fetchPromise = fetch(request)
     .then((networkResponse) => {
       if (networkResponse.ok) {
@@ -94,7 +94,7 @@ async function staleWhileRevalidate(request) {
     })
     .catch(() => cachedResponse);
 
-  // Возвращаем кэшированный ответ сразу, если есть
+  // ! Возвращаем кэшированный ответ сразу, если есть
   return cachedResponse || fetchPromise;
 }
 
@@ -113,7 +113,7 @@ async function networkFirst(request) {
     if (cachedResponse) {
       return cachedResponse;
     }
-    // Fallback для навигации
+    // ! Fallback для навигации
     if (request.mode === "navigate") {
       return cache.match("/index.html");
     }
@@ -127,7 +127,7 @@ async function cacheFirst(request) {
   const cachedResponse = await cache.match(request);
 
   if (cachedResponse) {
-    // Фоновое обновление
+    // ! Фоновое обновление
     fetch(request)
       .then((networkResponse) => {
         if (networkResponse.ok) {
@@ -154,36 +154,36 @@ self.addEventListener("fetch", (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // Пропускаем не-GET запросы
+  // ! Пропускаем не-GET запросы
   if (request.method !== "GET") {
     return;
   }
 
-  // Пропускаем chrome-extension и другие схемы
+  // ! Пропускаем chrome-extension и другие схемы
   if (!url.protocol.startsWith("http")) {
     return;
   }
 
-  // Определяем стратегию кэширования
+  // ! Определяем стратегию кэширования
   let handler;
 
-  // Навигационные запросы — network first
+  // ! Навигационные запросы — network first
   if (request.mode === "navigate") {
     handler = networkFirst(request);
   }
-  // Статические ассеты из нашего списка — stale-while-revalidate
+  // ! Статические ассеты из нашего списка — stale-while-revalidate
   else if (STATIC_ASSETS.some((asset) => request.url.includes(asset))) {
     handler = staleWhileRevalidate(request);
   }
-  // Шрифты и внешние библиотеки — cache first
+  // ! Шрифты и внешние библиотеки — cache first
   else if (CACHE_FIRST.some((pattern) => request.url.includes(pattern))) {
     handler = cacheFirst(request);
   }
-  // API и данные — network first
+  // ! API и данные — network first
   else if (NETWORK_FIRST.some((pattern) => request.url.includes(pattern))) {
     handler = networkFirst(request);
   }
-  // Остальное — stale-while-revalidate
+  // ! Остальное — stale-while-revalidate
   else {
     handler = staleWhileRevalidate(request);
   }
